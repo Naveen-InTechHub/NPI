@@ -1,0 +1,128 @@
+@page "/"
+@page "/npi"
+@using Microsoft.AspNetCore.Authorization
+@using NPI.Client.DTOs.Auth
+@inject NpiListViewModel VM
+@inject NavigationManager Nav
+
+<PageTitle>NPI — Records</PageTitle>
+
+<div class="npi-app @(ThemeService.IsDarkMode ? "dark" : "")">
+    <header class="header">
+        <div class="header-left">
+            <img src="/logo.webp" style="width: 180px;"/>
+            @* <div class="npi-logo">NPI</div> *@
+            @* <h1>New Product Introduction</h1> *@
+        </div>
+
+
+        <div class="header-right">
+            <button class="theme-toggle" @onclick="ThemeService.ToggleTheme">
+                @(ThemeService.IsDarkMode ? "☀️ Light" : "🌙 Dark")
+            </button>
+            <input class="inp" style="width:250px" placeholder="Search records..." @bind="VM.SearchTerm"
+                   @onkeyup="HandleKeyUp" />
+            <button class="btn btn-primary" @onclick="VM.SearchAsync">Search</button>
+
+            <div style="display: flex; gap: 10px; align-items:center">
+                @if (!string.IsNullOrEmpty(UserData.UserName))
+                {
+                    <div class="avatar">
+                        @(UserData.UserName?.ToUpper().Substring(0,
+                            Math.Min(2, UserData.UserName.Length)))
+                    </div>
+
+                }
+                <div style="display: flex; flex-direction: column; gap: 0px;">
+                    @if (!string.IsNullOrEmpty(UserData.UserName))
+                    {
+                        <div class="meta" style="color: #fff; margin-bottom: -2px;">@UserData.UserName</div>
+                    }
+                    @if (!string.IsNullOrEmpty(UserData.Role))
+                    {
+                        <div class="meta" style="font-size: 10px; color: #fff;">@UserData.Role</div>
+                    }
+                </div>
+            </div>
+            <button class="btn btn-warning" @onclick="() => VM.Logout()">Logout</button>
+
+        </div>
+    </header>
+
+
+
+    <div style="padding-top:48px">
+        <div class="content">
+            @if (VM.IsBusy)
+            {
+                <p>Loading...</p>
+            }
+            else if (VM.Records.Any())
+            {
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item Code</th>
+                                <th>Description</th>
+                                <th>Quote #</th>
+                                <th>Customer</th>
+                                <th>Status</th>
+                                <th>Type</th>
+                                <th>Order Qty</th>
+                                <th>PO Value</th>
+                                <th>Modified</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in VM.Records)
+                            {
+                                @* <tr style="cursor:pointer" @onclick="() => Nav.NavigateTo($\"/npi/{r.Id}\")"> *@
+                                <tr style="cursor:pointer"
+                                    @onclick="@(() => Nav.NavigateTo($"/npi/{r.Id}"))">
+                                    <td><strong class="mono">@r.ItemCode</strong></td>
+                                    <td>@r.ProductDescription</td>
+                                    <td>@r.QuoteNumber</td>
+                                    <td>@r.CustomerName</td>
+                                    <td><Badge Variant="@(r.Status == NpiStatus.Launched ? "success" : "info")">@r.Status</Badge></td>
+                                    <td>@r.ProductType</td>
+                                    <td class="mono">@r.OrderQty.ToString("N0")</td>
+                                    <td class="mono">@r.POValue.ToString("C0")</td>
+                                    <td class="text-faint text-sm">@(r.ModifiedDate?.ToString("MM/dd/yy") ?? r.CreatedDate.ToString("MM/dd/yy"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty" style="padding:48px">
+                    <p>No NPI records found. Create one to get started.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    UserData UserData = new UserData();
+    protected override async Task OnInitializedAsync()
+    {
+        VM.PropertyChanged += (_, _) => InvokeAsync(StateHasChanged);
+        await VM.LoadAsync();
+        UserData = await AuthService.GetCurrentUserAsync() ?? new UserData();
+        var currentAuthState = await AuthProvider.GetAuthenticationStateAsync();
+        if (currentAuthState.User.Identity?.IsAuthenticated != true)
+        {
+            Nav.NavigateTo("/login");
+        }
+        ;
+        StateHasChanged();
+    }
+
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await VM.SearchAsync();
+    }
+}

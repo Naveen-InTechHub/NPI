@@ -1,0 +1,42 @@
+@* Collapsible Section Card — Maps to Section component in UI prototype *@
+
+<div class="section">
+    <div class="section-head" @onclick="Toggle">
+        <div class="section-head-left">
+            <svg class="arrow @(IsOpen ? "open" : "")" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 5l7 7-7 7"/>
+            </svg>
+            @if (!string.IsNullOrEmpty(Icon))
+            {
+                <span class="icon">@Icon</span>
+            }
+            <h3>@Title</h3>
+        </div>
+        @if (Actions != null)
+        {
+            <div @onclick:stopPropagation="true">
+                @Actions
+            </div>
+        }
+    </div>
+    <div class="section-body @(IsOpen ? "" : "collapsed")">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string? Icon { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; } = true;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? Actions { get; set; }
+
+    private bool IsOpen { get; set; }
+
+    protected override void OnInitialized()
+    {
+        IsOpen = DefaultOpen;
+    }
+
+    private void Toggle() => IsOpen = !IsOpen;
+}

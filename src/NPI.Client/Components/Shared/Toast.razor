@@ -1,0 +1,51 @@
+﻿
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index:9999">
+    @foreach (var toast in _toasts)
+    {
+        <div class="toast show text-white @toast.Background mb-2">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @toast.Message
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        @onclick="() => RemoveToast(toast)"></button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<ToastMessage> _toasts = new();
+
+    protected override void OnInitialized()
+    {
+        ToastService.OnShow += ShowToast;
+    }
+
+    private void ShowToast(string message, string bg)
+    {
+        var toast = new ToastMessage { Message = message, Background = bg };
+        _toasts.Add(toast);
+        StateHasChanged();
+
+        _ = AutoRemove(toast);
+    }
+
+    private async Task AutoRemove(ToastMessage toast)
+    {
+        await Task.Delay(3000);
+        RemoveToast(toast);
+    }
+
+    private void RemoveToast(ToastMessage toast)
+    {
+        _toasts.Remove(toast);
+        StateHasChanged();
+    }
+
+    private class ToastMessage
+    {
+        public string Message { get; set; } = "";
+        public string Background { get; set; } = "";
+    }
+}

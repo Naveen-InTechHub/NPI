@@ -1,0 +1,26 @@
+@* Y/N Toggle Button Component — Maps to the YN toggle in the UI prototype *@
+
+<div class="yn-row">
+    <span class="yn-label">@Label</span>
+    <div style="display:flex;align-items:center;gap:6px">
+        @if (!string .IsNullOrEmpty(AnsweredBy))
+        {
+            <span class="yn-by">@AnsweredBy @AnsweredDate?.ToString("MM/dd HH:mm")</span>
+        }
+        <div class="yn-group">
+            <button class="yn-btn @(Value == true ? "yes-on" : "")"
+                    @onclick="() => OnToggle.InvokeAsync(true)">Y</button>
+            <button class="yn-btn @(Value == false ? "no-on" : "")"
+                    @onclick="() => OnToggle.InvokeAsync(false)">N</button>
+        </div>
+       
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public bool? Value { get; set; }
+    [Parameter] public string? AnsweredBy { get; set; }
+    [Parameter] public DateTime? AnsweredDate { get; set; }
+    [Parameter] public EventCallback<bool> OnToggle { get; set; }
+}

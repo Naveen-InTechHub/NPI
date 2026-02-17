@@ -1,0 +1,23 @@
+@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.JSInterop
+@using NPI.Client
+@using NPI.Client.Components.Layout
+@using NPI.Client.Components.Shared
+@using NPI.Client.Providers
+@using NPI.Client.Services
+@using NPI.Client.ViewModels
+@using NPI.Shared.DTOs
+@using NPI.Shared.Enums
+
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+@inject AuthStateProvider AuthProvider
+@inject ThemeService ThemeService
+@inject ToastService ToastService

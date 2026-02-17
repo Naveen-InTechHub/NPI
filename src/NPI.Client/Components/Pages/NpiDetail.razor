@@ -1,0 +1,664 @@
+@page "/npi/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using NPI.Client.DTOs.Auth
+@inject NpiDetailViewModel VM
+
+@attribute [Authorize(Roles = Roles.SuperAdmin + "," + Roles.NPIManager + "," + Roles.Planner + "," + Roles.QualityOfficer + "," + Roles.PackagingExec)]
+
+
+<PageTitle>NPI — @(VM.Record?.ItemCode ?? "Loading...")</PageTitle>
+
+@if (VM.IsBusy && VM.Record == null)
+{
+    <div class="loading">Loading NPI record...</div>
+}
+else if (VM.ErrorMessage != null && VM.Record == null)
+{
+    <div class="alert-warn" style="margin:24px">@VM.ErrorMessage</div>
+}
+else if (VM.Record != null)
+{
+    var r = VM.Record;
+
+    <div class="npi-app @(ThemeService.IsDarkMode ? "dark" : "")">
+
+        @* ── HEADER ── *@
+        <header class="header">
+            <div class="header-left">
+                @* <div class="npi-logo">NPI</div> *@
+                <img src="/logo.webp" style="width: 180px;" />
+                <div style="display:flex;align-items:center;gap:10px">
+                    <h1 style="position: relative; top: 4px;">@r.ItemCode — @r.ProductDescription</h1>
+                    <Badge Variant="info">Quote #@r.QuoteNumber</Badge>
+                    <Badge Variant="@VM.StatusBadgeClass">@VM.StatusDisplay</Badge>
+                    <button class="btn btn-secondary" @onclick="VM.NavToBids" disabled="@VM.IsBusy" style="background-color: #fff; color: #000;">Back</button>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="meta">@r.CreatedBy · @r.CreatedDate.ToString("MM/dd HH:mm")</span>
+                <button class="theme-toggle" @onclick="ThemeService.ToggleTheme">
+                    @(ThemeService.IsDarkMode ? "☀️ Light" : "🌙 Dark")
+                </button>
+                <button class="btn btn-success" @onclick="VM.SaveRecordAsync" disabled="@VM.IsBusy">Save</button>
+
+                <div style="display: flex; gap: 10px; align-items:center">
+                    @if (!string.IsNullOrEmpty(UserData.UserName))
+                    {
+                        <div class="avatar">
+                            @(UserData.UserName?.ToUpper().Substring(0,
+                                    Math.Min(2, UserData.UserName.Length)))
+                        </div>
+
+                    }
+                    <div style="display: flex; flex-direction: column; gap: 0px;">
+                        @if (!string.IsNullOrEmpty(UserData.UserName))
+                        {
+                            <div class="meta" style="color: #fff; margin-bottom: -2px;">@UserData.UserName</div>
+                        }
+                        @if (!string.IsNullOrEmpty(UserData.Role))
+                        {
+                            <div class="meta" style="font-size: 10px; color:#fff;">@UserData.Role</div>
+                        }
+                    </div>
+                </div>
+                <button class="btn btn-warning" @onclick="() => VM.Logout()">Logout</button>
+
+            </div>
+
+
+        </header>
+
+        <div style="padding-top:48px">
+
+            @* ── METRICS STRIP ── *@
+            <div class="strip">
+                <div class="strip-inner">
+                    <div class="product-row">
+                        <span><span class="lbl">Packout:</span> <strong>@r.PackoutDescription</strong></span><span class="sep">|</span>
+                        <span><span class="lbl">Type:</span> <strong>@r.ProductType · @r.PackageType</strong></span><span class="sep">|</span>
+                        <span><span class="lbl">Customer:</span> <strong>@r.CustomerName (@r.CustomerId)</strong></span><span class="sep">|</span>
+                        <span><span class="lbl">Sales:</span> <strong>@r.SalesRep1@(r.SalesRep2 != null ? $", {r.SalesRep2}" : "")</strong></span><span class="sep">|</span>
+                        <span><span class="lbl">Bulk:</span> <strong class="mono">@r.BulkCode</strong></span><span class="sep">|</span>
+                        <span><span class="lbl">FG:</span> <strong class="mono">@r.FGCode</strong></span>
+                    </div>
+                    <div class="metrics-row">
+                        <span><span class="metric-lbl">Order Qty:</span> <span class="metric-val mono">@r.OrderQty.ToString("N0")</span></span>
+                        <span><span class="metric-lbl">Units:</span> <span class="metric-val mono">@r.TotalUnits.ToString("N0")</span></span>
+                        <span><span class="metric-lbl">Formula Size:</span> <span class="metric-val mono">@r.FormulaSize.ToString("N0") M</span></span>
+                        <span><span class="metric-lbl">Servings:</span> <span class="metric-val mono">@r.Servings.ToString("N0")</span></span>
+                        <span><span class="metric-lbl">Unit Price:</span> <span class="metric-val mono">@r.UnitPrice.ToString("C2")</span></span>
+                        <span><span class="metric-lbl">Std Qty:</span> <span class="metric-val mono">@r.StdQty.ToString("N0")</span></span>
+                        <span><span class="metric-lbl">Lead Time:</span> <span class="metric-val mono">@r.LeadTimeDays days</span></span>
+                        <span><span class="metric-lbl">PO Value:</span> <span class="metric-val mono">@r.POValue.ToString("C0")</span></span>
+                    </div>
+                </div>
+            </div>
+
+            @* ── TAB BAR ── *@
+            <div class="tab-bar">
+                <div class="tab-bar-inner">
+                    @foreach (var tab in VisibleTabs)
+                    {
+                        <button class="tab-btn @(VM.ActiveTab == tab.Id ? "active" : "")"
+                        @onclick="() => VM.SwitchTab(tab.Id)">
+                            @tab.Label
+                        </button>
+                    }
+                </div>
+            </div>
+
+            @* ── TAB CONTENT ── *@
+            <div class="content">
+
+                @* ═══ SETUP & PILOT TAB ═══ *@
+                @if (VM.ActiveTab == "setup")
+                {
+                    @* Row 1: NPI Setup | Pilot Requirements *@
+                    <div class="grid-2">
+                        <CollapsibleSection Title="NPI SETUP" Icon="⚙️">
+                            @foreach (var q in VM.SetupQuestions)
+                            {
+                                <YnToggle Label="@q.QuestionText" Value="@q.Value"
+                                AnsweredBy="@q.AnsweredBy" AnsweredDate="@q.AnsweredDate"
+                                OnToggle="(v) => VM.ToggleSetupQuestionAsync(q, v)" />
+                            }
+                        
+                          
+                            <div class="mt-2">
+                                <div class="sub-label">Multiple Packouts Note</div>
+                                <textarea class="tarea" @bind="VM.SetupNoteText" style="height:48px" placeholder="Add notes..."></textarea>
+                                <div class="flex-between">
+                                     @if (!VM.SetupNotes.Any())
+                                    {
+                                        <span class="text-sm italic text-faint">No notes yet</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-sm text-faint">@VM.SetupNotes.Count note(s)</span>
+                                    }
+                                    <button class="btn btn-default" @onclick="() => VM.AddNoteAsync(NotesParent.Setup, VM.SetupNoteText)">Add Note</button>
+                                    </div>
+                            </div>
+
+                            @if (VM.SetupNotes != null && VM.SetupNotes.Any())
+                            {
+                                <div class="sub-label">Existing Notes</div>
+                                @foreach (var note in VM.SetupNotes)
+                                {
+                                    <div class="note-item mt-1">
+                                        <span class="text-sm">@note.Content</span>
+                                        <span class="text-sm text-faint"> — @note.CreatedBy, @note.CreatedDate.ToString("MM/dd")</span>
+                                    </div>
+                                }
+                            }
+                        </CollapsibleSection>
+
+                        <CollapsibleSection Title="PILOT REQUIREMENTS" Icon="🧪">
+                            @foreach (var q in VM.PilotRequirements)
+                            {
+                                <YnToggle Label="@q.QuestionText" Value="@q.Value"
+                                AnsweredBy="@q.AnsweredBy" AnsweredDate="@q.AnsweredDate"
+                                OnToggle="(v) => VM.TogglePilotAsync(q, v)" />
+                            }
+                          
+                            <div class="mt-2">
+                                <div class="sub-label">Pilot Notes</div>
+                                <textarea class="tarea" @bind="VM.PilotNoteText" style="height:48px" placeholder="Enter pilot notes..."></textarea>
+                                <div class="flex-between">
+                                    @if (!VM.PilotNotes.Any())
+                                    {
+                                        <span class="text-sm italic text-faint">No notes yet</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-sm text-faint">@VM.PilotNotes.Count note(s)</span>
+                                    }
+                                    <button class="btn btn-default" @onclick="() => VM.AddNoteAsync(NotesParent.Pilot, VM.PilotNoteText)">Add Note</button>
+                                    </div>
+                            </div>
+                            @if (VM.PilotNotes != null && VM.PilotNotes.Any())
+                            {
+                                <div class="sub-label">Existing Notes</div>
+                                @foreach (var note in VM.PilotNotes)
+                                {
+                                    <div class="note-item mt-1">
+                                        <span class="text-sm">@note.Content</span>
+                                        <span class="text-sm text-faint"> — @note.CreatedBy, @note.CreatedDate.ToString("MM/dd")</span>
+                                    </div>
+                                }
+                            }
+                        </CollapsibleSection>
+                    </div>
+
+                    @* Row 2: Planner Questions | Item Codes *@
+                    <div class="grid-2 mt-2">
+                        <CollapsibleSection Title="PLANNER QUESTIONS" Icon="📊">
+                            <div class="grid-2" style="gap:16px">
+                                <div>
+                                    <div class="sub-label">Raw Materials</div>
+                                    @foreach (var q in VM.RawMaterialQuestions)
+                                    {
+                                        <YnToggle Label="@q.QuestionText" Value="@q.Value"
+                                        OnToggle="(v) => VM.TogglePlannerAsync(q, v)" />
+                                    }
+                                </div>
+                                <div>
+                                    <div class="sub-label">Components & Other</div>
+                                    @foreach (var q in VM.ComponentQuestions)
+                                    {
+                                        <YnToggle Label="@q.QuestionText" Value="@q.Value"
+                                        OnToggle="(v) => VM.TogglePlannerAsync(q, v)" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="alert-success mt-2">
+                                <span>✓</span><span>Planner Launched — @r.CreatedBy, @r.CreatedDate.ToString("MM/dd HH:mm")</span>
+                            </div>
+                        </CollapsibleSection>
+
+                        <div class="space-y">
+                            <CollapsibleSection Title="ITEM CODES & AX BOM" Icon="🔖">
+                                <div class="grid-2" style="gap:8px 12px">
+                                    <div class="field"><label>Item Desc</label><div class="inp-wrap"><input class="inp" @bind="r.ItemDescription" /></div></div>
+                                    <div class="field"><label>Customer #</label><div class="inp-wrap"><input class="inp" @bind="r.CustomerName" placeholder="Enter" /></div></div>
+                                    <div class="field"><label>Bulk Code</label><div class="inp-wrap"><input class="inp" value="@r.BulkCode" disabled /></div></div>
+                                    <div class="field"><label>FG Code</label><div class="inp-wrap"><input class="inp" value="@r.FGCode" disabled /></div></div>
+                                    <div class="field"><label>Barcode</label><div class="inp-wrap"><input class="inp" @bind="r.Barcode" placeholder="Enter barcode" /></div></div>
+                                    <div style="display:flex;align-items:flex-end;justify-content:flex-end">
+                                        <button class="btn btn-default" @onclick="() => VM.UpdateItemCodesAxBom(r)">Update AX BOM</button> 
+                                    </div>
+                                </div>
+                            </CollapsibleSection>
+
+                            <div class="grid-2">
+                                <CollapsibleSection Title="NOTES" Icon="📝">
+
+                                    <textarea class="tarea" style="height:56px" @bind="VM.NoteText" placeholder="Add a note..."></textarea>
+                                    <div class="flex-between">
+                                        @if (!VM.Notes.Any())
+                                        {
+                                            <span class="text-sm italic text-faint">No notes yet</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-sm text-faint">@VM.Notes.Count note(s)</span>
+                                        }
+                                        <button class="btn btn-default" @onclick="() => VM.AddNoteAsync(NotesParent.Notes, VM.NoteText)">Add</button>
+                                    </div>
+                                    @foreach (var note in VM.Notes)
+                                    {
+                                        <div class="note-item mt-1">
+                                            <span class="text-sm">@note.Content</span>
+                                            <span class="text-sm text-faint"> — @note.CreatedBy, @note.CreatedDate.ToString("MM/dd")</span>
+                                        </div>
+                                    }
+                                </CollapsibleSection>
+
+                                <CollapsibleSection Title="CHANGE LOG" Icon="📜">
+                                    @if (!VM.ChangeLog.Any())
+                                    {
+                                        <p class="text-sm italic text-faint" style="text-align:center;padding:8px 0">No changes recorded</p>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var entry in VM.ChangeLog.Take(8))
+                                        {
+                                            <div class="text-sm mt-1" style="font-size:10px;">
+                                                <strong>@entry.FieldChanged</strong>: @entry.OldValue → @entry.NewValue
+                                                <span class="text-faint">@entry.ChangedBy @entry.ChangedDate.ToString("MM/dd HH:mm")</span>
+                                            </div>
+                                        }
+                                    }
+                                </CollapsibleSection>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* Row 3: Formula Spec *@
+                    @if (VM.FormulaSpec != null)
+                    {
+                        <div class="mt-2">
+                            <CollapsibleSection Title="FORMULA SPECIFICATION" Icon="🧬" DefaultOpen="false">
+                                <Actions><button class="btn btn-default">Change Formula</button></Actions>
+                                <ChildContent>
+                                    <div class="table-wrap">
+                                        <table>
+                                            <thead><tr><th>Formula</th><th>Prod Type</th><th>Pkg Type</th><th>Order Qty</th><th>Total Units</th><th>Serv/Unit</th><th>Formula Size</th><th>KG</th><th>Density</th><th>Blender</th><th>Batches</th></tr></thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="font-weight:600;color:#0284c7">@VM.FormulaSpec.FormulaName</td>
+                                                    <td>@VM.FormulaSpec.ProdType</td>
+                                                    <td>@VM.FormulaSpec.PkgType</td>
+                                                    <td class="mono">@VM.FormulaSpec.OrderQty.ToString("N0")</td>
+                                                    <td class="mono">@VM.FormulaSpec.TotalUnits.ToString("N0")</td>
+                                                    <td class="mono">@VM.FormulaSpec.ServPerUnit.ToString("N0")</td>
+                                                    <td class="mono">@VM.FormulaSpec.FormulaSize.ToString("N0")</td>
+                                                    <td class="mono">@VM.FormulaSpec.KG.ToString("N0")</td>
+                                                    <td class="mono">@VM.FormulaSpec.Density</td>
+                                                    <td>@VM.FormulaSpec.Blender</td>
+                                                    <td class="mono">@VM.FormulaSpec.Batches</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ChildContent>
+                            </CollapsibleSection>
+                        </div>
+                    }
+                }
+
+                @* ═══ LABOR & BOM TAB ═══ *@
+                <AuthorizeView Roles="@(Roles.SuperAdmin + "," + Roles.Planner)">
+                    <Authorized>
+                        @if (VM.ActiveTab == "bom")
+                        {
+                            <div class="grid-2">
+                                <CollapsibleSection Title="FORMULA LABOR & OVERHEAD" Icon="⏱️">
+                                    <Actions><span class="mono" style="font-size:12px;font-weight:700">@VM.FormulaLaborTotal.ToString("C2")</span></Actions>
+                                    <ChildContent>
+                                        <div class="table-wrap">
+                                            <table>
+                                                <thead><tr><th>Description</th><th>Base</th><th>Chg Ovr</th><th>Run</th><th>Mach.</th><th>Hd</th><th>Tot Hrs</th><th>Rate</th><th>Cost</th></tr></thead>
+                                                <tbody>
+                                                    @foreach (var item in VM.FormulaLabor)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Description</td>
+                                                            <td class="mono">@item.Base</td>
+                                                            <td class="mono">@item.ChangeOver</td>
+                                                            <td class="mono">@item.Run</td>
+                                                            <td class="mono">@item.Machine</td>
+                                                            <td class="mono">@item.Head</td>
+                                                            <td class="mono">@item.TotalHours</td>
+                                                            <td class="mono">@item.Rate</td>
+                                                            <td class="mono">@item.Cost.ToString("C0")</td>
+                                                        </tr>
+                                                    }
+                                                    @foreach (var oh in VM.FormulaOverhead)
+                                                    {
+                                                        <tr class="row-alt">
+                                                            <td class="muted">@oh.Description</td>
+                                                            <td class="muted">@oh.Base</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td class="mono">@oh.Rate</td>
+                                                            <td class="mono">@oh.Cost.ToString("C0")</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </ChildContent>
+                                </CollapsibleSection>
+
+                                <CollapsibleSection Title="PACKOUT LABOR & OVERHEAD" Icon="📦">
+                                    <div class="table-wrap">
+                                        <table>
+                                            <thead><tr><th>Description</th><th>Base</th><th>Units/Hr</th><th>Chg Ovr</th><th>Run</th><th>Mach.</th><th>Head</th><th>Tot Hrs</th><th>Cost</th><th>Cost/EA</th></tr></thead>
+                                            <tbody>
+                                                @foreach (var item in VM.PackoutLabor)
+                                                {
+                                                    <tr>
+                                                        <td>@item.Description</td>
+                                                        <td class="mono">@item.Base</td>
+                                                        <td class="mono">@item.UnitsPerHour</td>
+                                                        <td class="mono">@item.ChangeOver</td>
+                                                        <td class="mono">@item.Run</td>
+                                                        <td class="mono">@item.Machine</td>
+                                                        <td class="mono">@item.Head</td>
+                                                        <td class="mono">@item.TotalHours</td>
+                                                        <td class="mono">@item.Cost.ToString("C0")</td>
+                                                        <td class="mono">@item.CostPerEach?.ToString("C2")</td>
+                                                    </tr>
+                                                }
+                                                @foreach (var oh in VM.PackoutOverhead)
+                                                {
+                                                    <tr class="row-alt">
+                                                        <td class="muted">@oh.Description</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td class="mono">@oh.Machine</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td class="mono">@oh.Cost.ToString("C0")</td>
+                                                        <td class="mono">@oh.CostPerEach?.ToString("C2")</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </CollapsibleSection>
+                            </div>
+                        }
+                    </Authorized>
+
+                </AuthorizeView>
+
+                @* ═══ PACKAGING TAB ═══ *@
+                <AuthorizeView Roles="@(Roles.SuperAdmin + "," + Roles.PackagingExec)">
+                    <Authorized>
+                        @if (VM.ActiveTab == "packaging")
+                        {
+                            <div class="grid-2">
+                                <CollapsibleSection Title="PACKAGING BOM" Icon="🏷️">
+                                    <Actions><button class="btn btn-primary">Update BOM</button></Actions>
+                                    <ChildContent>
+                                        <div class="table-wrap">
+                                            <table>
+                                                <thead><tr><th>Component</th><th>Item Code</th><th>Description</th><th>Qty</th><th>UM</th><th>Cust?</th><th></th></tr></thead>
+                                                <tbody>
+                                                    @foreach (var comp in VM.PackagingComponents)
+                                                    {
+                                                        <tr>
+                                                            <td><Badge Variant="@GetComponentBadge(comp.ComponentType)">@comp.ComponentType</Badge></td>
+                                                            <td class="mono" style="font-size:12px">@comp.ItemCode</td>
+                                                            <td><input class="inp" @bind="comp.Description" placeholder="Description" style="min-width:100px" /></td>
+                                                            <td class="mono">@comp.Qty.ToString("F6")</td>
+                                                            <td>@comp.UnitOfMeasure</td>
+                                                            <td style="text-align:center"><input type="checkbox" @bind="comp.IsCustomerSupplied" /></td>
+                                                            <td><button class="btn btn-danger" @onclick="() => VM.DeletePackagingComponentAsync(comp)">✕</button></td>
+                                                        </tr>
+                                                    }
+                                                    <tr><td colspan="7" style="padding:6px 8px"><button class="btn-link">+ Add Component</button></td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </ChildContent>
+                                </CollapsibleSection>
+
+                                <CollapsibleSection Title="ADDITIONAL OPTIONS" Icon="☑️">
+                                    <div class="grid-2" style="gap:8px">
+                                        @foreach (var opt in VM.PackagingOptions)
+                                        {
+                                            <div class="opt-box">
+                                                <label>
+                                                    <input type="checkbox" @bind="opt.IsSelected" />
+                                                    Includes @opt.OptionName?
+                                                </label>
+                                                @if (opt.OptionName is "Neckband" or "Sleeve")
+                                                {
+                                                    <select class="mt-1" style="width:100%" @bind="opt.SubType">
+                                                        <option value="">Select type...</option>
+                                                        <option value="Standard">Standard</option>
+                                                        <option value="Custom">Custom</option>
+                                                    </select>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </CollapsibleSection>
+                            </div>
+                        }
+                    </Authorized>
+
+                </AuthorizeView>
+
+
+
+                @* ═══ DOCS TAB ═══ *@
+                @if (VM.ActiveTab == "docs")
+                {
+                    <div class="grid-2">
+                        <CollapsibleSection Title="DOCUMENTS & ATTACHMENTS" Icon="📎">
+                            <div class="grid-2" style="gap:8px">
+                            </div>
+                            <!-- Upload New Files -->
+                            <div class="mt-2">
+
+
+                                <div class="mt-2">
+                                    @foreach (var file in _selectedFiles)
+                                    {
+                                        <div>@file.Name (@(file.Size / 1024) KB)</div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="alert-warn mt-2">Max 2MB · .jpg .png .gif .docx .xlsx .pdf</div>
+                            @if (_validationErrors.Any())
+                            {
+                                <div class="alert-error mt-2">
+                                    @foreach (var err in _validationErrors)
+                                    {
+                                        <div style="color:red">@err</div>
+                                    }
+                                </div>
+                            }
+                            <div class="flex-between">
+                                <InputFile id="fileInput"
+                                OnChange="OnFilesSelected"
+                                Multiple
+                                style="display:none" />
+
+                                <!-- Styled Choose Button -->
+                                <label for="fileInput" class="btn btn-default" style="cursor:pointer;">
+                                    Choose
+                                </label>
+                                <button class="btn btn-primary" @onclick="UploadAll"
+                                disabled="@(!_selectedFiles.Any())">
+                                    Upload All
+                                </button>
+                            </div>
+
+
+
+
+                        </CollapsibleSection>
+
+                        <CollapsibleSection Title="ATTACHED FILES" Icon="📁">
+
+                            @if (VM.Documents != null && VM.Documents.Count > 0)
+                            {
+                                @foreach (var doc in VM.Documents)
+                                {
+                                    <div class="doc-card">
+                                        <a href="@($"{Http.BaseAddress}{doc.FilePath.TrimStart('/')}")" target="_blank">
+                                        <svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                        <div class="doc-info">
+                                            <div class="doc-name">@doc.Slot.ToString()</div>
+                                            <div class="doc-status">@(doc.FileName ?? "No file")</div>
+                                        </div>
+                                        </a>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="empty">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                    </svg>
+                                    <p>No files have been attached</p>
+                                </div>
+                            }
+                        </CollapsibleSection>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter] public int Id { get; set; }
+    UserData UserData = new UserData();
+    string CurrentRole = string.Empty;
+
+    private readonly (string Id, string Label)[] _tabs = new[]
+    {
+        ("setup", "Setup & Pilot"),
+        ("bom", "Labor & BOM"),
+        ("packaging", "Packaging"),
+        ("docs", "Docs")
+    };
+    private readonly Dictionary<string, string[]> _roleTabAccess = new()
+    {
+        { "SuperAdmin", new[] { "setup", "bom", "packaging", "docs" } },
+        { "NPIManager", new[] { "setup", "bom", "packaging", "docs" } },
+        { "Planner", new[] { "setup", "bom" } },
+        { "PackagingExec", new[] {"setup", "packaging" } },
+        { "QualityOfficer", new[] { "setup","docs" } }
+    };
+    private IEnumerable<(string Id, string Label)> VisibleTabs =>
+        _tabs.Where(t =>
+            _roleTabAccess.ContainsKey(CurrentRole) &&
+            _roleTabAccess[CurrentRole].Contains(t.Id));
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        VM.PropertyChanged += (_, _) => InvokeAsync(StateHasChanged);
+        UserData = await AuthService.GetCurrentUserAsync() ?? new UserData();
+
+        CurrentRole = UserData.Role;
+        VM.CurrentUser = UserData.UserName ?? "User";
+        await VM.LoadAsync(Id);
+    }
+
+    private static string GetComponentBadge(ComponentType type) => type switch
+    {
+        ComponentType.Bottle or ComponentType.Cap => "info",
+        ComponentType.Label => "warning",
+        ComponentType.Shipper => "purple",
+        _ => "info"
+    };
+    private List<IBrowserFile> _selectedFiles = new();
+
+    private const long MaxFileSize = 2 * 1024 * 1024; // 2MB
+
+    private readonly string[] AllowedExtensions =
+        { ".jpg", ".png", ".gif", ".docx", ".xlsx", ".pdf" };
+    private List<string> _validationErrors = new();
+
+    private void OnFilesSelected(InputFileChangeEventArgs e)
+    {
+        _validationErrors.Clear();
+        _selectedFiles.Clear();
+
+        foreach (var file in e.GetMultipleFiles())
+        {
+            var extension = Path.GetExtension(file.Name).ToLowerInvariant();
+
+            // Validate extension
+            if (!AllowedExtensions.Contains(extension))
+            {
+                _validationErrors.Add($"{file.Name} → Invalid file type.");
+                continue;
+            }
+
+            // Validate size
+            if (file.Size > MaxFileSize)
+            {
+                _validationErrors.Add($"{file.Name} → Exceeds 2MB.");
+                continue;
+            }
+
+            _selectedFiles.Add(file);
+        }
+    }
+    [Inject] private HttpClient Http { get; set; } = default!;
+
+    private async Task UploadAll()
+    {
+        _validationErrors.Clear();
+        if (!_selectedFiles.Any())
+            return;
+
+        var content = new MultipartFormDataContent();
+
+        foreach (var file in _selectedFiles)
+        {
+            var streamContent = new StreamContent(
+                file.OpenReadStream(2 * 1024 * 1024));
+
+            streamContent.Headers.ContentType =
+                new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+
+            content.Add(streamContent, "files", file.Name);
+        }
+
+        content.Add(new StringContent(string.IsNullOrEmpty(UserData.UserName) ? "User" : UserData.UserName), "uploadedBy");
+
+
+        var response = await Http.PostAsync(
+            $"api/NpiDocuments/{Id}/upload-multiple",
+            content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _selectedFiles.Clear();
+            await VM.LoadAsync(Id);
+            ToastService.ShowSuccess("Files uploaded successfully.");
+        }
+    }
+
+}

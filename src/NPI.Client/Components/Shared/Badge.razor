@@ -1,0 +1,14 @@
+<span class="badge @CssClass">@ChildContent</span>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Variant { get; set; } = "info";
+
+    private string CssClass => Variant switch
+    {
+        "success" => "badge-success",
+        "warning" => "badge-warn",
+        "purple" => "badge-purple",
+        _ => "badge-info"
+    };
+}
