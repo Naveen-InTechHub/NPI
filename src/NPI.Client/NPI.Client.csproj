@@ -11,14 +11,21 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0" PrivateAssets="all" />
-	  <PackageReference Include="Syncfusion.Blazor.Inputs"      Version="27.*" />
-	  <PackageReference Include="Syncfusion.Blazor.Buttons"     Version="27.*" />
+	  <PackageReference Include="Syncfusion.Blazor.Inputs" Version="27.*" />
+	  <PackageReference Include="Syncfusion.Blazor.Buttons" Version="27.*" />
 	  <PackageReference Include="Syncfusion.Blazor.Navigations" Version="27.*" />
 	  <PackageReference Include="Syncfusion.Blazor.Grid" Version="27.*" />
+	  <PackageReference Include="Syncfusion.Blazor.Spinner" Version="27.2.5" />
+	  <PackageReference Include="Syncfusion.Blazor.SplitButtons" Version="27.2.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NPI.Shared\NPI.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\img\" />
+    <Folder Include="wwwroot\css\bootstrap\" />
   </ItemGroup>
 
 </Project>
