@@ -7,6 +7,7 @@ using NPI.Client.Providers;
 using NPI.Client.Services;
 using NPI.Client.ViewModels;
 using NPI.Client.ViewModels.Auth;
+using Syncfusion.Blazor;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -18,6 +19,9 @@ builder.Services.AddScoped(sp => new HttpClient
 {
     BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7200/")
 });
+
+builder.Services.AddSyncfusionBlazor();
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mzg0MjUyNUAzMjM5MmUzMDJlMzAzYjMyMzkzYkNySG5zVmRlTjlyZExQSzVQUXJHWjVKaWNlWmhSdTJPUUUrcnc0UlA0OVE9");
 
 // Services
 builder.Services.AddScoped<INpiService, NpiService>();

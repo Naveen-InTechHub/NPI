@@ -55,4 +55,8 @@ public class NpiRecordDto
     public List<NpiDocumentDto> Documents { get; set; } = new();
     public List<NpiNoteDto> Notes { get; set; } = new();
     public List<ChangeLogEntryDto> ChangeLog { get; set; } = new();
+
+    // Internal 
+    public bool? Selected { get; set; }
+
 }

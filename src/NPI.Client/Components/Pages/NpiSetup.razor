@@ -1,0 +1,793 @@
+@page "/npi-setup-figma"
+@using Microsoft.AspNetCore.Components
+
+<PageTitle>New Product Initiation - ANS</PageTitle>
+
+<style>
+    /* ── Google Font ── */
+    @@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .ans-root {
+        font-family: 'DM Sans', sans-serif;
+        background: #f0f2f7;
+        min-height: 100vh;
+        color: #1a1d2e;
+    }
+
+    /* ── NAV ── */
+    .ans-nav {
+        background: #1e3a8a;
+        display: flex;
+        align-items: center;
+        gap: 0;
+        padding: 0 24px;
+        height: 52px;
+        box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    }
+    .ans-nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: -.3px;
+        margin-right: 32px;
+        text-decoration: none;
+    }
+    .ans-nav-logo small {
+        font-size: 9px;
+        font-weight: 400;
+        line-height: 1.2;
+        opacity: .75;
+        letter-spacing: .3px;
+        text-transform: uppercase;
+        border-left: 1px solid rgba(255,255,255,.3);
+        padding-left: 10px;
+    }
+    .ans-nav-links {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+    }
+    .ans-nav-link {
+        color: rgba(255,255,255,.8);
+        font-size: 13.5px;
+        padding: 6px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background .15s, color .15s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+    }
+    .ans-nav-link:hover { background: rgba(255,255,255,.12); color: #fff; }
+    .ans-nav-link.active { background: rgba(255,255,255,.18); color: #fff; }
+    .ans-nav-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-left: auto;
+    }
+    .ans-search {
+        background: rgba(255,255,255,.12);
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: 8px;
+        padding: 5px 12px;
+        color: rgba(255,255,255,.7);
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 200px;
+        cursor: text;
+    }
+    .ans-search kbd {
+        background: rgba(255,255,255,.15);
+        border-radius: 4px;
+        padding: 1px 5px;
+        font-size: 11px;
+        margin-left: auto;
+    }
+    .ans-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg,#60a5fa,#3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    /* ── PAGE HEADER ── */
+    .ans-page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22px 28px 16px;
+    }
+    .ans-page-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #111827;
+    }
+    .ans-page-title span { color: #2563eb; }
+    .btn-cancel {
+        background: #fff;
+        border: 1.5px solid #d1d5db;
+        color: #374151;
+        font-size: 13.5px;
+        font-weight: 500;
+        padding: 7px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: border-color .15s, box-shadow .15s;
+    }
+    .btn-cancel:hover { border-color: #9ca3af; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+
+    /* ── REVIEW INFO CARD ── */
+    .ans-card {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        margin: 0 28px 18px;
+        padding: 18px 22px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    }
+    .review-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 40px;
+    }
+    .review-left, .review-right { }
+    .review-row {
+        display: flex;
+        gap: 8px;
+        font-size: 13px;
+        padding: 3px 0;
+        color: #374151;
+    }
+    .review-row-label { color: #6b7280; min-width: 100px; }
+    .review-row-value { font-weight: 500; }
+    .review-row-value.link { color: #2563eb; cursor: pointer; }
+
+    .formula-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 14px 18px;
+        background: #fafbff;
+    }
+    .formula-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .formula-title { font-weight: 600; font-size: 14px; color: #1e3a8a; }
+    .btn-edit {
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        border-radius: 7px;
+        padding: 5px 14px;
+        font-size: 12.5px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: background .15s;
+    }
+    .btn-edit:hover { background: #1d4ed8; }
+    .formula-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 6px 12px;
+    }
+    .formula-item label { font-size: 11.5px; color: #6b7280; display: block; margin-bottom: 1px; }
+    .formula-item span { font-size: 13px; font-weight: 500; color: #111827; }
+
+    /* ── STEPPER ── */
+    .ans-stepper {
+        display: flex;
+        margin: 0 28px 20px;
+        background: #e8edf8;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #dbe2f3;
+    }
+    .step {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 16px;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #6b7280;
+        cursor: pointer;
+        position: relative;
+        transition: background .2s, color .2s;
+    }
+    .step.active {
+        background: #2563eb;
+        color: #fff;
+        clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%);
+    }
+    .step:not(:first-child):not(.active) {
+        clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 16px 100%, 32px 50%);
+    }
+    .step .step-num {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(255,255,255,.3);
+        flex-shrink: 0;
+    }
+    .step.active .step-num { background: rgba(255,255,255,.35); color: #fff; }
+    .step:not(.active) .step-num { background: #cbd5e1; color: #475569; }
+
+    /* ── SECTION GRID ── */
+    .npi-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding: 0 28px 28px;
+    }
+    .npi-section {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        padding: 18px 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+    .npi-section.full { grid-column: 1 / -1; }
+    .npi-section-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2563eb;
+        margin-bottom: 3px;
+    }
+    .npi-section-desc {
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 16px;
+        line-height: 1.45;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .form-row { display: flex; gap: 14px; margin-bottom: 12px; }
+    .form-group { flex: 1; }
+    .form-group label {
+        display: block;
+        font-size: 12px;
+        color: #374151;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+    .form-control {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #374151;
+        background: #f9fafb;
+        font-family: inherit;
+        transition: border-color .15s, box-shadow .15s;
+        outline: none;
+    }
+    .form-control:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.1); background: #fff; }
+    .form-control::placeholder { color: #9ca3af; }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    /* ── TOGGLE ROWS ── */
+    .toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 0;
+        font-size: 13px;
+        color: #374151;
+        gap: 12px;
+    }
+    .toggle-row label { flex: 1; cursor: pointer; }
+
+    /* Toggle Switch */
+    .toggle-switch { position: relative; display: inline-flex; align-items: center; cursor: pointer; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-track {
+        width: 44px;
+        height: 24px;
+        background: #d1d5db;
+        border-radius: 12px;
+        position: relative;
+        transition: background .2s;
+        flex-shrink: 0;
+    }
+    .toggle-track::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 18px;
+        height: 18px;
+        background: #fff;
+        border-radius: 50%;
+        transition: transform .2s;
+        box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    }
+    .toggle-switch input:checked + .toggle-track { background: #22c55e; }
+    .toggle-switch input:checked + .toggle-track::after { transform: translateX(20px); }
+    .toggle-label {
+        position: absolute;
+        font-size: 10px;
+        font-weight: 700;
+        color: #fff;
+        pointer-events: none;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: left .2s, right .2s;
+    }
+    .toggle-switch input:checked ~ .toggle-label { left: 6px; }
+    .toggle-switch input:not(:checked) ~ .toggle-label { right: 5px; color: #6b7280; }
+
+    /* toggle-note label text inside track */
+    .toggle-track span {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 10px;
+        font-weight: 700;
+        pointer-events: none;
+        color: #fff;
+        transition: opacity .15s;
+    }
+    .toggle-yes { left: 6px; }
+    .toggle-no { right: 5px; color: #6b7280; }
+
+    .npi-section-header { margin-bottom: 12px; }
+
+    /* ── PILOT NOTES ── */
+    .pilot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .pilot-toggles { display: flex; flex-direction: column; gap: 6px; }
+
+    /* ── THREE COL ── */
+    .npi-grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+        padding: 0 28px 28px;
+        margin-top: -16px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @@media (max-width: 900px) {
+        .npi-grid, .npi-grid-3 { grid-template-columns: 1fr; }
+        .review-grid { grid-template-columns: 1fr; }
+        .formula-grid { grid-template-columns: repeat(3,1fr); }
+        .step .step-label { display: none; }
+    }
+</style>
+
+<div class="ans-root">
+
+    <!-- NAV -->
+    <nav class="ans-nav">
+        <a class="ans-nav-logo" href="#">
+            <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+                <path d="M16 3L29 26H3L16 3Z" fill="white" opacity=".9"/>
+            </svg>
+            <span>ans</span>
+            <small>ARIZONA<br/>NUTRITIONAL<br/>SUPPLEMENTS</small>
+        </a>
+        <div class="ans-nav-links">
+            <a class="ans-nav-link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> Home</a>
+            <a class="ans-nav-link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Project Tracker</a>
+            <a class="ans-nav-link active" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Quote Requests</a>
+            <a class="ans-nav-link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> Bids Won</a>
+        </div>
+        <div class="ans-nav-right">
+            <div class="ans-search">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                Search
+                <kbd>Ctrl K</kbd>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="2" style="cursor:pointer"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <div class="ans-avatar">CA</div>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <div class="ans-page-header">
+        <h1 class="ans-page-title">
+            New Product Initiation : <span>FGTEST - Daily EU 439EURL tablet</span>
+        </h1>
+        <button class="btn-cancel" @onclick="HandleCancel">Cancel</button>
+    </div>
+
+    <!-- REVIEW INFO -->
+    <div class="ans-card">
+        <div class="review-grid">
+            <div class="review-left">
+                <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#111827;">Review Information</h3>
+                <div class="review-row"><span class="review-row-label">Packout</span><span class="review-row-value link">PS.2 Daily EU 439EURL - 60 CT</span></div>
+                <div class="review-row"><span class="review-row-label">Quote Number</span><span class="review-row-value">6514.0</span></div>
+                <div class="review-row"><span class="review-row-label">Quote Desc</span><span class="review-row-value">Daily EU 439EURL tablet</span></div>
+                <div class="review-row"><span class="review-row-label">Prod Type</span><span class="review-row-value">Tablet</span></div>
+                <div class="review-row"><span class="review-row-label">Customer</span><span class="review-row-value">Aloe Vera of America 50415</span></div>
+                <div class="review-row"><span class="review-row-label">Sales Person</span><span class="review-row-value">Antonia Matthaeus, Candice Axtell</span></div>
+                <div class="review-row"><span class="review-row-label">Created By</span><span class="review-row-value">Candice A.</span></div>
+                <div class="review-row"><span class="review-row-label">Created On</span><span class="review-row-value">02-02-2025 11:20pm</span></div>
+            </div>
+            <div class="review-right">
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-title">Formula : FS.2 Daily EU 439EURL 200k</span>
+                        <button class="btn-edit" @onclick="HandleEditFormula">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            Edit
+                        </button>
+                    </div>
+                    <div class="formula-grid">
+                        <div class="formula-item"><label>Prod Type</label><span>Tablet</span></div>
+                        <div class="formula-item"><label>Total Units</label><span>2000000</span></div>
+                        <div class="formula-item"><label>Total Savings</label><span>600000</span></div>
+                        <div class="formula-item"><label>Pkg Type</label><span>Bottles</span></div>
+                        <div class="formula-item"><label>Savings Per unit</label><span>30.000</span></div>
+                        <div class="formula-item"><label>Formula Kg</label><span>8892.20</span></div>
+                        <div class="formula-item"><label>Order Quantity</label><span>2000000</span></div>
+                        <div class="formula-item"><label>Formula Size</label><span>12000.000</span></div>
+                        <div class="formula-item"><label>Bulk Density</label><span>0.8</span></div>
+                        <div class="formula-item"><label>No of Batches</label><span>2</span></div>
+                        <div class="formula-item"><label>Blunder</label><span>3000 Cuft Rotary</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEPPER -->
+    <div class="ans-stepper">
+        <div class="step active" @onclick='() => SetStep(1)'>
+            <span class="step-num">1</span>
+            <span class="step-label">NPI Setup</span>
+        </div>
+        <div class="step @(currentStep >= 2 ? "visited" : "")" @onclick='() => SetStep(2)'>
+            <span class="step-num">2</span>
+            <span class="step-label">FGSS Setup</span>
+        </div>
+        <div class="step" @onclick='() => SetStep(3)'>
+            <span class="step-num">3</span>
+            <span class="step-label">Testing Setup</span>
+        </div>
+        <div class="step" @onclick='() => SetStep(4)'>
+            <span class="step-num">4</span>
+            <span class="step-label">Packaging Setup</span>
+        </div>
+        <div class="step" @onclick='() => SetStep(5)'>
+            <span class="step-num">5</span>
+            <span class="step-label">Sampling Plan</span>
+        </div>
+    </div>
+
+    <div style="padding: 0 28px 8px; font-size:17px; font-weight:600; color:#111827;">NPI Setup</div>
+
+    <!-- ROW 1: 2 columns -->
+    <div class="npi-grid">
+        <!-- Bulk & Packout Configuration -->
+        <div class="npi-section">
+            <div class="npi-section-title">Bulk &amp; Packout Configuration</div>
+            <div class="npi-section-desc">Define how the product bulk and packout will be handled during production.</div>
+
+            <div class="toggle-row">
+                <label>Does this new product use an existing bulk?</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" @bind="useExistingBulk" />
+                    <span class="toggle-track">
+                        <span class="toggle-yes">Yes</span>
+                        <span class="toggle-no">No</span>
+                    </span>
+                </label>
+            </div>
+            <div class="toggle-row">
+                <label>Will this bulk be used for multiple packouts?</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" @bind="multiplePackouts" />
+                    <span class="toggle-track">
+                        <span class="toggle-yes">Yes</span>
+                        <span class="toggle-no">No</span>
+                    </span>
+                </label>
+            </div>
+            <div class="toggle-row" style="margin-bottom:12px;">
+                <label>Will this item be sold as a finished bulk product?</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" @bind="soldAsFinishedBulk" />
+                    <span class="toggle-track">
+                        <span class="toggle-yes">Yes</span>
+                        <span class="toggle-no">No</span>
+                    </span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>Multiple Packout Notes</label>
+                <textarea class="form-control" placeholder="Write..." @bind="multiplePackoutNotes"></textarea>
+            </div>
+        </div>
+
+        <!-- Item Identification -->
+        <div class="npi-section">
+            <div class="npi-section-title">Item Identification</div>
+            <div class="npi-section-desc">Product and internal item codes used for tracking and production.</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Item Description</label>
+                    <input class="form-control" type="text" placeholder="Enter" @bind="itemDescription" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Bulk Item Code</label>
+                    <input class="form-control" type="text" placeholder="Enter" @bind="bulkItemCode" />
+                </div>
+                <div class="form-group">
+                    <label>Finished Goods (FG) Item Code</label>
+                    <input class="form-control" type="text" placeholder="Enter" @bind="fgItemCode" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Commercial & Pricing Details -->
+        <div class="npi-section">
+            <div class="npi-section-title">Commercial &amp; Pricing Details</div>
+            <div class="npi-section-desc">Commercial assumptions used for planning and forecasting.</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Theoretical Unit Sales Price</label>
+                    <input class="form-control" type="text" placeholder="Enter" @bind="unitSalesPrice" />
+                </div>
+                <div class="form-group">
+                    <label>Theoretical Standard Order Quantity</label>
+                    <input class="form-control" type="text" placeholder="Enter" @bind="standardOrderQty" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Quoted Lead Time (Business Days)</label>
+                    <input class="form-control" type="text" placeholder="Enter" @bind="quotedLeadTime" />
+                </div>
+                <div class="form-group">
+                    <label>Estimated Purchase Order Value</label>
+                    <input class="form-control" type="text" placeholder="Enter" @bind="estimatedPOValue" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Pilot & Production Requirements -->
+        <div class="npi-section">
+            <div class="npi-section-title">Pilot &amp; Production Requirements</div>
+            <div class="npi-section-desc">Select pilot and production activities required before full-scale manufacturing.</div>
+
+            <div class="pilot-grid">
+                <div class="pilot-toggles">
+                    <div class="toggle-row">
+                        <label>Bench-Top Pilot Required</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" @bind="benchTopPilot" />
+                            <span class="toggle-track">
+                                <span class="toggle-yes">Yes</span>
+                                <span class="toggle-no">No</span>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="toggle-row">
+                        <label>Non-GMP Production Pilot Required</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" @bind="nonGmpPilot" />
+                            <span class="toggle-track">
+                                <span class="toggle-yes">Yes</span>
+                                <span class="toggle-no">No</span>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="toggle-row">
+                        <label>GMP Production Pilot Required</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" @bind="gmpPilot" />
+                            <span class="toggle-track">
+                                <span class="toggle-yes">Yes</span>
+                                <span class="toggle-no">No</span>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="toggle-row">
+                        <label>Fill Study Required</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" @bind="fillStudy" />
+                            <span class="toggle-track">
+                                <span class="toggle-yes">Yes</span>
+                                <span class="toggle-no">No</span>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="toggle-row">
+                        <label>Stability or Approval Samples Required</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" @bind="stabilitySamples" />
+                            <span class="toggle-track">
+                                <span class="toggle-yes">Yes</span>
+                                <span class="toggle-no">No</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Pilot Notes (optional)</label>
+                    <textarea class="form-control" placeholder="Enter" style="min-height:130px;" @bind="pilotNotes"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ROW 2: 3 columns -->
+    <div class="npi-grid-3">
+        <!-- Formula & Raw Material Assessment -->
+        <div class="npi-section">
+            <div class="npi-section-title">Formula &amp; Raw Material Assessment</div>
+            <div class="npi-section-desc">Identify changes or risks related to formula and raw materials.</div>
+
+            <div class="toggle-row">
+                <label>Does the formula include new raw materials?</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" @bind="newRawMaterials" />
+                    <span class="toggle-track">
+                        <span class="toggle-yes">Yes</span>
+                        <span class="toggle-no">No</span>
+                    </span>
+                </label>
+            </div>
+            <div class="toggle-row">
+                <label>Are any raw materials customer-supplied?</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" @bind="customerSuppliedMaterials" />
+                    <span class="toggle-track">
+                        <span class="toggle-yes">Yes</span>
+                        <span class="toggle-no">No</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Packaging & Component Assessment -->
+        <div class="npi-section">
+            <div class="npi-section-title">Packaging &amp; Component Assessment</div>
+            <div class="npi-section-desc">Review packaging components and sourcing details.</div>
+
+            <div class="toggle-row">
+                <label>Does the packout include new components (excluding label)?</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" @bind="newComponents" />
+                    <span class="toggle-track">
+                        <span class="toggle-yes">Yes</span>
+                        <span class="toggle-no">No</span>
+                    </span>
+                </label>
+            </div>
+            <div class="toggle-row">
+                <label>Are packaging components customer-supplied?</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" @bind="customerSuppliedPackaging" />
+                    <span class="toggle-track">
+                        <span class="toggle-yes">Yes</span>
+                        <span class="toggle-no">No</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Artwork & Regulatory Review -->
+        <div class="npi-section">
+            <div class="npi-section-title">Artwork &amp; Regulatory Review</div>
+            <div class="npi-section-desc">Confirm artwork and regulatory requirements.</div>
+
+            <div class="toggle-row">
+                <label>Does the packout require new or updated artwork?</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" @bind="newArtwork" />
+                    <span class="toggle-track">
+                        <span class="toggle-yes">Yes</span>
+                        <span class="toggle-no">No</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER ACTIONS -->
+    <div style="display:flex;justify-content:flex-end;gap:12px;padding:0 28px 32px;">
+        <button class="btn-cancel" @onclick="HandleCancel">Cancel</button>
+        <button style="background:#2563eb;color:#fff;border:none;border-radius:8px;padding:9px 28px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;"
+                @onclick="HandleSaveAndNext">
+            Save &amp; Next →
+        </button>
+    </div>
+
+</div>
+
+@code {
+    private int currentStep = 1;
+
+    // Bulk & Packout
+    private bool useExistingBulk = true;
+    private bool multiplePackouts = false;
+    private bool soldAsFinishedBulk = true;
+    private string multiplePackoutNotes = "";
+
+    // Item Identification
+    private string itemDescription = "";
+    private string bulkItemCode = "";
+    private string fgItemCode = "";
+
+    // Commercial & Pricing
+    private string unitSalesPrice = "";
+    private string standardOrderQty = "";
+    private string quotedLeadTime = "";
+    private string estimatedPOValue = "";
+
+    // Pilot & Production
+    private bool benchTopPilot = true;
+    private bool nonGmpPilot = false;
+    private bool gmpPilot = true;
+    private bool fillStudy = true;
+    private bool stabilitySamples = true;
+    private string pilotNotes = "";
+
+    // Assessment
+    private bool newRawMaterials = true;
+    private bool customerSuppliedMaterials = true;
+    private bool newComponents = true;
+    private bool customerSuppliedPackaging = true;
+    private bool newArtwork = true;
+
+    private void SetStep(int step) => currentStep = step;
+
+    private void HandleCancel()
+    {
+        // Navigate back or show confirmation dialog
+        // NavigationManager.NavigateTo("/quote-requests");
+    }
+
+    private void HandleEditFormula()
+    {
+        // Open formula edit modal or navigate to edit page
+    }
+
+    private void HandleSaveAndNext()
+    {
+        if (currentStep < 5)
+            currentStep++;
+        // Also save form data here
+    }
+}
