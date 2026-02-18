@@ -74,6 +74,11 @@ body {
 /*===============================
     Login Page
 =================================*/
+.ans-validation-error-msg {
+    color: red !important;
+    font-size: 13px !important;
+    margin: 3px 0px;
+}
 .ans-login-container {
     display: flex;
     height: 100vh;

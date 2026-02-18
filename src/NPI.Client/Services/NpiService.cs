@@ -43,6 +43,8 @@ public interface INpiService
 
     // Change Log
     Task<List<ChangeLogEntryDto>> GetChangeLogAsync(int npiId);
+    // Export
+    Task<byte[]?> ExportAsync(string? search = null, NpiStatus? status = null);
 }
 
 // ══════════════════════════════════════════════════════
@@ -144,4 +146,17 @@ public class NpiService : INpiService
     // ── Change Log ──
     public async Task<List<ChangeLogEntryDto>> GetChangeLogAsync(int npiId)
         => await GetAsync<List<ChangeLogEntryDto>>($"api/npirecords/{npiId}/changelog") ?? new();
+
+    public async Task<byte[]?> ExportAsync(string? search = null, NpiStatus? status = null)
+    {
+        var url = $"api/npirecords/export?search={search}&status={(int?)status}";
+
+        var response = await _http.GetAsync(url);
+
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        return await response.Content.ReadAsByteArrayAsync();
+    }
+
 }

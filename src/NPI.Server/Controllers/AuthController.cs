@@ -24,7 +24,7 @@ namespace NPI.Server.Controllers
             try
             {
                 var user = _db.Users
-                    .FirstOrDefault(u => u.UserName == request.Username && u.Password == request.Password);
+                    .FirstOrDefault(u => u.Email == request.UserEmail && u.Password == request.Password);
 
                 if (user == null)
                     return Unauthorized(new ApiResponse<LoginResponse> { Success = false, Message = "Invalid username or password." });
@@ -51,7 +51,7 @@ namespace NPI.Server.Controllers
 
     public class LoginRequest
     {
-        public string Username { get; set; } = string.Empty;
+        public string UserEmail { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
     }
 

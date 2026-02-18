@@ -371,7 +371,7 @@
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
                     Filters
                 </button>
-                <button class="btn btn-filled" @onclick="HandleExport">
+                <button class="btn btn-filled" @onclick="VM.ExportFile">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     Export
                 </button>
@@ -442,10 +442,10 @@
                                 <td class="td-muted">@row.ItemCode</td>
                                 <td class="td-muted">@row.FGCode</td>
                                 <td class="td-muted">@row.BulkCode</td>
-                                <td> @(string.IsNullOrEmpty(row.CreatedBy) ? "John.K" : row.CreatedBy) </td>
+                                <td> @(string.IsNullOrEmpty(row.CreatedBy) ? "Mike T." : row.CreatedBy) </td>
                                 <td class="td-muted">@row.CreatedDate</td>
                                 <td>
-                                    <span class="status-badge @StatusClass(row.Status)">@row.Status</span>
+                                    <span class="status-badge @StatusClass(row.Status)">@GetStatusText(row.Status)</span>
                                 </td>
                                 <td class="td-muted td-wrap">@row.PackoutDescription</td>
                                 <td class="td-muted td-wrap">@row.ProductDescription</td>
@@ -549,6 +549,12 @@
         NpiStatus.Draft => "badge-draft",
         _             => "badge-draft"
     };
+    private string GetStatusText(NpiStatus status) => status switch
+    {
+        NpiStatus.InProgress => "In Progress",
+        NpiStatus.PlannerLaunched => "Planner Launched",
+        _ => status.ToString()
+    };
 
     // ── Actions ─────────────────────────────────────────────
     private void OpenFilters()   { /* Open filter panel / modal */ }
@@ -577,5 +583,6 @@
     {
         if (e.Key == "Enter") await VM.SearchAsync();
     }
+
 
 }

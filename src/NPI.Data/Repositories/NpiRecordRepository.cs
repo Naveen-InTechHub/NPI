@@ -1,8 +1,12 @@
 using System.Linq.Expressions;
+using System.Security.AccessControl;
+using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
 using NPI.Data.Context;
 using NPI.Data.Entities;
 using NPI.Shared.Enums;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace NPI.Data.Repositories;
 
@@ -16,6 +20,7 @@ public interface INpiRecordRepository : IRepository<NpiRecord>
     Task<NpiRecord?> GetRecordWithDocsAsync(int id);
     Task<IReadOnlyList<NpiRecord>> GetByStatusAsync(NpiStatus status);
     Task<IReadOnlyList<NpiRecord>> SearchAsync(string? searchTerm, NpiStatus? status, int page, int pageSize);
+    Task<byte[]> ExportAsync(string? searchTerm, NpiStatus? status);
     Task<decimal> GetTotalLaborCostAsync(int npiRecordId, LaborCategory category);
     Task<int> RemoveDuplicatesByItemCodeAsync(string itemCode);
     Task<int> RemoveAllDuplicatesAsync();
@@ -168,6 +173,110 @@ public class NpiRecordRepository : Repository<NpiRecord>, INpiRecordRepository
         _context.NpiRecords.RemoveRange(toDelete);
 
         return toDelete.Count;
+    }
+    public async Task<byte[]> ExportAsync(string? searchTerm, NpiStatus? status)
+    {
+        var query = _dbSet.AsNoTracking().AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            var term = searchTerm.ToLower();
+
+            query = query.Where(r =>
+                r.ItemCode.ToLower().Contains(term) ||
+                r.ProductDescription.ToLower().Contains(term) ||
+                (r.QuoteNumber != null && r.QuoteNumber.ToLower().Contains(term)) ||
+                (r.CustomerName != null && r.CustomerName.ToLower().Contains(term)) ||
+                (r.BulkCode != null && r.BulkCode.ToLower().Contains(term)) ||
+                (r.FGCode != null && r.FGCode.ToLower().Contains(term)));
+        }
+
+        if (status.HasValue)
+            query = query.Where(r => r.Status == status.Value);
+
+        var result = await query.ToListAsync();
+
+        if (!result.Any())
+            throw new Exception("No data to export.");
+
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.Worksheets.Add("Bids Won");
+
+        // =========================
+        // HEADER
+        // =========================
+
+        worksheet.Cell(1, 1).Value = "Customer Name";
+        worksheet.Cell(1, 2).Value = "Item Code";
+        worksheet.Cell(1, 3).Value = "FG Code";
+        worksheet.Cell(1, 4).Value = "Bulk Code";
+        worksheet.Cell(1, 5).Value = "Created By";
+        worksheet.Cell(1, 6).Value = "Created Date";
+        worksheet.Cell(1, 7).Value = "Status";
+        worksheet.Cell(1, 8).Value = "Packout Description";
+        worksheet.Cell(1, 9).Value = "Product Description";
+
+        var headerRange = worksheet.Range(1, 1, 1, 9);
+
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#1F4E78");
+        headerRange.Style.Font.FontColor = XLColor.White;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        worksheet.Row(1).Height = 25;
+
+        // Freeze Header
+        worksheet.SheetView.FreezeRows(1);
+
+        // =========================
+        // DATA
+        // =========================
+
+        int row = 2;
+
+        foreach (var item in result)
+        {
+            worksheet.Cell(row, 1).Value = item.CustomerName;
+            worksheet.Cell(row, 2).Value = item.ItemCode;
+            worksheet.Cell(row, 3).Value = item.FGCode;
+            worksheet.Cell(row, 4).Value = item.BulkCode;
+            worksheet.Cell(row, 5).Value = item.CreatedBy;
+
+            worksheet.Cell(row, 6).Value = item.CreatedDate;
+            worksheet.Cell(row, 6).Style.DateFormat.Format = "dd-MMM-yyyy hh:mm AM/PM";
+
+            worksheet.Cell(row, 7).Value = item.Status.ToString();
+            worksheet.Cell(row, 8).Value = item.PackoutDescription;
+            worksheet.Cell(row, 9).Value = item.ProductDescription;
+
+            row++;
+        }
+
+        // =========================
+        // TABLE BORDERS
+        // =========================
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 9);
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+        // =========================
+        // COLUMN WIDTHS
+        // =========================
+
+        worksheet.Columns(1, 5).AdjustToContents();
+        worksheet.Column(6).Width = 22; // Date column fixed width
+        worksheet.Columns(7, 9).AdjustToContents();
+
+        // =========================
+        // SAVE
+        // =========================
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+
+        return stream.ToArray();
     }
 
 }

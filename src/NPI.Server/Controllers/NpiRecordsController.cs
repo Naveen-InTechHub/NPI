@@ -51,6 +51,30 @@ public class NpiRecordsController : ControllerBase
             return BadRequest(new ApiResponse<List<NpiRecordDto>> { Success = false, Message = ex.Message });
         }
     }
+    [HttpGet("export")]
+    public async Task<IActionResult> Export(
+     [FromQuery] string? search,
+     [FromQuery] int? status)
+    {
+        try
+        {
+            NpiStatus? statusEnum = status.HasValue
+                ? (NpiStatus)status.Value
+                : null;
+
+            var fileBytes = await _uow.NpiRecords.ExportAsync(search, statusEnum);
+
+            return File(
+                fileBytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "BidsWon.xlsx");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
 
     // ── GET by ID ──
     [HttpGet("{id}")]

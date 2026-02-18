@@ -23,6 +23,12 @@ namespace NPI.Client.ViewModels.Auth
             set => SetProperty(ref _userRole, value);
         }
 
+        private bool _isSubmiting;
+        public bool IsSubmiting
+        {
+            get => _isSubmiting;
+            set => SetProperty(ref _isSubmiting, value);
+        }
         public LoginViewModel(IAuthService service, NavigationManager navigationManager)
         {
             _authService = service;
