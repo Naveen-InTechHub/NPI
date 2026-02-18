@@ -20,6 +20,7 @@
 body {
     margin: 0;
     font-family: "Figtree", sans-serif !important;
+    background-color: #f8f8f8;
 }
 /*================================
     COMMAN STYLE
@@ -71,6 +72,38 @@ body {
     font-style: normal;
     line-height: normal;
 }
+.ans-filter-btn {
+    border-radius: 12px;
+    border: 1px solid rgba(9, 22, 51, 0.50);
+    background: #FFF;
+    box-shadow: 0 0 17px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    height: 38px;
+    padding: 8px 16px;
+    align-items: center;
+    gap: 6px;
+    color: rgba(9, 22, 51, 0.70);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+.ans-export-btn {
+    border-radius: 12px;
+    background: var(--primary-color);
+    box-shadow: 0 0 17px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    height: 38px;
+    padding: 8px 16px;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    border: none;
+}
 /*===============================
     Login Page
 =================================*/
@@ -115,4 +148,76 @@ body {
     font-weight: 400;
     line-height: normal;
     text-align: center;
+}
+
+/*===================
+    Header    
+====================*/
+.nav-search {
+    display: inline-flex;
+    background: #FFFFFF1A !important;
+/*    border: 1px solid rgba(255,255,255,.18) !important;*/
+    width: 250px !important;
+    height: 38px;
+    align-items: center;
+    border-radius: 12px;
+}
+.nav-search img
+{
+    width: 20px;
+    position: relative;
+    left: 8px;
+}
+.nav-search .e-input-group input.e-input {
+    background: transparent !important;
+    padding: 5px 12px !important;
+    color: rgba(255,255,255,.6);
+    font-size: 13px;
+    color: #FFF;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    position: relative;
+}
+.nav-search .e-input-group {
+    background: transparent !important;
+    border: none !important;
+    padding: 0px 6px !important;
+    box-shadow: none !important;
+}
+/* Placeholder color */
+.nav-search .e-input-group input.e-input::placeholder {
+    color: #ffffff !important;
+    opacity: 1; /* Important for some browsers */
+}
+
+/* For Edge / old browser support (optional but safe) */
+.nav-search .e-input-group input.e-input::-ms-input-placeholder {
+    color: #ffffff !important;
+}
+
+.nav-search .e-input-group input.e-input::-webkit-input-placeholder {
+    color: #ffffff !important;
+}
+/*===================
+    Page Layout    
+====================*/
+.ans-page {
+    margin: 0 auto;
+    padding: 28px 28px 30px;
+    background-color: #f8f8f8;
+}
+/*===============
+    Footer
+ =============*/
+.ans-footer-content {
+    color: rgba(0, 0, 0, 0.50);
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    bottom: 10px;
+    text-align: center;
+    margin: 10px 20px;
 }
