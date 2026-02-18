@@ -44,7 +44,7 @@
         text-transform: capitalize;
     }
     table.ans-table thead th.sortable { cursor: pointer; }
-    table.ans-table thead th.sortable:hover { color: var(--ans-accent); }
+    table.ans-table thead th.sortable:hover { color: var(--primary-color); }
     table.ans-table thead th.th-check { width: 44px; padding-left: 22px; }
     table.ans-table thead th.th-action { width: 64px; text-align: center; }
 
@@ -86,7 +86,8 @@
         position: relative; background: white;
     }
     .cb-input:checked {
-        background: var(--ans-accent); border-color: var(--ans-accent);
+        background: var(--primary-color); 
+        border-color: var(--primary-color);
     }
     .cb-input:checked::after {
         content: '';
@@ -95,7 +96,7 @@
         border: 2px solid white; border-top: none; border-left: none;
         transform: rotate(45deg);
     }
-    .cb-input:hover:not(:checked) { border-color: var(--ans-accent); }
+    .cb-input:hover:not(:checked) { border-color: var(--primary-color); }
 
     /* ── Status Badges ── */
     .status-badge {
@@ -118,7 +119,7 @@
         transition: all .15s;
     }
     .action-btn:hover {
-        border-color: var(--ans-accent); color: var(--ans-accent);
+        border-color: var(--primary-color); color: var(--primary-color);
         background: #eff6ff;
     }
 
@@ -143,7 +144,7 @@
         cursor: pointer; display: flex; align-items: center; justify-content: center;
         transition: all .15s;
     }
-    .pg-btn:hover:not(:disabled) { border-color: var(--ans-accent); color: var(--ans-accent); background: #eff6ff; }
+    .pg-btn:hover:not(:disabled) { border-color: var(--primary-color); color: var(--primary-color); background: #eff6ff; }
     .pg-btn.active {
         background: var(--primary-color); color: white;
         border-color: var(--primary-color); font-weight: 700;

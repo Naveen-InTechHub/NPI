@@ -241,7 +241,7 @@ public class NpiRecordRepository : Repository<NpiRecord>, INpiRecordRepository
             worksheet.Cell(row, 2).Value = item.ItemCode;
             worksheet.Cell(row, 3).Value = item.FGCode;
             worksheet.Cell(row, 4).Value = item.BulkCode;
-            worksheet.Cell(row, 5).Value = item.CreatedBy;
+            worksheet.Cell(row, 5).Value = string.IsNullOrEmpty(item.CreatedBy)?"User" : item.CreatedBy;
 
             worksheet.Cell(row, 6).Value = item.CreatedDate;
             worksheet.Cell(row, 6).Style.DateFormat.Format = "dd-MMM-yyyy hh:mm AM/PM";

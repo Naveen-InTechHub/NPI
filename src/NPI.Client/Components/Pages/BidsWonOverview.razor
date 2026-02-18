@@ -9,143 +9,140 @@
 
 <PageTitle>Bids Won Overview - ANS</PageTitle>
 
-    <Header />
-    <div class="ans-page">
-        <!-- ════ PAGE HEADER ════ -->
-        <div class="page-header">
-            <div>
-                <div class="page-title">Bids Won Overview</div>
-                <div class="page-subtitle">Real-time insights into employee productivity, work patterns, and performance trends.</div>
-            </div>
-            <div class="header-actions">
-                <button class="ans-filter-btn" @onclick="OpenFilters">
-                <img src="assets/img/icon/filter.svg" />
-                    Filters
-                </button>
-                <button class="ans-export-btn" @onclick="HandleExport">
-                <img src="assets/img/icon/export.svg" />
-                    Export
-                </button>
-            </div>
+<Header />
+<div class="ans-page">
+    <!-- ════ PAGE HEADER ════ -->
+    <div class="page-header">
+        <div>
+            <div class="page-title">Bids Won Overview</div>
+            <div class="page-subtitle">Real-time insights into employee productivity, work patterns, and performance trends.</div>
         </div>
+        <div class="header-actions">
+            <button class="ans-filter-btn">
+                <img src="assets/img/icon/filter.svg" />
+                Filters
+            </button>
+            <button class="ans-export-btn" @onclick="VM.ExportFile">
+                <img src="assets/img/icon/export.svg" />
+                Export
+            </button>
+        </div>
+    </div>
 
-        <!-- ════ GRID CARD ════ -->
-        <div class="grid-card">
-            <div class="ans-table-wrap">
-                <table class="ans-table">
-                    <thead>
-                        <tr>
-                            <th class="th-check">
+    <!-- ════ GRID CARD ════ -->
+    <div class="grid-card">
+        <div class="ans-table-wrap">
+            <table class="ans-table">
+                <thead>
+                    <tr>
+                        <th class="th-check">
+                            <div class="cb-wrap">
+                                <input type="checkbox" class="cb-input" @onchange="() => VM.ToggleSelectAll(AllSelected)"
+                                       checked="@AllSelected" />
+                              
+                            </div>
+                        </th>
+                        <th class="sortable @(SortCol=="CustomerName" ? (SortAsc?"sort-asc":"sort-desc") : "")"
+                            @onclick='() => SortBy("CustomerName")'>
+                            Customer Name
+                            <span class="sort-icon">
+                                <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 0L8 5H0L4 0Z" fill="@(SortCol=="CustomerName"&&SortAsc?"#2563eb":"#94a3b8")" /></svg>
+                                <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 5L0 0H8L4 5Z" fill="@(SortCol=="CustomerName"&&!SortAsc?"#2563eb":"#94a3b8")" /></svg>
+                            </span>
+                        </th>
+                        <th class="sortable @(SortCol=="ItemCode" ? (SortAsc?"sort-asc":"sort-desc") : "")"
+                            @onclick='() => SortBy("ItemCode")'>
+                            Item Code
+                            <span class="sort-icon">
+                                <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 0L8 5H0L4 0Z" fill="@(SortCol=="ItemCode"&&SortAsc?"#2563eb":"#94a3b8")" /></svg>
+                                <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 5L0 0H8L4 5Z" fill="@(SortCol=="ItemCode"&&!SortAsc?"#2563eb":"#94a3b8")" /></svg>
+                            </span>
+                        </th>
+                        <th>FG Item Code</th>
+                        <th>Bulk Item Code</th>
+                        <th class="sortable @(SortCol=="CreatedBy" ? (SortAsc?"sort-asc":"sort-desc") : "")"
+                            @onclick='() => SortBy("CreatedBy")'>
+                            Created By
+                            <span class="sort-icon">
+                                <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 0L8 5H0L4 0Z" fill="@(SortCol=="CreatedBy"&&SortAsc?"#2563eb":"#94a3b8")" /></svg>
+                                <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 5L0 0H8L4 5Z" fill="@(SortCol=="CreatedBy"&&!SortAsc?"#2563eb":"#94a3b8")" /></svg>
+                            </span>
+                        </th>
+                        <th>Created On</th>
+                        <th class="text-center">Status</th>
+                        <th>Packout Description</th>
+                        <th>Quote Description</th>
+                        <th class="th-action">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in PagedRows)
+                    {
+                        <tr style="border:none" class="@(row.Selected ?? false ? "row-selected" : "")">
+                            <td class="td-check">
                                 <div class="cb-wrap">
                                     <input type="checkbox" class="cb-input"
-                                           checked="@AllSelected"
-                                           />
-                             @*        <input type="checkbox" class="cb-input"
-                                           checked="@AllSelected"
-                                           @onchange="ToggleSelectAll" /> *@
+                                           checked="@row.Selected"
+                                           @onchange="() => VM.ToggleRow(row)" />
                                 </div>
-                            </th>
-                            <th class="sortable @(SortCol=="CustomerName" ? (SortAsc?"sort-asc":"sort-desc") : "")"
-                                @onclick='() => SortBy("CustomerName")'>
-                                Customer Name
-                                <span class="sort-icon">
-                                    <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 0L8 5H0L4 0Z" fill="@(SortCol=="CustomerName"&&SortAsc?"#2563eb":"#94a3b8")"/></svg>
-                                    <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 5L0 0H8L4 5Z" fill="@(SortCol=="CustomerName"&&!SortAsc?"#2563eb":"#94a3b8")"/></svg>
-                                </span>
-                            </th>
-                            <th class="sortable @(SortCol=="ItemCode" ? (SortAsc?"sort-asc":"sort-desc") : "")"
-                                @onclick='() => SortBy("ItemCode")'>
-                                Item Code
-                                <span class="sort-icon">
-                                    <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 0L8 5H0L4 0Z" fill="@(SortCol=="ItemCode"&&SortAsc?"#2563eb":"#94a3b8")"/></svg>
-                                    <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 5L0 0H8L4 5Z" fill="@(SortCol=="ItemCode"&&!SortAsc?"#2563eb":"#94a3b8")"/></svg>
-                                </span>
-                            </th>
-                            <th>FG Item Code</th>
-                            <th>Bulk Item Code</th>
-                            <th class="sortable @(SortCol=="CreatedBy" ? (SortAsc?"sort-asc":"sort-desc") : "")"
-                                @onclick='() => SortBy("CreatedBy")'>
-                                Created By
-                                <span class="sort-icon">
-                                    <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 0L8 5H0L4 0Z" fill="@(SortCol=="CreatedBy"&&SortAsc?"#2563eb":"#94a3b8")"/></svg>
-                                    <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 5L0 0H8L4 5Z" fill="@(SortCol=="CreatedBy"&&!SortAsc?"#2563eb":"#94a3b8")"/></svg>
-                                </span>
-                            </th>
-                            <th>Created On</th>
-                            <th class="text-center">Status</th>
-                            <th>Packout Description</th>
-                            <th>Quote Description</th>
-                            <th class="th-action">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var row in PagedRows)
-                        {
-                            <tr style="border:none" class="@(row.Selected ?? false ? "row-selected" : "")">
-                                <td class="td-check">
-                                    <div class="cb-wrap">
-                                        <input type="checkbox" class="cb-input"
-                                               checked="@row.Selected"
-                                               @onchange="() => ToggleRow(row)" />
-                                    </div>
-                                </td>
-                                <td>@row.CustomerName</td>
-                                <td class="td-muted">@row.ItemCode</td>
-                                <td class="td-muted">@row.FGCode</td>
-                                <td class="td-muted">@row.BulkCode</td>
-                                <td> @(string.IsNullOrEmpty(row.CreatedBy) ? "Mike T." : row.CreatedBy) </td>
-                                <td class="td-muted">@row.CreatedDate</td>
-                                <td>
-                                    <div class="text-center">
-                                    <span class="status-badge @StatusClass(row.Status)">@row.Status</span>
-                                    </div>
-                                </td>
-                                <td class="td-muted td-wrap">@row.PackoutDescription</td>
-                                <td class="td-muted td-wrap">@row.ProductDescription</td>
-                                <td class="td-action">
-                                    <button class="action-btn" title="Mark as done" @onclick="() => HandleAction(row)">
+                            </td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)">@row.CustomerName</td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.ItemCode</td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.FGCode</td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.BulkCode</td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)"> @(string.IsNullOrEmpty(row.CreatedBy) ? "User" : row.CreatedBy) </td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.CreatedDate</td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)">
+                                <div class="text-center">
+                                    <span class="status-badge @VM.StatusClass(row.Status)">@VM.GetStatusText(row.Status)</span>
+                                </div>
+                            </td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted td-wrap">@row.PackoutDescription</td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted td-wrap">@row.ProductDescription</td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-action">
+                                <button class="action-btn" title="Mark as done" @onclick="() => VM.NavigateToNPISetup(row.Id)">
                                     <img src="assets/img/icon/tick.svg" />
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-            <!-- ── Pagination Footer ── -->
-            <div class="table-footer mt-3">
-                <div class="table-footer-info">
-                    Showing <strong>@PageSize</strong> of <strong>@TotalRows</strong> results
-                </div>
-                <div class="pagination">
-                    <button class="pg-btn pg-arrow" @onclick="PrevPage" disabled="@(CurrentPage == 1)">
+        <!-- ── Pagination Footer ── -->
+        <div class="table-footer mt-3">
+            <div class="table-footer-info">
+                Showing <strong>@PageSize</strong> of <strong>@TotalRows</strong> results
+            </div>
+            <div class="pagination">
+                <button class="pg-btn pg-arrow" @onclick="PrevPage" disabled="@(CurrentPage == 1)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M6.86333 2.85603C6.92567 2.79453 6.9995 2.7459 7.08063 2.71294C7.16176 2.67997 7.24858 2.66331 7.33614 2.66389C7.42371 2.66448 7.5103 2.68231 7.59098 2.71637C7.67165 2.75042 7.74483 2.80003 7.80633 2.86236C7.86784 2.9247 7.91646 2.99853 7.94942 3.07966C7.98239 3.16078 7.99906 3.24761 7.99847 3.33517C7.99788 3.42274 7.98005 3.50933 7.946 3.59001C7.91194 3.67068 7.86233 3.74386 7.8 3.80536L4.22 7.33336H13.3333C13.5101 7.33336 13.6797 7.4036 13.8047 7.52863C13.9298 7.65365 14 7.82322 14 8.00003C14 8.17684 13.9298 8.34641 13.8047 8.47143C13.6797 8.59646 13.5101 8.6667 13.3333 8.6667H4.22333L7.8 12.19C7.9196 12.3154 7.9857 12.4824 7.98431 12.6556C7.98292 12.8288 7.91415 12.9947 7.79256 13.1181C7.67097 13.2415 7.50611 13.3128 7.33291 13.3167C7.15971 13.3207 6.99177 13.2571 6.86467 13.1394L2.248 8.59136C2.16939 8.51384 2.10697 8.42146 2.06436 8.3196C2.02176 8.21775 1.99981 8.10844 1.99981 7.99803C1.99981 7.88762 2.02176 7.77831 2.06436 7.67646C2.10697 7.5746 2.16939 7.48222 2.248 7.4047L6.86333 2.85603Z" fill="#2563EB" />
                     </svg>
-                    </button>
-                    @for (int p = 1; p <= TotalPages; p++)
-                    {
-                        var pg = p;
-                        <button class="pg-btn @(pg == CurrentPage ? "active" : "")" @onclick="() => GoToPage(pg)">@pg</button>
-                    }
-                    <button class="pg-btn pg-arrow" @onclick="NextPage" disabled="@(CurrentPage == TotalPages)">
+                </button>
+                @for (int p = 1; p <= TotalPages; p++)
+                {
+                    var pg = p;
+                    <button class="pg-btn @(pg == CurrentPage ? "active" : "")" @onclick="() => GoToPage(pg)">@pg</button>
+                }
+                <button class="pg-btn pg-arrow" @onclick="NextPage" disabled="@(CurrentPage == TotalPages)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M9.13667 2.85603C9.07433 2.79453 9.0005 2.7459 8.91937 2.71294C8.83824 2.67997 8.75142 2.66331 8.66386 2.66389C8.57629 2.66448 8.4897 2.68231 8.40902 2.71637C8.32835 2.75042 8.25517 2.80003 8.19367 2.86236C8.13216 2.9247 8.08354 2.99853 8.05058 3.07966C8.01761 3.16078 8.00094 3.24761 8.00153 3.33517C8.00212 3.42274 8.01995 3.50933 8.054 3.59001C8.08806 3.67068 8.13767 3.74386 8.2 3.80536L11.78 7.33336H2.66667C2.48986 7.33336 2.32029 7.4036 2.19526 7.52863C2.07024 7.65365 2 7.82322 2 8.00003C2 8.17684 2.07024 8.34641 2.19526 8.47143C2.32029 8.59646 2.48986 8.6667 2.66667 8.6667H11.7767L8.2 12.19C8.0804 12.3154 8.0143 12.4824 8.01569 12.6556C8.01708 12.8288 8.08585 12.9947 8.20744 13.1181C8.32903 13.2415 8.49389 13.3128 8.66709 13.3167C8.84029 13.3207 9.00823 13.2571 9.13533 13.1394L13.752 8.59136C13.8306 8.51384 13.893 8.42146 13.9356 8.3196C13.9782 8.21775 14.0002 8.10844 14.0002 7.99803C14.0002 7.88762 13.9782 7.77831 13.9356 7.67646C13.893 7.5746 13.8306 7.48222 13.752 7.4047L9.13667 2.85603Z" fill="#2563EB" />
                     </svg>
-                    </button>
-                </div>
+                </button>
             </div>
         </div>
     </div>
-    <Footer/>
+</div>
+<Footer />
 
 @code {
 
 
     // ── Sorting ─────────────────────────────────────────────
-    private string SortCol  = "CustomerName";
-    private bool   SortAsc  = true;
+    private string SortCol = "CustomerName";
+    private bool SortAsc = true;
 
     private void SortBy(string col)
     {
@@ -160,27 +157,21 @@
         VM.Records = SortCol switch
         {
             "CustomerName" => SortAsc ? VM.Records.OrderBy(r => r.CustomerName).ToList() : VM.Records.OrderByDescending(r => r.CustomerName).ToList(),
-            "ItemCode"     => SortAsc ? VM.Records.OrderBy(r => r.ItemCode).ToList()     : VM.Records.OrderByDescending(r => r.ItemCode).ToList(),
-            "CreatedBy"    => SortAsc ? VM.Records.OrderBy(r => r.CreatedBy).ToList()    : VM.Records.OrderByDescending(r => r.CreatedBy).ToList(),
-            _              => VM.Records
+            "ItemCode" => SortAsc ? VM.Records.OrderBy(r => r.ItemCode).ToList() : VM.Records.OrderByDescending(r => r.ItemCode).ToList(),
+            "CreatedBy" => SortAsc ? VM.Records.OrderBy(r => r.CreatedBy).ToList() : VM.Records.OrderByDescending(r => r.CreatedBy).ToList(),
+            _ => VM.Records
         };
     }
 
     // ── Selection ───────────────────────────────────────────
     private bool AllSelected => PagedRows.Any() && PagedRows.All(r => r.Selected ?? false);
 
-    // private void ToggleSelectAll(ChangeEventArgs e)
-    // {
-    //     bool v = (bool)(e.Value ?? false);
-    //     foreach (var r in PagedRows) r.Selected = v;
-    // }
-    private void ToggleRow(NpiRecordDto row) => row.Selected = !row.Selected;
 
     // ── Pagination ──────────────────────────────────────────
     private int CurrentPage = 1;
-    private int PageSize    = 11;
-    private int TotalRows   => VM.Records.Count;
-    private int TotalPages  => (int)Math.Ceiling((double)TotalRows / PageSize);
+    private int PageSize = 11;
+    private int TotalRows => VM.Records.Count;
+    private int TotalPages => (int)Math.Ceiling((double)TotalRows / PageSize);
 
     private IEnumerable<NpiRecordDto> PagedRows =>
         VM.Records.Skip((CurrentPage - 1) * PageSize).Take(PageSize);
@@ -188,27 +179,6 @@
     private void PrevPage() { if (CurrentPage > 1) CurrentPage--; }
     private void NextPage() { if (CurrentPage < TotalPages) CurrentPage++; }
     private void GoToPage(int p) => CurrentPage = p;
-
-    // ── Status CSS ──────────────────────────────────────────
-    private string StatusClass(NpiStatus status) => status switch
-    {
-        NpiStatus.Launched => "badge-launched",
-        NpiStatus.InProgress => "badge-inprogress",
-        NpiStatus.Draft => "badge-draft",
-        _             => "badge-draft"
-    };
-    private string GetStatusText(NpiStatus status) => status switch
-    {
-        NpiStatus.InProgress => "In Progress",
-        NpiStatus.PlannerLaunched => "Planner Launched",
-        _ => status.ToString()
-    };
-
-    // ── Actions ─────────────────────────────────────────────
-    private void OpenFilters()   { /* Open filter panel / modal */ }
-    private void HandleExport()  { /* Export to CSV/Excel */ }
-    private void HandleAction(NpiRecordDto row) { /* Mark as done or open detail */ }
-
 
     // Implementations
 

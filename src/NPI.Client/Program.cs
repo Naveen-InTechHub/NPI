@@ -36,6 +36,7 @@ builder.Services.AddScoped<AuthenticationStateProvider>(provider =>
 // ViewModels (Transient — new instance per component)
 builder.Services.AddTransient<NpiDetailViewModel>();
 builder.Services.AddTransient<NpiListViewModel>();
+builder.Services.AddTransient<HeaderViewModel>();
 builder.Services.AddTransient<LoginViewModel>();
 builder.Services.AddScoped<ThemeService>();
 builder.Services.AddScoped<ToastService>();

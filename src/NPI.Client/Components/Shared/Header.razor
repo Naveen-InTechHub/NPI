@@ -1,11 +1,13 @@
-﻿ <!-- Mobile nav -->
+﻿@inject HeaderViewModel VM
+
+<!-- Mobile nav -->
 <div class="mobile-nav @(mobileOpen ? "open" : "")">
     <a class="nav-link" href="#">Home</a>
     <a class="nav-link" href="#">Project Tracker</a>
     <a class="nav-link" href="#">Quote Requests</a>
     <a class="nav-link active" href="#">Bids Won</a>
 </div>
- <!-- ════ NAVIGATION ════ -->
+<!-- ════ NAVIGATION ════ -->
 <nav class="ans-nav">
     <a class="nav-logo" href="#">
         <img src="logo.webp" />
@@ -22,7 +24,7 @@
         </a>
         <a class="nav-link" href="#">
             <img src="assets/img/icon/page-outline.svg" />
-           Quote Requests
+            Quote Requests
         </a>
         <a class="nav-link active" href="#">
             <img src="assets/img/icon/cil_badge.svg" />
@@ -31,7 +33,7 @@
     </div>
     <div class="nav-right">
         <div class="nav-search">
-                <img src="assets/img/icon/search.svg" />
+            <img src="assets/img/icon/search.svg" />
             <SfTextBox Placeholder="Search" CssClass="search-input"></SfTextBox>
         </div>
         <button class="nav-icon-btn" title="Notifications">
@@ -49,12 +51,12 @@
                 <li class="dropdown-header ans-dropdown-profile">
                     <img src="assets/img/user.jpg" class="profile-img" />
                     <div class="profile-info">
-                        <div class="profile-name"><strong>John Doe</strong></div>
-                        <div class="profile-role">Administrator</div>
+                        <div class="profile-name"><strong>@VM.UserData.UserName</strong></div>
+                        <div class="profile-role">@VM.UserData.Role</div>
                     </div>
                 </li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Logout</a></li>
+                <li><a class="dropdown-item" role="button" @onclick="VM.Logout">Logout</a></li>
             </ul>
         </div>
         <button class="nav-hamburger" @onclick="() => mobileOpen = !mobileOpen">
@@ -74,5 +76,8 @@
 @code {
     // ── Nav ─────────────────────────────────────────────────
     private bool mobileOpen = false;
-
+    protected override async Task OnInitializedAsync()
+    {
+        await VM.LoadUserDataAsync();
+    }
 }

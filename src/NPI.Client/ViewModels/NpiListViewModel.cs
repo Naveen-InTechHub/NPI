@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using NPI.Client.Providers;
 using NPI.Client.Services;
@@ -12,11 +12,14 @@ public class NpiListViewModel : ViewModelBase
 {
     private readonly INpiService _service;
     private readonly AuthStateProvider _authStateProvider;
+    private readonly NavigationManager _navigationManager;
+
     private readonly IJSRuntime JS;
-    public NpiListViewModel(INpiService service,AuthStateProvider authStateProvider, IJSRuntime js) 
+    public NpiListViewModel(INpiService service, AuthStateProvider authStateProvider, IJSRuntime js, NavigationManager navigationManager)
     {
         _service = service;
         _authStateProvider = authStateProvider;
+        _navigationManager = navigationManager;
         JS = js;
     }
 
@@ -25,6 +28,16 @@ public class NpiListViewModel : ViewModelBase
     {
         get => _records;
         set => SetProperty(ref _records, value);
+    }
+    private bool _allSelected;
+    public bool AllSelected
+    {
+        get => _allSelected;
+        set
+        {
+            _allSelected = value;
+            ToggleSelectAll(value);
+        }
     }
 
     private string _searchTerm = string.Empty;
@@ -56,7 +69,7 @@ public class NpiListViewModel : ViewModelBase
 
     public async Task Logout()
     {
-      await _authStateProvider.MarkUserAsLoggedOut();
+        await _authStateProvider.MarkUserAsLoggedOut();
     }
 
     public async Task ExportFile()
@@ -76,6 +89,33 @@ public class NpiListViewModel : ViewModelBase
                 Convert.ToBase64String(bytes));
         });
     }
+
+    public void NavigateToNPISetup(int npiId)
+    {
+        _navigationManager.NavigateTo($"/npi/{npiId}");
+    }
+
+    // ── Status CSS ──────────────────────────────────────────
+    public string StatusClass(NpiStatus status) => status switch
+    {
+        NpiStatus.Launched => "badge-launched",
+        NpiStatus.InProgress => "badge-inprogress",
+        NpiStatus.Draft => "badge-draft",
+        _ => "badge-draft"
+    };
+    public string GetStatusText(NpiStatus status) => status switch
+    {
+        NpiStatus.InProgress => "In Progress",
+        NpiStatus.PlannerLaunched => "Planner Launched",
+        _ => status.ToString()
+    };
+
+
+    public void ToggleSelectAll(bool isSelected)
+    {
+        foreach (var r in Records) r.Selected = isSelected;
+    }
+    public void ToggleRow(NpiRecordDto row) => row.Selected = !row.Selected;
 
 
 }
