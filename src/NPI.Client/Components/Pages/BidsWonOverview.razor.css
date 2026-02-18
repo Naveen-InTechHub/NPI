@@ -1,0 +1,172 @@
+﻿
+    /* ── Page Header ── */
+    .page-header {
+        display: flex; align-items: flex-start;
+        justify-content: space-between; flex-wrap: wrap;
+        gap: 14px; margin-bottom: 22px;
+    }
+    .page-title { font-size: 25px; font-weight: 700; color: #091633; line-height: 1.25; }
+    .page-subtitle { font-size: 15px; color: #000000CC; margin-top: 4px; }
+    .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    /* ════ GRID CARD ════ */
+    .grid-card {
+        border-radius: 12px;
+        border: 1px solid rgba(37, 99, 235, 0.20);
+        background: #FFF;
+        box-shadow: 0 0 125px 0 rgba(0, 0, 0, 0.10);
+        padding: 16px 17px;
+    }
+
+    /* ════ CUSTOM TABLE ════ */
+    .ans-table-wrap { overflow-x: auto; }
+
+    table.ans-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+    }
+
+    table.ans-table thead {
+        border-radius: 8px;
+        background: #F3F3F3;
+    }
+    table.ans-table thead th {
+        padding: 12px 8px;
+        font-size: 14px !important;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        color: #091633B2;
+        text-align: left;
+        white-space: nowrap;
+        user-select: none;
+        text-transform: capitalize;
+    }
+    table.ans-table thead th.sortable { cursor: pointer; }
+    table.ans-table thead th.sortable:hover { color: var(--ans-accent); }
+    table.ans-table thead th.th-check { width: 44px; padding-left: 22px; }
+    table.ans-table thead th.th-action { width: 64px; text-align: center; }
+
+    /* Sort icons */
+    .sort-icon { display: inline-flex; flex-direction: column; gap: 1px; margin-left: 4px; vertical-align: middle; opacity: .45; }
+    .sort-icon svg { display: block; }
+    th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity: 1; }
+
+    /* Rows */
+    table.ans-table tbody tr {
+        border-bottom: 1px solid #f1f5f9;
+        transition: background .12s;
+    }
+    table.ans-table tbody tr:last-child { border-bottom: none; }
+    table.ans-table tbody tr:hover { background: #f8fafc; }
+    table.ans-table tbody tr.row-selected { background: #eff6ff; }
+
+    table.ans-table tbody td {
+        padding: 8px 5px;
+        color: #091633B2;
+        font-size: 13px !important;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    table.ans-table tbody td.td-check { padding-left: 18px; width: 44px; }
+    table.ans-table tbody td.td-action { text-align: center; width: 64px; }
+    table.ans-table tbody td.td-muted { color: var(--ans-muted); }
+    table.ans-table tbody td.td-wrap { white-space: normal; max-width: 200px; }
+
+    /* Custom checkbox */
+    .cb-wrap { display: flex; align-items: center; justify-content: center; }
+    .cb-input {
+        width: 16px; height: 16px; border: 1.5px solid #cbd5e1;
+        border-radius: 4px; appearance: none; cursor: pointer;
+        transition: background .15s, border-color .15s;
+        position: relative; background: white;
+    }
+    .cb-input:checked {
+        background: var(--ans-accent); border-color: var(--ans-accent);
+    }
+    .cb-input:checked::after {
+        content: '';
+        position: absolute; left: 4px; top: 1.5px;
+        width: 5px; height: 9px;
+        border: 2px solid white; border-top: none; border-left: none;
+        transform: rotate(45deg);
+    }
+    .cb-input:hover:not(:checked) { border-color: var(--ans-accent); }
+
+    /* ── Status Badges ── */
+    .status-badge {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 4px 14px; border-radius: 99px;
+        font-size: 13px; font-weight: 500; white-space: nowrap;
+        padding: 6px 21px;
+        min-width: 140px;
+    }
+    .badge-launched    { background: #16A34A33; color: #16A34A; border: 1px solid #16A34A33; }
+    .badge-inprogress  { background: #2563EB33; color: #2563EB; border: 1px solid #2563EB33; }
+    .badge-draft       { background: #0916331A; color: #000000B2; border: 1px solid #0916331A; }
+
+    /* ── Action button ── */
+    .action-btn {
+        width: 32px; height: 32px; border-radius: 50%;
+        background: transparent; border: 1.5px solid var(--ans-border);
+        display: inline-flex; align-items: center; justify-content: center;
+        cursor: pointer; color: var(--ans-muted);
+        transition: all .15s;
+    }
+    .action-btn:hover {
+        border-color: var(--ans-accent); color: var(--ans-accent);
+        background: #eff6ff;
+    }
+
+    /* ════ FOOTER / PAGINATION ════ */
+    .table-footer {
+        display: flex; align-items: center;
+        justify-content: space-between;
+/*        padding: 14px 18px;*/
+/*        border-top: 1px solid var(--ans-border);*/
+/*        background: #fafbfc;*/
+        flex-wrap: wrap; gap: 10px;
+    }
+    .table-footer-info { font-size: 13px; color: var(--ans-muted); }
+    .table-footer-info strong { color: var(--ans-text); font-weight: 600; }
+
+    .pagination { display: flex; align-items: center; gap: 4px; }
+    .pg-btn {
+        min-width: 32px; height: 32px; padding: 0 8px;
+        border-radius: 50%; border: 1.5px solid var(--ans-border);
+        background: white; color: var(--ans-text);
+        font-size: 13px; font-weight: 500; font-family: inherit;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        transition: all .15s;
+    }
+    .pg-btn:hover:not(:disabled) { border-color: var(--ans-accent); color: var(--ans-accent); background: #eff6ff; }
+    .pg-btn.active {
+        background: var(--primary-color); color: white;
+        border-color: var(--primary-color); font-weight: 700;
+    }
+    .pg-btn:disabled { opacity: .38; cursor: not-allowed; }
+    .pg-arrow { width: 32px; }
+
+    /* ════ RESPONSIVE ════ */
+    @media (max-width: 1024px) {
+        .nav-search { display: none; }
+    }
+    @media (max-width: 768px) {
+        .ans-page { padding: 16px 14px 36px; }
+        .nav-links, .nav-sep { display: none; }
+        .nav-hamburger { display: flex; }
+        .nav-search { display: none; }
+        .page-title { font-size: 18px; }
+        table.ans-table thead th,
+        table.ans-table tbody td { padding: 10px 10px; font-size: 12.5px; }
+    }
+    @media (max-width: 600px) {
+        .table-footer { flex-direction: column; align-items: flex-start; gap: 12px; }
+    }
+
+    /* ── Syncfusion overrides (if using SfGrid) ── */
+    .e-grid { font-family: 'DM Sans', sans-serif !important; border: none !important; }
