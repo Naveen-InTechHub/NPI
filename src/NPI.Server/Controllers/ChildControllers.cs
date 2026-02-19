@@ -405,7 +405,7 @@ public class UpdateQuestionsController : ControllerBase
         || q.QuestionKey == "newartwork"
         );
         foreach (var question in plannerQuestionsToUpdate)
-        {
+        { 
             if (question.QuestionKey == "customersupplied")
             {
                 question.QuestionText = question.Category == PlannerCategory.Components ? "Are packaging components customer-supplied?"

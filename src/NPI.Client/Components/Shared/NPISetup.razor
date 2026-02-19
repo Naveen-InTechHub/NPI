@@ -10,28 +10,34 @@
             <div class="ans-mini-card-body">
                 <div class="row mt-2 mb-2">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Does this new product use an existing bulk?</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Will this bulk be used for multiple packouts?</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Will this item be sold as a finished bulk product?</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
+                        @if (NpiRecord.SetupQuestions != null)
+                        {
+                            foreach (var question in NpiRecord.SetupQuestions)
+                            {
+                                <div class="d-flex justify-content-between gap-3 mb-2">
+                                    <div class="ans-mini-card-list-label">@question.QuestionText</div>
+                                    <SfSwitch TChecked="bool?"
+                                    Checked="@question.Value"
+                                    CheckedChanged="(v)=> VM.ToggleSetupQuestionAsync(question, v)"
+                                    OnLabel="Yes"
+                                    OffLabel="No"
+                                    CssClass="ans-switch-btn flex-shrink-0">
+                                    </SfSwitch>
+
+                                </div>
+                            }
+                        }
+
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="ans-mini-card-list-label mb-2">Multiple Packout Notes</div>
                         <div class="ans-textarea-box w-100">
                             <SfTextArea Placeholder="Enter" Width="100%" style="height: 80px;"></SfTextArea>
-                       </div>
+                        </div>
                     </div>
                 </div>
-                
-             </div>
+
+            </div>
         </div>
     </div>
     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
@@ -45,19 +51,19 @@
                     <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Item Description</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                         </div>
+                            <SfTextBox @bind-Value="NpiRecord.ItemDescription" Placeholder="Enter"></SfTextBox>
+                        </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Bulk Item Code</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                            <SfTextBox @bind-Value="NpiRecord.BulkCode" Placeholder="Enter"></SfTextBox>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Finished Goods (FG) Item Code</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                            <SfTextBox @bind-Value="NpiRecord.FGCode" Placeholder="Enter"></SfTextBox>
                         </div>
                     </div>
                 </div>
@@ -78,25 +84,27 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Theoretical Unit Sales Price</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                            <SfNumericTextBox TValue="decimal" @bind-Value="@NpiRecord.UnitPrice" Placeholder="Enter"></SfNumericTextBox>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Theoretical Standard Order Quantity</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                            <SfNumericTextBox TValue="decimal" @bind-Value="@NpiRecord.OrderQty" Placeholder="Enter"></SfNumericTextBox>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Quoted Lead Time (Business Days)</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                            <SfNumericTextBox TValue="int" @bind-Value="@NpiRecord.LeadTimeDays" Placeholder="Enter"></SfNumericTextBox>
+
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Estimated Purchase Order Value</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                            <SfNumericTextBox TValue="decimal" @bind-Value="@NpiRecord.POValue" Placeholder="Enter"></SfNumericTextBox>
+
                         </div>
                     </div>
                 </div>
@@ -113,26 +121,24 @@
             <div class="ans-mini-card-body">
                 <div class="row mt-2 mb-2">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Bench-Top Pilot Required</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Non-GMP Production Pilot Required</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">GMP Production Pilot Required</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Fill Study Required</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Stability or Approval Samples Required</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
+                        @if (NpiRecord.PilotRequirements != null)
+                        {
+                            foreach (var question in NpiRecord.PilotRequirements)
+                            {
+                                <div class="d-flex justify-content-between gap-3 mb-2">
+                                    <div class="ans-mini-card-list-label">@question.QuestionText</div>
+                                    <SfSwitch TChecked="bool?"
+                                    Checked="@question.Value"
+                                    CheckedChanged="(v)=> VM.TogglePilotAsync(question, v)"
+                                    OnLabel="Yes"
+                                    OffLabel="No"
+                                    CssClass="ans-switch-btn flex-shrink-0">
+                                    </SfSwitch>
+
+                                </div>
+                            }
+                        }
+
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="ans-mini-card-list-label mb-2">Multiple Packout Notes</div>
@@ -156,18 +162,22 @@
             <div class="ans-mini-card-body">
                 <div class="row mt-2 mb-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Does the formula include new raw materials?</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Are any raw materials customer-supplied?</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Are raw materials sourced from a new vendor?</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
+                        @if (VM.RawMaterialQuestions != null)
+                        {
+                            @foreach (var q in VM.RawMaterialQuestions)
+                            {
+                                <div class="d-flex justify-content-between gap-3 mb-2">
+                                    <div class="ans-mini-card-list-label">@q.QuestionText</div>
+                                    <SfSwitch TChecked="bool?"
+                                              Checked="@q.Value"
+                                              CheckedChanged="(v)=> VM.TogglePlannerAsync(q, v)"
+                                              OnLabel="Yes"
+                                              OffLabel="No"
+                                              CssClass="ans-switch-btn flex-shrink-0">
+                                    </SfSwitch>
+                                </div>
+                            }
+                        }
                     </div>
                 </div>
 
@@ -183,18 +193,23 @@
             <div class="ans-mini-card-body">
                 <div class="row mt-2 mb-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Does the packout include new components (excluding label)?</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Are any packaging components customer-supplied?</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Are packaging components sourced from a new vendor?</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
+                        @if (VM.ComponentAssesmentsQuestion != null)
+                        {
+                            foreach (var question in VM.ComponentAssesmentsQuestion)
+                            {
+                                <div class="d-flex justify-content-between gap-3 mb-2">
+                                    <div class="ans-mini-card-list-label">@question.QuestionText</div>
+                                    <SfSwitch TChecked="bool?"
+                                              Checked="@question.Value"
+                                              CheckedChanged="(v)=> VM.TogglePlannerAsync(question, v)"
+                                              OnLabel="Yes"
+                                              OffLabel="No"
+                                              CssClass="ans-switch-btn flex-shrink-0">
+                                    </SfSwitch>
+
+                                </div>
+                            }
+                        }
                     </div>
                 </div>
 
@@ -210,14 +225,23 @@
             <div class="ans-mini-card-body">
                 <div class="row mt-2 mb-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Does the packout require new or updated artwork?</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Does this product require regulatory certifications or approvals?</div>
-                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
-                        </div>
+                        @if (VM.ArtWorkQuestion != null)
+                        {
+                            foreach (var question in VM.ArtWorkQuestion)
+                            {
+                                <div class="d-flex justify-content-between gap-3 mb-2">
+                                    <div class="ans-mini-card-list-label">@question.QuestionText</div>
+                                    <SfSwitch TChecked="bool?"
+                                              Checked="@question.Value"
+                                              CheckedChanged="(v)=> VM.TogglePlannerAsync(question, v)"
+                                              OnLabel="Yes"
+                                              OffLabel="No"
+                                              CssClass="ans-switch-btn flex-shrink-0">
+                                    </SfSwitch>
+
+                                </div>
+                            }
+                        }
                     </div>
                 </div>
 
@@ -253,4 +277,8 @@
 </div>
 @code {
     private bool isChecked = true;
+    [Parameter]
+    public NpiRecordDto NpiRecord { get; set; } = new NpiRecordDto();
+    [Parameter]
+    public NpiDetailViewModel VM { get; set; }
 }

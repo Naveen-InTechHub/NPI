@@ -1,203 +1,324 @@
-﻿@page "/quote-request"
+﻿@page "/npi/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using NPI.Client.DTOs.Auth
 @using Syncfusion.Blazor.Navigations
 
-<Header/>
-<div class="ans-page">
-    <div class="d-flex justify-content-between align-items-center">
-        <div class="ans-page-title">New Product Initiation : <span>FGTEST - Daily EU 439EURL tablet</span> </div>
-        <button class="ans-filter-btn">
-            Cancel
-        </button>
-    </div>
-    <div class="ans-card-container mt-3">
-        <div class="row gy-3 gy-lg-0 gx-0 gx-lg-2">
-            <div class="col-12 col-sm-12 col-md-12 col-lg-6 ans-col-lg-5">
-                <div class="ans-card-title">Review Information</div>
-                <div class="ans-border"></div>
-                <div class="ans-card-body">
-                    <div class="ans-panel-left">
-                        <div class="ans-field-row">
-                            <div class="ans-field-label">Packout</div>
-                            <div class="ans-field-value link">PS.2 Daily EU 439EURL - 60 CT</div>
-                        </div>
-                        <div class="ans-field-row">
-                            <div class="ans-field-label">Quote Number</div>
-                            <div class="ans-field-value">6514.0</div>
-                        </div>
-                        <div class="ans-field-row">
-                            <div class="ans-field-label">Quote Desc</div>
-                            <div class="ans-field-value">Daily EU 439EURL tablet</div>
-                        </div>
-                        <div class="ans-field-row">
-                            <div class="ans-field-label">Prod Type</div>
-                            <div class="ans-field-value">Tablet</div>
-                        </div>
-                    </div>
+@inject NpiDetailViewModel VM
 
-                    <div class="ans-panel-right">
-                        <div class="ans-field-row">
-                            <div class="ans-field-label">Customer</div>
-                            <div class="ans-field-value">Aloe Vera of America 50415</div>
-                        </div>
-                        <div class="ans-field-row">
-                            <div class="ans-field-label">Sales Person</div>
-                            <div class="ans-field-value">Antonia Matthaeus, Candice Axtell</div>
-                        </div>
-                        <div class="ans-field-row">
-                            <div class="ans-field-label">Created By</div>
-                            <div class="ans-field-value">Candice A</div>
-                        </div>
-                        <div class="ans-field-row">
-                            <div class="ans-field-label">Created On</div>
-                            <div class="ans-field-value">02-02-2025 11:20pm</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-12 col-md-12 col-lg-6 ans-col-lg-7">
-                <div class="ans-sub-card-container">
-                    <div class="ans-card-title">Formula : FS.2 Daily EU 439EURL 200k</div>
+@attribute [Authorize(Roles = Roles.SuperAdmin + "," + Roles.NPIManager + "," + Roles.Planner + "," + Roles.QualityOfficer + "," + Roles.PackagingExec)]
+
+
+<Header/>
+@if (VM.Record != null)
+{
+    var r = VM.Record;
+    <div class="ans-page">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="ans-page-title">New Product Initiation : <span>@r.ItemCode - @r.ProductDescription</span> </div>
+            <button class="ans-filter-btn">
+                Cancel
+            </button>
+        </div>
+        <div class="ans-card-container mt-3">
+            <div class="row gy-3 gy-lg-0 gx-0 gx-lg-2">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 ans-col-lg-5">
+                    <div class="ans-card-title">Review Information</div>
                     <div class="ans-border"></div>
-                    <div class="ans-card-body1">
+                    <div class="ans-card-body">
                         <div class="ans-panel-left">
                             <div class="ans-field-row">
+                                <div class="ans-field-label">Packout</div>
+                                <div class="ans-field-value link">@r.PackoutDescription</div>
+                            </div>
+                            <div class="ans-field-row">
+                                <div class="ans-field-label">Quote Number</div>
+                                <div class="ans-field-value">@r.QuoteNumber</div>
+                            </div>
+                            <div class="ans-field-row">
+                                <div class="ans-field-label">Quote Desc</div>
+                                <div class="ans-field-value">@r.ProductDescription</div>
+                            </div>
+                            <div class="ans-field-row">
                                 <div class="ans-field-label">Prod Type</div>
-                                <div class="ans-field-value">Tablet</div>
-                            </div>
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Pkg Type</div>
-                                <div class="ans-field-value">Bottles</div>
-                            </div>
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Order Quantity</div>
-                                <div class="ans-field-value">2000000</div>
-                            </div>
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">No of Batches</div>
-                                <div class="ans-field-value">2</div>
+                                <div class="ans-field-value">@r.ProductType</div>
                             </div>
                         </div>
 
                         <div class="ans-panel-right">
                             <div class="ans-field-row">
-                                <div class="ans-field-label">Total Units</div>
-                                <div class="ans-field-value">2000000</div>
+                                <div class="ans-field-label">Customer</div>
+                                <div class="ans-field-value">@r.CustomerName</div>
                             </div>
                             <div class="ans-field-row">
-                                <div class="ans-field-label">Savings Per unit</div>
-                                <div class="ans-field-value">30.000</div>
+                                <div class="ans-field-label">Sales Person</div>
+                                <div class="ans-field-value">@r.SalesRep1</div>
                             </div>
                             <div class="ans-field-row">
-                                <div class="ans-field-label">Formula Size</div>
-                                <div class="ans-field-value">12000.000</div>
+                                <div class="ans-field-label">Created By</div>
+                                <div class="ans-field-value">@(string.IsNullOrEmpty(r.CreatedBy)? "User" : r.CreatedBy)</div>
                             </div>
                             <div class="ans-field-row">
-                                <div class="ans-field-label">Blunder</div>
-                                <div class="ans-field-value">023000 Cuft Rotary</div>
+                                <div class="ans-field-label">Created On</div>
+                                <div class="ans-field-value">@r.CreatedDate.ToString("MM-dd-yyyy hh:mm tt")</div>
                             </div>
                         </div>
-                        <div class="ans-panel-right">
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Total Savings</div>
-                                <div class="ans-field-value">600000</div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 ans-col-lg-7">
+                    <div class="ans-sub-card-container">
+                        <div class="ans-card-title">Formula : FS.2 Daily EU 439EURL 200k</div>
+                        <div class="ans-border"></div>
+                        <div class="ans-card-body1">
+                            <div class="ans-panel-left">
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Prod Type</div>
+                                    <div class="ans-field-value">@r.ProductType</div>
+                                </div>
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Pkg Type</div>
+                                    <div class="ans-field-value">@r.PackageType</div>
+                                </div>
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Order Quantity</div>
+                                    <div class="ans-field-value">@r.OrderQty.ToString("N0")</div>
+                                </div>
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">No of Batches</div>
+                                    <div class="ans-field-value">2</div>
+                                </div>
                             </div>
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Formula Kg</div>
-                                <div class="ans-field-value">8892.20</div>
+
+                            <div class="ans-panel-right">
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Total Units</div>
+                                    <div class="ans-field-value">@r.TotalUnits.ToString("N0")</div>
+                                </div>
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Savings Per unit</div>
+                                    <div class="ans-field-value">30.000</div>
+                                </div>
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Formula Size</div>
+                                    <div class="ans-field-value">@r.FormulaSize.ToString("N0")</div>
+                                </div>
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Blunder</div>
+                                    <div class="ans-field-value">023000 Cuft Rotary</div>
+                                </div>
                             </div>
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Bulk Density</div>
-                                <div class="ans-field-value">0.8</div>
+                            <div class="ans-panel-right">
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Total Savings</div>
+                                    <div class="ans-field-value">600000</div>
+                                </div>
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Formula Kg</div>
+                                    <div class="ans-field-value">8892.20</div>
+                                </div>
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Bulk Density</div>
+                                    <div class="ans-field-value">0.8</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ── Stepper Bar ── -->
+        <!-- ── Stepper Bar ── -->
 
-    <div class="stepper mt-3 mb-3">
-        <div class="step active" onclick="goTo(0)">
-            <div class="step-body"></div>
-            <div class="step-inner">
-                <div class="step-num">1</div>
-                <span class="step-label">NPI Setup</span>
+        <div class="stepper mt-3 mb-3">
+            <div class="step active" onclick="goTo(0)">
+                <div class="step-body"></div>
+                <div class="step-inner">
+                    <div class="step-num">1</div>
+                    <span class="step-label">NPI Setup</span>
+                </div>
             </div>
-        </div>
 
-        <div class="step" onclick="goTo(1)">
-            <div class="step-body"></div>
-            <div class="step-inner">
-                <div class="step-num">2</div>
-                <span class="step-label">Formulation</span>
+            <div class="step" onclick="goTo(1)">
+                <div class="step-body"></div>
+                <div class="step-inner">
+                    <div class="step-num">2</div>
+                    <span class="step-label">Formulation</span>
+                </div>
             </div>
-        </div>
 
-        <div class="step" onclick="goTo(2)">
-            <div class="step-body"></div>
-            <div class="step-inner">
-                <div class="step-num">3</div>
-                <span class="step-label">Testing Setup</span>
+            <div class="step" onclick="goTo(2)">
+                <div class="step-body"></div>
+                <div class="step-inner">
+                    <div class="step-num">3</div>
+                    <span class="step-label">Testing Setup</span>
+                </div>
             </div>
-        </div>
 
-        <div class="step" onclick="goTo(3)">
-            <div class="step-body"></div>
-            <div class="step-inner">
-                <div class="step-num">4</div>
-                <span class="step-label">Packaging Setup</span>
+            <div class="step" onclick="goTo(3)">
+                <div class="step-body"></div>
+                <div class="step-inner">
+                    <div class="step-num">4</div>
+                    <span class="step-label">Packaging Setup</span>
+                </div>
             </div>
-        </div>
 
-        <div class="step" onclick="goTo(4)">
-            <div class="step-body"></div>
-            <div class="step-inner">
-                <div class="step-num">5</div>
-                <span class="step-label">Sampling Plan</span>
+            <div class="step" onclick="goTo(4)">
+                <div class="step-body"></div>
+                <div class="step-inner">
+                    <div class="step-num">5</div>
+                    <span class="step-label">Sampling Plan</span>
+                </div>
             </div>
-        </div>
 
-    </div>
-    <!-- /stepper -->
-    <!-- ── Content Panels ── -->
-    <div class="panels">
-        <!-- Step 1: NPI Setup -->
-        <div class="panel active" id="panel-0">
-            <NPISetup/>
         </div>
+        <!-- /stepper -->
+        <!-- ── Content Panels ── -->
+        <div class="panels">
+            <!-- Step 1: NPI Setup -->
+            <div class="panel active" id="panel-0">
+                <NPISetup NpiRecord="VM.Record" VM="VM"/>
+            </div>
 
-        <!-- Step 2: Formulation -->
-        <div class="panel" id="panel-1">
+            <!-- Step 2: Formulation -->
+            <div class="panel" id="panel-1">
+            </div>
+
+            <!-- Step 3: Testing Setup -->
+            <div class="panel" id="panel-2">
+            </div>
+
+            <!-- Step 4: Packaging Setup -->
+            <div class="panel" id="panel-3">
+            </div>
+
+            <!-- Step 5: Sampling Plan -->
+            <div class="panel" id="panel-4">
+            </div>
+
         </div>
-
-        <!-- Step 3: Testing Setup -->
-        <div class="panel" id="panel-2">
-        </div>
-
-        <!-- Step 4: Packaging Setup -->
-        <div class="panel" id="panel-3">
-        </div>
-
-        <!-- Step 5: Sampling Plan -->
-        <div class="panel" id="panel-4">
-        </div>
-
-    </div>
-    <!-- /panels -->
-    <!-- ── Navigation ── -->
-    @* <div class="stepper-nav">
+        <!-- /panels -->
+        <!-- ── Navigation ── -->
+        @* <div class="stepper-nav">
         <span class="step-indicator" id="stepIndicator">Step 1 of 5</span>
         <div class="nav-btns">
             <button class="btn btn-prev" id="btnPrev" onclick="changeStep(-1)" disabled>&#8592; Previous</button>
             <button class="btn btn-next" id="btnNext" onclick="changeStep(1)">Next &#8594;</button>
         </div>
     </div> *@
-</div>
+    </div>
+}
 <Footer/>
 
 @code {
+    [Parameter] public int Id { get; set; }
     private bool isChecked = true;
+    UserData UserData = new UserData();
+    string CurrentRole = string.Empty;
 
+    private readonly (string Id, string Label)[] _tabs = new[]
+    {
+        ("setup", "Setup & Pilot"),
+        ("bom", "Labor & BOM"),
+        ("packaging", "Packaging"),
+        ("docs", "Docs")
+    };
+    private readonly Dictionary<string, string[]> _roleTabAccess = new()
+    {
+        { "SuperAdmin", new[] { "setup", "bom", "packaging", "docs" } },
+        { "NPIManager", new[] { "setup", "bom", "packaging", "docs" } },
+        { "Planner", new[] { "setup", "bom" } },
+        { "PackagingExec", new[] {"setup", "packaging" } },
+        { "QualityOfficer", new[] { "setup","docs" } }
+    };
+    private IEnumerable<(string Id, string Label)> VisibleTabs =>
+        _tabs.Where(t =>
+            _roleTabAccess.ContainsKey(CurrentRole) &&
+            _roleTabAccess[CurrentRole].Contains(t.Id));
+
+    protected override async Task OnInitializedAsync()
+    {
+        VM.PropertyChanged += (_, _) => InvokeAsync(StateHasChanged);
+        UserData = await AuthService.GetCurrentUserAsync() ?? new UserData();
+
+        CurrentRole = UserData.Role;
+        VM.CurrentUser = UserData.UserName ?? "User";
+        await VM.LoadAsync(Id);
+    }
+
+    private static string GetComponentBadge(ComponentType type) => type switch
+    {
+        ComponentType.Bottle or ComponentType.Cap => "info",
+        ComponentType.Label => "warning",
+        ComponentType.Shipper => "purple",
+        _ => "info"
+    };
+    private List<IBrowserFile> _selectedFiles = new();
+
+    private const long MaxFileSize = 2 * 1024 * 1024; // 2MB
+
+    private readonly string[] AllowedExtensions =
+        { ".jpg", ".png", ".gif", ".docx", ".xlsx", ".pdf" };
+    private List<string> _validationErrors = new();
+
+    private void OnFilesSelected(InputFileChangeEventArgs e)
+    {
+        _validationErrors.Clear();
+        _selectedFiles.Clear();
+
+        foreach (var file in e.GetMultipleFiles())
+        {
+            var extension = Path.GetExtension(file.Name).ToLowerInvariant();
+
+            // Validate extension
+            if (!AllowedExtensions.Contains(extension))
+            {
+                _validationErrors.Add($"{file.Name} → Invalid file type.");
+                continue;
+            }
+
+            // Validate size
+            if (file.Size > MaxFileSize)
+            {
+                _validationErrors.Add($"{file.Name} → Exceeds 2MB.");
+                continue;
+            }
+
+            _selectedFiles.Add(file);
+        }
+    }
+    [Inject] private HttpClient Http { get; set; } = default!;
+
+    private async Task UploadAll()
+    {
+        _validationErrors.Clear();
+        if (!_selectedFiles.Any())
+            return;
+
+        var content = new MultipartFormDataContent();
+
+        foreach (var file in _selectedFiles)
+        {
+            var streamContent = new StreamContent(
+                file.OpenReadStream(2 * 1024 * 1024));
+
+            streamContent.Headers.ContentType =
+                new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+
+            content.Add(streamContent, "files", file.Name);
+        }
+
+        content.Add(new StringContent(string.IsNullOrEmpty(UserData.UserName) ? "User" : UserData.UserName), "uploadedBy");
+
+
+        var response = await Http.PostAsync(
+            $"api/NpiDocuments/{Id}/upload-multiple",
+            content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _selectedFiles.Clear();
+            await VM.LoadAsync(Id);
+            ToastService.ShowSuccess("Files uploaded successfully.");
+        }
+    }
 }

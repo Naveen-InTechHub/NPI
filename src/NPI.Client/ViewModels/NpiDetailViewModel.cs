@@ -93,6 +93,12 @@ public class NpiDetailViewModel : ViewModelBase
     public List<PlannerQuestionDto> ComponentQuestions
         => Record?.PlannerQuestions?.Where(q => q.Category == PlannerCategory.Components).ToList() ?? new();
 
+    public List<PlannerQuestionDto> ComponentAssesmentsQuestion
+       => Record?.PlannerQuestions?.Where(q => q.Category == PlannerCategory.Components && (q.QuestionKey == "newcomponents" || q.QuestionKey == "fromnewvendor" || q.QuestionKey == "customersupplied") ).ToList() ?? new();
+
+    public List<PlannerQuestionDto> ArtWorkQuestion
+    => Record?.PlannerQuestions?.Where(q => q.Category == PlannerCategory.Components && (q.QuestionKey == "regulatorycerts" || q.QuestionKey == "newartwork")).ToList() ?? new();
+
     public FormulaSpecDto? FormulaSpec
         => Record?.FormulaSpec;
 
@@ -181,13 +187,14 @@ public class NpiDetailViewModel : ViewModelBase
     /// <summary>Toggle a Setup question Y/N</summary>
     public async Task ToggleSetupQuestionAsync(SetupQuestionDto question, bool? newValue)
     {
+       
+        question.Value = newValue;
         if (Record == null) return;
         await ExecuteAsync(async () =>
         {
             var result = await _service.ToggleSetupQuestionAsync(
                 Record.Id, question.Id,
                 new ToggleRequest { Value = newValue, AnsweredBy = CurrentUser ?? "User" });
-
             if (result != null)
             {
                 var idx = Record.SetupQuestions.FindIndex(q => q.Id == question.Id);
