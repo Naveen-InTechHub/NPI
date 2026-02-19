@@ -1,6 +1,6 @@
 ﻿/* xs : 0px — 575.98px */
 @media (max-width: 575.98px) {
-    .ans-mini-card-list-label {
+    .ans-mini-card-list-label, .ans-secondary-button, .ans-primary-button {
         font-size: 13px !important;
     }
     .ans-page {
@@ -23,7 +23,7 @@
 
 /* sm : 576px — 767.98px */
 @media (min-width: 576px) and (max-width: 767.98px) {
-    .ans-mini-card-list-label {
+    .ans-mini-card-list-label, .ans-secondary-button, .ans-primary-button {
         font-size: 13px !important;
     }
     .ans-page {
@@ -46,7 +46,7 @@
 
 /* md : 768px — 991.98px */
 @media (min-width: 768px) and (max-width: 991.98px) {
-    .ans-mini-card-list-label {
+    .ans-mini-card-list-label, .ans-secondary-button, .ans-primary-button {
         font-size: 13px !important;
     }
     .ans-page {
@@ -69,7 +69,7 @@
 
 /* lg : 992px — 1199.98px */
 @media (min-width: 992px) and (max-width: 1199.98px) {
-    .ans-mini-card-list-label {
+    .ans-mini-card-list-label, .ans-secondary-button, .ans-primary-button {
         font-size: 13px !important;
     }
     .ans-page {
@@ -95,7 +95,7 @@
 
 /* xl : 1200px — 1399.98px */
 @media (min-width: 1200px) and (max-width: 1399.98px) {
-    .ans-mini-card-list-label {
+    .ans-mini-card-list-label, .ans-secondary-button, .ans-primary-button {
         font-size: 13px !important;
     }
     .ans-page {

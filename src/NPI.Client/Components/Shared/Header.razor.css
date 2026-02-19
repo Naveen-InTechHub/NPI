@@ -200,7 +200,7 @@
 @media (max-width: 1024px) {
     .nav-search { display: none; }
 }
-@media (max-width: 768px) {
+@media (max-width: 820px) {
     .nav-links, .nav-sep { display: none; }
     .nav-hamburger { display: flex; }
     .nav-search { display: none; }

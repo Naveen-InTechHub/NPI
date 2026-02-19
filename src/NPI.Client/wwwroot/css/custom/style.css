@@ -211,6 +211,22 @@ body {
     font-weight: 500;
     line-height: normal;
 }
+.ans-primary-button.smal-size {
+    border-radius: 12px;
+    background: var(--primary-color);
+    box-shadow: 0 0 17px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    height: 34px !important;
+    padding: 6px 24px !important;
+    align-items: center;
+    gap: 6px;
+    color: #FFF;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    border: none;
+}
 .ans-primary-button {
     border-radius: 12px;
     background: var(--primary-color);
@@ -277,6 +293,22 @@ body {
     font-weight: 600;
     line-height: normal;
 }
+.ans-secondary-button.smal-size {
+    border-radius: 12px;
+    border: 1px solid rgba(9, 22, 51, 0.50);
+    background: #FFF;
+    box-shadow: 0 0 17px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    height: 34px !important;
+    padding: 6px 24px !important;
+    align-items: center;
+    gap: 6px;
+    color: #091633B2;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
 .ans-secondary-button:disabled,
 .ans-secondary-button.disabled {
     background: #f3f5f9;
@@ -286,7 +318,50 @@ body {
     opacity: 0.8;
     box-shadow: none;
 }
+.ans-edit-btn {
+    display: flex;
+    padding: 5px 10px;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--primary-color);
+    color: #fff;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    border: none;
+    border-radius: 50px;
+    flex-shrink: 0;
+}
+.ans-search-box {
+    display: flex;
+    height: 38px;
+    padding: 12px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.20);
+    background: rgba(234, 234, 234, 0.70);
+}
+.ans-search-box .e-input-group
+{
+    background: transparent !important;
+    border: none !important; 
+}
+.ans-search-box .e-input-group.e-input-focus {
+    box-shadow: none !important;
+}
 
+.ans-search-box .e-input-group input.e-input {
+    background: transparent !important;
+    height: 38px !important;
+    padding: 5px 0px !important;
+    width: 100%;
+    border: none;
+    font-size: 14px;
+    font-style: normal;
+    line-height: normal;
+}
 /*===============================
     Login Page
 =================================*/
@@ -403,7 +478,7 @@ body {
 /* ── Navigation ── */
 .stepper-nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     align-items: center;
     margin-top: 18px;
 }
@@ -427,4 +502,41 @@ body {
     bottom: 10px;
     text-align: center;
     margin: 10px 20px;
+}
+
+.ans-attach-file-list
+{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.ans-attach-file-list li
+{
+    display: flex;
+    gap: 5px;
+    justify-content: space-between;
+    border-radius: 6px;
+    background: rgba(234, 234, 234, 0.70);
+    height: 40px;
+    padding: 12px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.ans-file-container .ans-file-name {
+    color: rgba(9, 22, 51, 0.70);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+.ans-file-container .ans-file-status {
+    color: #16A34A;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+.cursor-pointer
+{
+    cursor: pointer !important;
 }

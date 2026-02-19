@@ -243,12 +243,12 @@
     .btn-finish:hover { background: #166e41; }
 
     /* ── Responsive ── */
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       .step-label { display: none; }
       .step.active .step-label { display: block; font-size: 10px; }
       .step-inner { padding: 0 12px 0 16px; }
       .step:first-child .step-inner { padding-left: 10px; }
-      .panel { padding: 20px 14px; }
+      .panel { padding: 5px 5px; }
       .info-grid { grid-template-columns: 1fr 1fr; }
     }
 
