@@ -1,0 +1,256 @@
+﻿<div class="ans-card-title">NPI Setup</div>
+<div class="ans-border"></div>
+<div class="row g-3">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Bulk & Packout Configuration</div>
+                <div class="ans-mini-card-header-para">Define how the product bulk and packout will be handled during production.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row mt-2 mb-2">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Does this new product use an existing bulk?</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Will this bulk be used for multiple packouts?</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Will this item be sold as a finished bulk product?</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="ans-mini-card-list-label mb-2">Multiple Packout Notes</div>
+                        <div class="ans-textarea-box w-100">
+                            <SfTextArea Placeholder="Enter" Width="100%" style="height: 80px;"></SfTextArea>
+                       </div>
+                    </div>
+                </div>
+                
+             </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Item Identification</div>
+                <div class="ans-mini-card-header-para">Product and internal item codes used for tracking and production.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row mt-2 mb-2">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Item Description</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                         </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Bulk Item Code</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Finished Goods (FG) Item Code</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-3 mt-0">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Commercial & Pricing Details</div>
+                <div class="ans-mini-card-header-para">Commercial assumptions used for planning and forecasting.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row mt-2 mb-2">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Theoretical Unit Sales Price</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Theoretical Standard Order Quantity</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Quoted Lead Time (Business Days)</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Estimated Purchase Order Value</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Bulk & Packout Configuration</div>
+                <div class="ans-mini-card-header-para">Define how the product bulk and packout will be handled during production.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row mt-2 mb-2">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Bench-Top Pilot Required</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Non-GMP Production Pilot Required</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">GMP Production Pilot Required</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Fill Study Required</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Stability or Approval Samples Required</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="ans-mini-card-list-label mb-2">Multiple Packout Notes</div>
+                        <div class="ans-textarea-box w-100">
+                            <SfTextArea Placeholder="Enter" Width="100%" style="height: 100px;"></SfTextArea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-3 mt-0">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Formula & Raw Material Assessment</div>
+                <div class="ans-mini-card-header-para">Identify changes or risks related to formula and raw materials.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row mt-2 mb-2">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Does the formula include new raw materials?</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Are any raw materials customer-supplied?</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Are raw materials sourced from a new vendor?</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Packaging & Component Assessment</div>
+                <div class="ans-mini-card-header-para">Review packaging components and sourcing details.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row mt-2 mb-2">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Does the packout include new components (excluding label)?</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Are any packaging components customer-supplied?</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Are packaging components sourced from a new vendor?</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Artwork & Regulatory Review</div>
+                <div class="ans-mini-card-header-para">Confirm artwork and regulatory requirements.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row mt-2 mb-2">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Does the packout require new or updated artwork?</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Does this product require regulatory certifications or approvals?</div>
+                            <SfSwitch @bind-Checked="isChecked" OnLabel="Yes" OffLabel="No" CssClass="ans-switch-btn flex-shrink-0"></SfSwitch>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ── Navigation ── -->
+<div class="stepper-nav mb-3">
+    <span class="step-indicator" id="stepIndicator">Step 1 of 5</span>
+    <div class="nav-btns">
+        <button class="ans-secondary-button" id="btnPrev" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Launch Product</button>
+        <button class="ans-primary-button" id="btnNext" onclick="changeStep(1)" disabled>Launch & Next</button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            @* <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div> *@
+            <div class="modal-body">
+                <div class="text-center">
+                    <video autoplay muted loop playsinline class="w-50">
+                        <source src="assets/img/loading.mp4" type="video/mp4" />
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    private bool isChecked = true;
+}
