@@ -90,11 +90,11 @@
                                            @onchange="() => VM.ToggleRow(row)" />
                                 </div>
                             </td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)">@row.CustomerName</td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="cursor-pointer td-muted">@row.CustomerName</td>
                             <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.ItemCode</td>
                             <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.FGCode</td>
                             <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.BulkCode</td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)"> @(string.IsNullOrEmpty(row.CreatedBy) ? "User" : row.CreatedBy) </td>
+                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted"> @(string.IsNullOrEmpty(row.CreatedBy) ? "User" : row.CreatedBy) </td>
                             <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.CreatedDate</td>
                             <td @onclick="() => VM.NavigateToNPISetup(row.Id)">
                                 <div class="text-center">
