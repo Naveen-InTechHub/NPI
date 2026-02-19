@@ -50,6 +50,8 @@ public class NpiRecordRepository : Repository<NpiRecord>, INpiRecordRepository
             .FirstOrDefaultAsync(r => r.Id == id); 
     }
 
+
+
     /// <summary>Load Setup & Pilot tab data only</summary>
     public async Task<NpiRecord?> GetRecordWithSetupAsync(int id)
     {

@@ -17,7 +17,7 @@
     <div class="ans-page">
         <div class="d-flex justify-content-between align-items-center">
             <div class="ans-page-title">New Product Initiation : <span>@r.ItemCode - @r.ProductDescription</span> </div>
-            <button class="ans-filter-btn">
+            <button class="ans-filter-btn" @onclick="VM.NavToBids">
                 Cancel
             </button>
         </div>
@@ -70,9 +70,9 @@
                     <div class="ans-sub-card-container">
                         <div class="d-flex justify-content-between flex-wrap gap-2">
                             <div class="ans-card-title">Formula : FS.2 Daily EU 439EURL 200k</div>
-                            <button class="ans-edit-btn" data-bs-toggle="modal" data-bs-target="#editFormulaModal">
+                           @*  <button class="ans-edit-btn" data-bs-toggle="modal" data-bs-target="#editFormulaModal">
                                 <img src="assets/img/icon/edit.svg" />Edit
-                            </button>
+                            </button> *@
                         </div>
 
                         <div class="ans-border"></div>

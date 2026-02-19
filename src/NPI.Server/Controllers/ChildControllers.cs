@@ -377,6 +377,10 @@ public class ItemCodesAXBomController : ControllerBase
         await _uow.SaveChangesAsync();
         return Ok(new ApiResponse<List<ChangeLogEntryDto>> { Success = true, Data = new List<ChangeLogEntryDto>() });
     }
+
+ 
+
+
 }
 
 
@@ -442,5 +446,7 @@ public class UpdateQuestionsController : ControllerBase
 
         await _uow.SaveChangesAsync();
         return Ok("Question updated as per new figma");
-    }
+    } 
+
+
 }

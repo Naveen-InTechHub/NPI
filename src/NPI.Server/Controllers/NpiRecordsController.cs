@@ -81,15 +81,27 @@ public class NpiRecordsController : ControllerBase
     public async Task<ActionResult<ApiResponse<NpiRecordDto>>> GetById(int id)
     {
         try
-        {
+        { 
             var record = await _uow.NpiRecords.GetFullRecordAsync(id);
             if (record == null)
                 return NotFound(new ApiResponse<NpiRecordDto> { Success = false, Message = "Record not found" });
 
             var dto = _mapper.Map<NpiRecordDto>(record);
+
+            dto.SetupNotes = record.Notes?
+                .Where(n => n.Parent == "Setup")
+                .OrderByDescending(n => n.CreatedDate)
+                .Select(n => n.Content)
+                .FirstOrDefault() ?? string.Empty;
+
+            dto.PilotNotes = record.Notes?
+                .Where(n => n.Parent == "Pilot")
+                .OrderByDescending(n => n.CreatedDate)
+                .Select(n => n.Content)
+                .FirstOrDefault() ?? string.Empty;
             return Ok(new ApiResponse<NpiRecordDto> { Success = true, Data = dto });
         }
-        catch (Exception ex)
+        catch (Exception ex) 
         {
             return BadRequest(new ApiResponse<NpiRecordDto> { Success = false, Message = ex.Message });
         }
@@ -205,11 +217,15 @@ public class NpiRecordsController : ControllerBase
     {
         try
         {
-            var record = await _uow.NpiRecords.GetByIdAsync(id);
+            var record = await _uow.NpiRecords.GetByIdAsync(id); 
             if (record == null)
                 return NotFound(new ApiResponse<NpiRecordDto> { Success = false, Message = "Record not found" });
 
             _mapper.Map(dto, record);
+            // Notes update helper
+            await UpsertNote(record, "Setup", dto.SetupNotes, dto.ModifiedBy);
+            await UpsertNote(record, "Pilot", dto.PilotNotes, dto.ModifiedBy);
+            // Notes Update helper
             _uow.NpiRecords.Update(record);
             await _uow.SaveChangesAsync();
 
@@ -772,6 +788,35 @@ public class NpiRecordsController : ControllerBase
 
         return Ok($"{removedCount} duplicate record(s) removed.");
     }
+
+    private async Task UpsertNote(NpiRecord record, string parent, string? content, string? user)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+            return;
+
+        var existingNote = record.Notes?
+            .FirstOrDefault(n => n.Parent == parent);
+
+        if (existingNote != null)
+        {
+            existingNote.Content = content;
+        }
+        else
+        {
+            record.Notes ??= new List<NpiNote>();
+
+            record.Notes.Add(new NpiNote
+            {
+                NpiRecordId = record.Id,
+                Parent = parent,
+                Content = content,
+                CreatedBy = user,
+                CreatedDate = DateTime.UtcNow
+            });
+        }
+    }
+
+
 
 
 

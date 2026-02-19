@@ -20,9 +20,9 @@
         <div class="header-actions">
             <div class="ans-search-box">
                 <img src="assets/img/icon/search-black.svg" />
-                <SfTextBox Placeholder="Search"></SfTextBox>
+                <SfTextBox OnChange="VM.SearchAsync" @bind-Value="VM.SearchTerm" Placeholder="Search"></SfTextBox>
             </div>
-          @*   <button class="ans-filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+            @*   <button class="ans-filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
                 <img src="assets/img/icon/filter.svg" />
                 Filters
             </button> *@
@@ -42,12 +42,12 @@
                         <th class="th-check">
                             <div class="cb-wrap">
                                 <input type="checkbox" class="cb-input" @onchange="() => VM.ToggleSelectAll(AllSelected)"
-                                       checked="@AllSelected" />
-                              
+                                checked="@AllSelected" />
+
                             </div>
                         </th>
                         <th class="sortable @(SortCol=="CustomerName" ? (SortAsc?"sort-asc":"sort-desc") : "")"
-                            @onclick='() => SortBy("CustomerName")'>
+                        @onclick='() => SortBy("CustomerName")'>
                             Customer Name
                             <span class="sort-icon">
                                 <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 0L8 5H0L4 0Z" fill="@(SortCol=="CustomerName"&&SortAsc?"#2563eb":"#94a3b8")" /></svg>
@@ -55,7 +55,7 @@
                             </span>
                         </th>
                         <th class="sortable @(SortCol=="ItemCode" ? (SortAsc?"sort-asc":"sort-desc") : "")"
-                            @onclick='() => SortBy("ItemCode")'>
+                        @onclick='() => SortBy("ItemCode")'>
                             Item Code
                             <span class="sort-icon">
                                 <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 0L8 5H0L4 0Z" fill="@(SortCol=="ItemCode"&&SortAsc?"#2563eb":"#94a3b8")" /></svg>
@@ -65,7 +65,7 @@
                         <th>FG Item Code</th>
                         <th>Bulk Item Code</th>
                         <th class="sortable @(SortCol=="CreatedBy" ? (SortAsc?"sort-asc":"sort-desc") : "")"
-                            @onclick='() => SortBy("CreatedBy")'>
+                        @onclick='() => SortBy("CreatedBy")'>
                             Created By
                             <span class="sort-icon">
                                 <svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4 0L8 5H0L4 0Z" fill="@(SortCol=="CreatedBy"&&SortAsc?"#2563eb":"#94a3b8")" /></svg>
@@ -86,8 +86,8 @@
                             <td class="td-check">
                                 <div class="cb-wrap">
                                     <input type="checkbox" class="cb-input"
-                                           checked="@row.Selected"
-                                           @onchange="() => VM.ToggleRow(row)" />
+                                    checked="@row.Selected"
+                                    @onchange="() => VM.ToggleRow(row)" />
                                 </div>
                             </td>
                             <td @onclick="() => VM.NavigateToNPISetup(row.Id)">@row.CustomerName</td>
@@ -217,5 +217,10 @@
         if (e.Key == "Enter") await VM.SearchAsync();
     }
 
+    public async Task Search()
+    {
+        await VM.SearchAsync();
+        StateHasChanged();
+    }
 
 }

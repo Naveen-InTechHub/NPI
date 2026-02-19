@@ -52,6 +52,13 @@ public class NpiDetailViewModel : ViewModelBase
         set => SetProperty(ref _isDarkTheme, value);
     }
 
+    private bool _isLaunching;
+    public bool IsLaunching
+    {
+        get => _isLaunching;
+        set => SetProperty(ref _isLaunching, value);
+    }
+
     private string _noteText = string.Empty;
     public string NoteText
     {
@@ -252,10 +259,12 @@ public class NpiDetailViewModel : ViewModelBase
         if (Record == null) return;
         await ExecuteAsync(async () =>
         {
+            IsLaunching = true;
             Record.ModifiedBy = CurrentUser;
             var result = await _service.UpdateAsync(Record.Id, Record);
             if (result != null) Record = result;
         });
+        IsLaunching = false;
         _toastService.ShowSuccess("Record saved successfully.");
     }
 

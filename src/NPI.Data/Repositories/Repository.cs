@@ -34,6 +34,8 @@ public interface IRepository<T> where T : BaseEntity
     void Update(T entity);
     void Remove(T entity);
     void RemoveRange(IEnumerable<T> entities);
+    Task<T?> GetTrackedAsync(Expression<Func<T, bool>> predicate);
+
 }
 
 // ── Generic Repository Implementation ──
@@ -66,6 +68,12 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
 
     public async Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate)
         => await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
+    public async Task<T?> GetTrackedAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet
+            .Where(predicate)
+            .FirstOrDefaultAsync(); // 🔥 No AsNoTracking here
+    }
 
     public async Task<IReadOnlyList<T>> FindAsync(
         Expression<Func<T, bool>>? predicate = null,
@@ -94,6 +102,8 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
 
     public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
         => predicate == null ? await _dbSet.CountAsync() : await _dbSet.CountAsync(predicate);
+  
+
 
     // ── Paged ──
 

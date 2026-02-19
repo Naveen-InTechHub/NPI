@@ -32,7 +32,7 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="ans-mini-card-list-label mb-2">Multiple Packout Notes</div>
                         <div class="ans-textarea-box w-100">
-                            <SfTextArea Placeholder="Enter" Width="100%" style="height: 80px;"></SfTextArea>
+                            <SfTextArea @bind-Value="NpiRecord.SetupNotes" Placeholder="Enter" Width="100%" style="height: 80px;"></SfTextArea>
                         </div>
                     </div>
                 </div>
@@ -143,7 +143,7 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="ans-mini-card-list-label mb-2">Multiple Packout Notes</div>
                         <div class="ans-textarea-box w-100">
-                            <SfTextArea Placeholder="Enter" Width="100%" style="height: 100px;"></SfTextArea>
+                            <SfTextArea @bind-Value="NpiRecord.PilotNotes" Placeholder="Enter" Width="100%" style="height: 100px;"></SfTextArea>
                         </div>
                     </div>
                 </div>
@@ -249,32 +249,36 @@
         </div>
     </div>
 </div>
-<!-- ── Navigation ── -->
+<!-- Navigation -->
 <div class="stepper-nav mb-3">
-    @* <span class="step-indicator" id="stepIndicator">Step 1 of 5</span> *@
     <div class="nav-btns">
-        <button class="ans-secondary-button" id="btnPrev" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Launch Product</button>
-        <button class="ans-primary-button" id="btnNext" onclick="changeStep(1)" disabled>Launch & Next</button>
+        <button @onclick="VM.SaveRecordAsync" class="ans-secondary-button">
+            Launch Product
+        </button>
+
+        <button class="ans-primary-button" disabled>
+            Launch & Next
+        </button>
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            @* <div class="modal-header">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div> *@
-            <div class="modal-body">
-                <div class="text-center">
-                    <video autoplay muted loop playsinline class="w-50" style="border: none;">
-                        <source src="assets/img/loading.mp4" type="video/mp4" />
-                    </video>
+@if (VM.IsLaunching)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="text-center">
+                        <video autoplay muted loop playsinline class="w-50">
+                            <source src="assets/img/loading.mp4" type="video/mp4" />
+                        </video>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+}
+
 @code {
     private bool isChecked = true;
     [Parameter]

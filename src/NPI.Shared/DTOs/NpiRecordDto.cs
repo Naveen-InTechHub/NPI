@@ -38,6 +38,9 @@ public class NpiRecordDto
     public string? CustomerNumber { get; set; }
     public string? Barcode { get; set; }
 
+    // Notes 
+    public string? SetupNotes { get; set; }
+    public string? PilotNotes { get; set; }
     // Audit
     public string? CreatedBy { get; set; }
     public DateTime CreatedDate { get; set; }
