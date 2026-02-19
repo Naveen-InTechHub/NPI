@@ -1,0 +1,307 @@
+﻿<div class="ans-card-title">FGSS Setup</div>
+<div class="ans-border"></div>
+<div class="row g-3">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Finished Goods Specifications</div>
+                <div class="ans-mini-card-header-para">Define the physical and functional attributes of the finished product.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Dosage Form</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Tablet Shape & Color</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Tablet Weight (mg)</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Dimensions (L × W × T)</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Coating Type (if applicable)</div>
+                        <div class="ans-select">
+                            <select class="form-select">
+                                <option disabled selected hidden></option>
+                                <option value="1">Film</option>
+                                <option value="2">Sugar</option>
+                                <option value="3">Enteric</option>
+                                <option>None</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Flavor / Odor Characteristics</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox  Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Packaging Configuration</div>
+                <div class="ans-mini-card-header-para">Specify how finished goods are packed and labeled.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Primary Packaging Type</div>
+                        <div class="ans-select">
+                            <select class="form-select">
+                                <option disabled selected hidden></option>
+                                <option value="1">Bottle</option>
+                                <option value="2">Blister</option>
+                                <option value="3">Sachet</option>
+                                <option>None</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Count per Unit</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Container Material</div>
+                        <div class="ans-select">
+                            <select class="form-select">
+                                <option disabled selected hidden></option>
+                                <option value="1">HDPE</option>
+                                <option value="2">PET</option>
+                                <option value="3">Glass</option>
+                                <option>None</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Closure Type</div>
+                        <div class="ans-select">
+                            <select class="form-select">
+                                <option disabled selected hidden></option>
+                                <option value="1">CRC</option>
+                                <option value="2">Standard</option>
+                                <option value="3">Induction Seal</option>
+                                <option>None</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Secondary Packaging</div>
+                        <div class="ans-select">
+                            <select class="form-select">
+                                <option disabled selected hidden></option>
+                                <option value="1">Carton</option>
+                                <option value="2">Shrink wrap</option>
+                                <option>None</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Label Version / SKU</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Quality & Release Criteria</div>
+                <div class="ans-mini-card-header-para">Define quality checks required before product release.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Appearance Inspection Required</div>
+                            <SfSwitch TChecked="bool?"
+                                      Checked=true
+                                      OnLabel="Yes"
+                                      OffLabel="No"
+                                      CssClass="ans-switch-btn flex-shrink-0">
+                            </SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Weight Variation Test</div>
+                            <SfSwitch TChecked="bool?"
+                                      Checked=true
+                                      OnLabel="Yes"
+                                      OffLabel="No"
+                                      CssClass="ans-switch-btn flex-shrink-0">
+                            </SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Hardness / Friability Test</div>
+                            <SfSwitch TChecked="bool?"
+                                      Checked=true
+                                      OnLabel="Yes"
+                                      OffLabel="No"
+                                      CssClass="ans-switch-btn flex-shrink-0">
+                            </SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Disintegration / Dissolution Test</div>
+                            <SfSwitch TChecked="bool?"
+                                      Checked=true
+                                      OnLabel="Yes"
+                                      OffLabel="No"
+                                      CssClass="ans-switch-btn flex-shrink-0">
+                            </SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Microbial Testing Required</div>
+                            <SfSwitch TChecked="bool?"
+                                      Checked=true
+                                      OnLabel="Yes"
+                                      OffLabel="No"
+                                      CssClass="ans-switch-btn flex-shrink-0">
+                            </SfSwitch>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="ans-mini-card-list-label mb-2">Acceptance Criteria Notes</div>
+                        <div class="ans-textarea-box w-100">
+                            <SfTextArea Placeholder="Enter" Width="100%" style="height: 130px;"></SfTextArea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-3 mt-0">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Shelf Life & Storage Conditions</div>
+                <div class="ans-mini-card-header-para">Establish stability and storage requirements.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Target Shelf Life</div>
+                        <div class="ans-select">
+                            <select class="form-select">
+                                <option disabled selected hidden></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Storage Conditions</div>
+                        <div class="ans-select">
+                            <select class="form-select">
+                                <option disabled selected hidden></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Special Handling Instructions</div>
+                        <div class="ans-select">
+                            <select class="form-select">
+                                <option disabled selected hidden></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Packaging & Component Assessment</div>
+                <div class="ans-mini-card-header-para">Review packaging components and sourcing details.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">COA Required at Release</div>
+                            <SfSwitch TChecked="bool?"
+                                      Checked=true
+                                      OnLabel="Yes"
+                                      OffLabel="No"
+                                      CssClass="ans-switch-btn flex-shrink-0">
+                            </SfSwitch>
+                        </div>
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <div class="ans-mini-card-list-label">Batch Record Template Linked</div>
+                            <SfSwitch TChecked="bool?"
+                                      Checked=true
+                                      OnLabel="Yes"
+                                      OffLabel="No"
+                                      CssClass="ans-switch-btn flex-shrink-0">
+                            </SfSwitch>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="ans-mini-card-list-label mb-2">Regulatory Market</div>
+                        <div class="ans-select">
+                            <select class="form-select">
+                                <option disabled selected hidden></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">FGSS Notes & Exceptions</div>
+                <div class="ans-mini-card-header-para">Capture any special instructions or deviations.</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="ans-mini-card-list-label mb-2">Special FG Handling Notes</div>
+                        <div class="ans-text-box ans-reduce-radius w-100">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="ans-mini-card-list-label mb-2">Known Risks or Constraints</div>
+                        <div class="ans-text-box ans-reduce-radius w-100">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ── Navigation ── -->
+<div class="stepper-nav mb-3">
+    @* <span class="step-indicator" id="stepIndicator">Step 1 of 5</span> *@
+    <div class="nav-btns">
+        <button class="ans-secondary-button" id="btnPrev" onclick="changeStep(-1)">Previous</button>
+        <button class="ans-primary-button" id="btnNext" onclick="changeStep(1)">Save & Continue</button>
+    </div>
+</div>
+@code {
+
+}
