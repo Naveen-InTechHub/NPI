@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using NPI.Client.DTOs.Auth
 @using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Inputs
 
 @inject NpiDetailViewModel VM
 
@@ -138,13 +139,13 @@
                 </div>
             </div>
 
-            <div class="step" onclick="goTo(1)">
-                <div class="step-body"></div>
-                <div class="step-inner">
-                    <div class="step-num">2</div>
-                    <span class="step-label">Formulation</span>
-                </div>
+        <div class="step" onclick="goTo(1)">
+            <div class="step-body"></div>
+            <div class="step-inner">
+                <div class="step-num">2</div>
+                <span class="step-label">FGSS Setup</span>
             </div>
+        </div>
 
             <div class="step" onclick="goTo(2)">
                 <div class="step-body"></div>
@@ -191,9 +192,10 @@
             <div class="panel" id="panel-3">
             </div>
 
-            <!-- Step 5: Sampling Plan -->
-            <div class="panel" id="panel-4">
-            </div>
+        <!-- Step 5: Sampling Plan -->
+        <div class="panel" id="panel-4">
+            <SamplingPlan/>
+        </div>
 
         </div>
         <!-- /panels -->
@@ -205,8 +207,104 @@
             <button class="btn btn-next" id="btnNext" onclick="changeStep(1)">Next &#8594;</button>
         </div>
     </div> *@
+</div>
+<!-- Modal -->
+<div class="modal fade" id="editFormulaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+
+        <div class="modal-content ans-modal">
+
+            <!-- Header -->
+            <div class="modal-header d-flex gap-3 align-items-center" style="background-color: rgba(37, 99, 235, 0.05); padding: 15px;">
+                <div>
+                    <div class="ans-card-title" style="color: var(--primary-color); font-size: 16px;">Edit Formula</div>
+                    <div class="ans-para mb-0 mt-1">Product and internal item codes used for tracking and production.</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body pt-2">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Production Type</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Package Type</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Order Quantity</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">No of Batches</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Formula Size</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Total Units</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Savings Per Unit</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Blunder</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Total Savings</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Formula Kg</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                        <div class="ans-mini-card-list-label mb-2">Bulk Density</div>
+                        <div class="ans-text-box ans-reduce-radius">
+                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="flex-end gap-2 justify-content-end px-2 mb-3">
+                <button class="ans-secondary-button smal-size px-4" style="font-size: 14px" data-bs-dismiss="modal">Cancel</button>
+                <button class="ans-primary-button smal-size px-4" style="font-size: 14px">Update</button>
+            </div>
+
+        </div>
     </div>
-}
+</div>
+
 <Footer/>
 
 @code {

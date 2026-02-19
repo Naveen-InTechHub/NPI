@@ -1,0 +1,71 @@
+﻿<div class="ans-card-title">Sampling Plan</div>
+<div class="ans-border"></div>
+<div class="row g-3">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Upload Dcuments</div>
+                <div class="ans-mini-card-header-para">Select a file to upload</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <FileUpload/>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+        <div class="ans-mini-card-container flex-fill h-100">
+            <div class="ans-mini-card-header">
+                <div class="ans-mini-card-header-title">Attached Documents</div>
+                <div class="ans-mini-card-header-para">You can see the attached documents here</div>
+            </div>
+            <div class="ans-mini-card-body">
+                <ul class="ans-attach-file-list">
+                    <li>
+                        <div class="d-flex gap-2 w-100">
+                            <img src="assets/img/icon/pdficon.svg" />
+                            <div class="ans-file-container">
+                                <div class="ans-file-name">sample doc.pdf</div>
+                                <div class="ans-file-status">File uploaded</div>
+                            </div>
+                        </div>
+                        <div class="cursor-pointer">
+                            <img src="assets/img/icon/remove.svg" />
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex gap-2 w-100">
+                            <img src="assets/img/icon/pdficon.svg" />
+                            <div class="ans-file-container">
+                                <div class="ans-file-name">sample doc.pdf</div>
+                                <div class="ans-file-status">File uploaded</div>
+                            </div>
+                        </div>
+                        <div class="cursor-pointer">
+                            <img src="assets/img/icon/remove.svg" />
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex gap-2 w-100">
+                            <img src="assets/img/icon/pdficon.svg" />
+                            <div class="ans-file-container">
+                                <div class="ans-file-name">sample doc.pdf</div>
+                                <div class="ans-file-status">File uploaded</div>
+                            </div>
+                        </div>
+                        <div class="cursor-pointer">
+                            <img src="assets/img/icon/remove.svg" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ── Navigation ── -->
+<div class="stepper-nav mb-3">
+    @* <span class="step-indicator" id="stepIndicator">Step 1 of 5</span> *@
+    <div class="nav-btns">
+        <button class="ans-secondary-button" id="btnPrev" onclick="changeStep(-1)">Previous</button>
+        <button class="ans-primary-button" id="btnNext" onclick="changeStep(5)">Save & Continue</button>
+    </div>
+</div>

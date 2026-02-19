@@ -1,0 +1,159 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+
+<!-- LABEL makes whole box clickable -->
+<label class="upload-box">
+    <InputFile OnChange="OnFileSelected" class="d-none" />
+    <div class="upload-content">
+        <div class="upload-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4.49982 11C-0.000177145 11.5 0.499823 5.99999 4.49982 6.49999C2.99982 0.999989 11.4998 0.999989 10.9998 4.99999C15.9998 3.49999 15.9998 11.5 11.4998 11M5.49982 8.99999L7.99982 6.99999M7.99982 6.99999L10.4998 8.99999M7.99982 6.99999V14.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+        <div class="upload-title">
+            Choose a file or drag & drop it here
+        </div>
+        <div class="upload-sub">
+            JPEG, PNG, PDF formats, up to 25MB
+        </div>
+        <span class="browse-btn">
+            Browse files
+        </span>
+    </div>
+</label>
+<!-- FILE LIST BELOW -->
+@if (files.Count > 0)
+{
+    <div class="file-list">
+
+        @foreach (var file in files)
+        {
+            <div class="file-item">
+
+                <div class="file-info">
+                    📄 @file.Name
+                    <small>(@FormatSize(file.Size))</small>
+                </div>
+
+                <button class="remove-btn"
+                        @onclick="() => RemoveFile(file)">
+                    ✕
+                </button>
+
+            </div>
+        }
+        <div class="d-flex justify-content-between gap-2 mt-3 mb-2">
+            <button class="ans-secondary-button small-size">Clear All</button>
+            <button class="ans-primary-button small-size">Save</button>
+        </div>
+    </div>
+}
+
+<style>
+.upload-box {
+    width: 100%;
+    border: 2px dashed #cfd6e4;
+    border-radius: 10px;
+    background: #f3f4f6;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.upload-box:hover {
+    border-color: #9fb3d1;
+    background: #eef1f7;
+}
+
+.upload-content {
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.upload-icon {
+    font-size: 28px;
+    color: #6c7a93;
+    margin-bottom: 0px;
+}
+
+.upload-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #2c3e55;
+}
+
+.upload-sub {
+    font-size: 13px;
+    color: #8b97ad;
+    margin: 5px 0 12px;
+}
+
+.browse-btn {
+    background: #ffffff;
+    border: 1px solid #cfd6e4;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.browse-btn:hover {
+    background: #f4f6fb;
+}
+    /* File list container */
+.file-list {
+  margin-top: 16px;
+}
+
+/* Single file row */
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f7f8fb;
+  border: 1px solid #e1e5ef;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+
+/* File text */
+.file-info {
+  font-size: 14px;
+  color: #2c3e55;
+}
+
+.file-info small {
+  color: #8b97ad;
+  margin-left: 6px;
+}
+
+/* Remove button */
+.remove-btn {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  color: #c0392b;
+}
+
+.remove-btn:hover {
+  color: #e74c3c;
+}
+</style>
+@code {
+    List<IBrowserFile> files = new();
+    void OnFileSelected(InputFileChangeEventArgs e)
+    {
+        files.AddRange(e.GetMultipleFiles());
+    }
+    void RemoveFile(IBrowserFile file)
+    {
+        files.Remove(file);
+    }
+    string FormatSize(long bytes)
+    {
+        return $"{bytes / 1024} KB";
+    }
+}
+

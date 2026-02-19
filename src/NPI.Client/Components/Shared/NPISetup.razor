@@ -251,7 +251,7 @@
 </div>
 <!-- ── Navigation ── -->
 <div class="stepper-nav mb-3">
-    <span class="step-indicator" id="stepIndicator">Step 1 of 5</span>
+    @* <span class="step-indicator" id="stepIndicator">Step 1 of 5</span> *@
     <div class="nav-btns">
         <button class="ans-secondary-button" id="btnPrev" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Launch Product</button>
         <button class="ans-primary-button" id="btnNext" onclick="changeStep(1)" disabled>Launch & Next</button>
@@ -267,7 +267,7 @@
             </div> *@
             <div class="modal-body">
                 <div class="text-center">
-                    <video autoplay muted loop playsinline class="w-50">
+                    <video autoplay muted loop playsinline class="w-50" style="border: none;">
                         <source src="assets/img/loading.mp4" type="video/mp4" />
                     </video>
                 </div>

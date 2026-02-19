@@ -18,10 +18,14 @@
             <div class="page-subtitle">Real-time insights into employee productivity, work patterns, and performance trends.</div>
         </div>
         <div class="header-actions">
-            <button class="ans-filter-btn">
+            <div class="ans-search-box">
+                <img src="assets/img/icon/search-black.svg" />
+                <SfTextBox Placeholder="Search"></SfTextBox>
+            </div>
+          @*   <button class="ans-filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
                 <img src="assets/img/icon/filter.svg" />
                 Filters
-            </button>
+            </button> *@
             <button class="ans-export-btn" @onclick="VM.ExportFile">
                 <img src="assets/img/icon/export.svg" />
                 Export
@@ -135,10 +139,21 @@
         </div>
     </div>
 </div>
+
 <Footer />
 
 @code {
 
+    private List<string> StatusOptions = new()
+    {
+        "In-progress",
+        "Completed",
+        "Pending",
+        "Cancelled",
+        "On Hold"
+    };
+
+    private List<string> SelectedStatuses = new() { "In-progress" };
 
     // ── Sorting ─────────────────────────────────────────────
     private string SortCol = "CustomerName";
