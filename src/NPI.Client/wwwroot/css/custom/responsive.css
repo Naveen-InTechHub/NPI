@@ -1,2 +1,157 @@
-﻿body {
+﻿/* xs : 0px — 575.98px */
+@media (max-width: 575.98px) {
+    .ans-mini-card-list-label {
+        font-size: 13px !important;
+    }
+    .ans-page {
+        padding: 16px 15px 21px !important;
+    }
+    .ans-page-title {
+        font-size: 16px !important;
+    }
+    .ans-card-title {
+        font-size: 16px !important;
+    }
+    .ans-col-lg-5 {
+        width: 100%;
+    }
+
+    .ans-col-lg-7 {
+        width: 100%;
+    }
+}
+
+/* sm : 576px — 767.98px */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .ans-mini-card-list-label {
+        font-size: 13px !important;
+    }
+    .ans-page {
+        padding: 16px 15px 21px !important;
+    }
+    .ans-page-title {
+        font-size: 16px !important;
+    }
+    .ans-card-title {
+        font-size: 16px !important;
+    }
+    .ans-col-lg-5 {
+        width: 100%;
+    }
+
+    .ans-col-lg-7 {
+        width: 100%;
+    }
+}
+
+/* md : 768px — 991.98px */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .ans-mini-card-list-label {
+        font-size: 13px !important;
+    }
+    .ans-page {
+        padding: 16px 15px 21px !important;
+    }
+    .ans-page-title {
+        font-size: 20px !important;
+    }
+    .ans-card-title {
+        font-size: 16px !important;
+    }
+    .ans-col-lg-5 {
+        width: 100%;
+    }
+
+    .ans-col-lg-7 {
+        width: 100%;
+    }
+}
+
+/* lg : 992px — 1199.98px */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .ans-mini-card-list-label {
+        font-size: 13px !important;
+    }
+    .ans-page {
+        padding: 16px 15px 21px !important;
+    }
+    .ans-page {
+        padding: 16px 28px 30px !important;
+    }
+    .ans-page-title {
+        font-size: 20px !important;
+    }
+    .ans-card-title {
+        font-size: 16px !important;
+    }
+    .ans-col-lg-5 {
+        width: 100%;
+    }
+
+    .ans-col-lg-7 {
+        width: 100%;
+    }
+}
+
+/* xl : 1200px — 1399.98px */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+    .ans-mini-card-list-label {
+        font-size: 13px !important;
+    }
+    .ans-page {
+        padding: 16px 28px 30px !important;
+    }
+    .ans-page-title {
+        font-size: 20px !important;
+    }
+    .ans-card-title {
+        font-size: 16px !important;
+    }
+    .ans-field-label, .ans-field-value {
+        font-size: 12px !important;
+    }
+    .ans-col-lg-5 {
+        width: 45%;
+    }
+
+    .ans-col-lg-7 {
+        width: 55%;
+    }
+}
+
+/* xxl : 1400px — 1599.98px */
+@media (min-width: 1400px) and (max-width: 1599.98px) {
+    .ans-mini-card-list-label
+    {
+        font-size: 13px !important;
+    }
+    .ans-page {
+        padding: 16px 28px 30px !important;
+    }
+    .ans-page-title {
+        font-size: 20px !important;
+    }
+    .ans-card-title {
+        font-size: 16px !important;
+    }
+    .ans-field-label, .ans-field-value {
+        font-size: 13px !important;
+    }
+    .ans-col-lg-5 {
+        width: 45%;
+    }
+
+    .ans-col-lg-7 {
+        width: 55%;
+    }
+}
+
+/* xxxl : ≥ 1600px */
+@media (min-width: 1600px) {
+    .ans-col-lg-5 {
+        width: 45%;
+    }
+    .ans-col-lg-7 {
+        width: 55%;
+    }
 }
