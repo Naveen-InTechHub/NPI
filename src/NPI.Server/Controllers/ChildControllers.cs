@@ -380,4 +380,67 @@ public class ItemCodesAXBomController : ControllerBase
 }
 
 
+// ══════════════════════════════════════════════════════
+// Update Questions
+// ══════════════════════════════════════════════════════
+[ApiController]
+[Route("api/updatequestionsfigma")]
+public class UpdateQuestionsController : ControllerBase
+{
+    private readonly IUnitOfWork _uow;
+    private readonly IMapper _mapper;
+    public UpdateQuestionsController(IUnitOfWork uow, IMapper mapper) { _uow = uow; _mapper = mapper; }
 
+    [HttpPost]
+    public async Task<ActionResult<string>> UpdateQuestions()
+    {
+        // setup questions 
+
+        var plannerQuestionsToUpdate = await _uow.PlannerQuestions.FindAsync(q => 
+           q.QuestionKey == "newrawmaterials" 
+        || q.QuestionKey == "customersupplied" 
+        || q.QuestionKey == "fromnewvendor"
+        || q.QuestionKey == "newcomponents"
+        || q.QuestionKey == "regulatorycerts"
+        || q.QuestionKey == "newartwork"
+        );
+        foreach (var question in plannerQuestionsToUpdate)
+        {
+            if (question.QuestionKey == "customersupplied")
+            {
+                question.QuestionText = question.Category == PlannerCategory.Components ? "Are packaging components customer-supplied?"
+                                                                                        : "Are any raw materials customer-supplied?";
+                _uow.PlannerQuestions.Update(question);
+            }
+            else if (question.QuestionKey == "fromnewvendor")
+            {
+                question.QuestionText = question.Category == PlannerCategory.Components ? "Are packaging components sourced from a new vendor?" 
+                                                                                        : "Are raw materials sourced from a new vendor?";
+                _uow.PlannerQuestions.Update(question);
+            }
+            else if (question.QuestionKey == "newcomponents")
+            {
+                question.QuestionText = "Does the packout include new components (excluding label)?";
+                _uow.PlannerQuestions.Update(question);
+            }
+            else if (question.QuestionKey == "newrawmaterials")
+            {
+                question.QuestionText = "Does the formula include new raw materials?";
+                _uow.PlannerQuestions.Update(question);
+            }
+            else if (question.QuestionKey == "regulatorycerts")
+            {
+                question.QuestionText = "Does this product require regulatory certifications or approvals?";
+                _uow.PlannerQuestions.Update(question);
+            }
+            else if (question.QuestionKey == "newartwork")
+            {
+                question.QuestionText = "Does the packout require new or updated artwork?";
+                _uow.PlannerQuestions.Update(question);
+            }
+        }
+
+        await _uow.SaveChangesAsync();
+        return Ok("Question updated as per new figma");
+    }
+}
