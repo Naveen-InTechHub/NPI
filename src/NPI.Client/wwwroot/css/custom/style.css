@@ -53,27 +53,6 @@ body {
     font-weight: 500;
     line-height: normal;
 }
-.ans-select .form-select {
-    border-radius: 6px;
-    background: rgba(234, 234, 234, 0.70);
-    height: 40px;
-    padding: 7px 40px 7px 10px;
-    background-image: var(--bs-form-select-bg-img);
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 16px 12px;
-    font-size: 14px;
-    font-style: normal;
-    line-height: normal;
-}
-.ans-select .form-select:focus {
-    border-color: transparent;
-    box-shadow: none;
-    outline: none;
-}
-.ans-text-box .e-input-group .e-input-group-icon {
-    display: none !important;
-}
 .ans-text-box .e-input-group {
     background-color: transparent !important;
     border: none !important;
