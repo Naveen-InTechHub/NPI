@@ -561,3 +561,10 @@ body {
 {
     cursor: pointer !important;
 }
+
+.table-loader {
+    min-height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -4,11 +4,11 @@
     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
         <div class="ans-mini-card-container flex-fill h-100">
             <div class="ans-mini-card-header">
-                <div class="ans-mini-card-header-title">Upload Dcuments</div>
+                <div class="ans-mini-card-header-title">Upload Documents</div>
                 <div class="ans-mini-card-header-para">Select a file to upload</div>
             </div>
             <div class="ans-mini-card-body">
-                <FileUpload/>
+                <FileUpload VM="VM" NpiRecord="NpiRecord"/>
             </div>
         </div>
     </div>
@@ -20,42 +20,34 @@
             </div>
             <div class="ans-mini-card-body">
                 <ul class="ans-attach-file-list">
-                    <li>
-                        <div class="d-flex gap-2 w-100">
-                            <img src="assets/img/icon/pdficon.svg" />
-                            <div class="ans-file-container">
-                                <div class="ans-file-name">sample doc.pdf</div>
-                                <div class="ans-file-status">File uploaded</div>
-                            </div>
+                   
+                    @if (VM.Documents != null && VM.Documents.Count > 0)
+                    {
+                        @foreach (var doc in VM.Documents)
+                        {
+                            <li>
+                                <div class="d-flex gap-2 w-100">
+                                    <img src="@GetFileIcon(doc.FileName)" style="width:24px;height:24px;object-fit:contain;" />
+                                    <div class="ans-file-container">
+                                        <div class="ans-file-name">@(doc.FileName ?? "No file")</div>
+                                        <div class="ans-file-status">File uploaded</div>
+                                    </div>
+                                </div>
+                                <div class="cursor-pointer" @onclick="() => VM.DeleteDocument(doc.Id)">
+                                    <img src="assets/img/icon/remove.svg" />
+                                </div>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                            </svg>
+                            <p>No files have been attached</p>
                         </div>
-                        <div class="cursor-pointer">
-                            <img src="assets/img/icon/remove.svg" />
-                        </div>
-                    </li>
-                    <li>
-                        <div class="d-flex gap-2 w-100">
-                            <img src="assets/img/icon/pdficon.svg" />
-                            <div class="ans-file-container">
-                                <div class="ans-file-name">sample doc.pdf</div>
-                                <div class="ans-file-status">File uploaded</div>
-                            </div>
-                        </div>
-                        <div class="cursor-pointer">
-                            <img src="assets/img/icon/remove.svg" />
-                        </div>
-                    </li>
-                    <li>
-                        <div class="d-flex gap-2 w-100">
-                            <img src="assets/img/icon/pdficon.svg" />
-                            <div class="ans-file-container">
-                                <div class="ans-file-name">sample doc.pdf</div>
-                                <div class="ans-file-status">File uploaded</div>
-                            </div>
-                        </div>
-                        <div class="cursor-pointer">
-                            <img src="assets/img/icon/remove.svg" />
-                        </div>
-                    </li>
+                    }
                 </ul>
             </div>
         </div>
@@ -65,7 +57,45 @@
 <div class="stepper-nav mb-3">
     @* <span class="step-indicator" id="stepIndicator">Step 1 of 5</span> *@
     <div class="nav-btns">
-        <button class="ans-secondary-button" id="btnPrev" onclick="changeStep(-1)">Previous</button>
-        <button class="ans-primary-button" id="btnNext" onclick="changeStep(5)">Save & Continue</button>
+        <button class="ans-secondary-button" id="btnPrev" @onclick="PreviousTab">Previous</button>
+        <button class="ans-primary-button" id="btnNext" @onclick="SaveAndContinueAsync">Save & Continue</button>
     </div>
 </div>
+
+@code {
+    [Inject] private HttpClient Http { get; set; } = default!;
+    [Parameter]
+    public NpiRecordDto NpiRecord { get; set; } = new NpiRecordDto();
+    [Parameter]
+    public NpiDetailViewModel VM { get; set; }
+
+    [Parameter]
+    public EventCallback<int> TabNavigation { get; set; }
+
+    public async Task SaveAndContinueAsync()
+    {
+        await TabNavigation.InvokeAsync(0); // Navigate to next tab (e.g., Tab 3)
+    }
+
+    public async Task PreviousTab()
+    {
+        await TabNavigation.InvokeAsync(1); // Navigate to previous tab (e.g., Tab 1)
+    }
+
+    private string GetFileIcon(string? fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+            return "assets/img/icon/jpgicon.png"; // default
+
+        var ext = Path.GetExtension(fileName).ToLowerInvariant();
+
+        return ext switch
+        {
+            ".pdf" => "assets/img/icon/pdficon.svg",
+            ".png" => "assets/img/icon/pngicon.png",
+            ".jpg" => "assets/img/icon/jpgicon.png",
+            ".jpeg" => "assets/img/icon/jpgicon.png",
+            _ => "assets/img/icon/jpgicon.png" // default
+        };
+    }
+}

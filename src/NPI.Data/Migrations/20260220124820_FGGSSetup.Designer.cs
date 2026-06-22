@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NPI.Data.Context;
 
@@ -10,9 +11,11 @@ using NPI.Data.Context;
 namespace NPI.Data.Migrations
 {
     [DbContext(typeof(NpiDbContext))]
-    partial class NpiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260220124820_FGGSSetup")]
+    partial class FGGSSetup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");

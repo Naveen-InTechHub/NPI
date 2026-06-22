@@ -29,6 +29,12 @@ public class NpiListViewModel : ViewModelBase
         get => _records;
         set => SetProperty(ref _records, value);
     }
+    private List<int>? _selectedIds = new();
+    public List<int>? SelectedIds
+    {
+        get => _selectedIds;
+        set => SetProperty(ref _selectedIds, value);
+    }
     private bool _allSelected;
     public bool AllSelected
     {
@@ -38,6 +44,13 @@ public class NpiListViewModel : ViewModelBase
             _allSelected = value;
             ToggleSelectAll(value);
         }
+    }
+
+    private bool _isLoading;
+    public bool IsLoading
+    {
+        get => _isLoading;
+        set => SetProperty(ref _isLoading, value);
     }
 
     private string _searchTerm = string.Empty;
@@ -73,10 +86,10 @@ public class NpiListViewModel : ViewModelBase
     }
 
     public async Task ExportFile()
-    {
+    { 
         await ExecuteAsync(async () =>
         {
-            var bytes = await _service.ExportAsync(SearchTerm, StatusFilter);
+            var bytes = await _service.ExportAsync(SearchTerm, StatusFilter, SelectedIds);
 
             if (bytes == null)
             {
@@ -114,8 +127,23 @@ public class NpiListViewModel : ViewModelBase
     public void ToggleSelectAll(bool isSelected)
     {
         foreach (var r in Records) r.Selected = isSelected;
+        if(!isSelected)
+            SelectedIds = new();
     }
-    public void ToggleRow(NpiRecordDto row) => row.Selected = !row.Selected;
+    public void ToggleRow(NpiRecordDto row, bool isChecked)
+    {
+        row.Selected = isChecked;
 
+        if (isChecked)
+        {
+            if (!SelectedIds?.Contains(row.Id) ?? false)
+                SelectedIds?.Add(row.Id);
+        }
+        else
+        {
+            SelectedIds?.Remove(row.Id);
+        }
+
+    }
 
 }

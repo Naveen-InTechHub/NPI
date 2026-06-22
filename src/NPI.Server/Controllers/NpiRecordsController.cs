@@ -51,18 +51,16 @@ public class NpiRecordsController : ControllerBase
             return BadRequest(new ApiResponse<List<NpiRecordDto>> { Success = false, Message = ex.Message });
         }
     }
-    [HttpGet("export")]
-    public async Task<IActionResult> Export(
-     [FromQuery] string? search,
-     [FromQuery] int? status)
+    [HttpPost("export")]
+    public async Task<IActionResult> Export([FromBody] ExportRequest request)
     {
         try
         {
-            NpiStatus? statusEnum = status.HasValue
-                ? (NpiStatus)status.Value
+            NpiStatus? statusEnum = request.Status.HasValue
+                ? (NpiStatus)request.Status.Value
                 : null;
 
-            var fileBytes = await _uow.NpiRecords.ExportAsync(search, statusEnum);
+            var fileBytes = await _uow.NpiRecords.ExportAsync(request.Search, request.Status, request.SelectedIds);
 
             return File(
                 fileBytes,
@@ -99,6 +97,26 @@ public class NpiRecordsController : ControllerBase
                 .OrderByDescending(n => n.CreatedDate)
                 .Select(n => n.Content)
                 .FirstOrDefault() ?? string.Empty;
+
+            dto.AcceptanceNotes = record.Notes?
+               .Where(n => n.Parent == "Acceptance")
+               .OrderByDescending(n => n.CreatedDate)
+               .Select(n => n.Content)
+               .FirstOrDefault() ?? string.Empty;
+            dto.FGHandlingNotes = record.Notes?
+               .Where(n => n.Parent == "FG Handling")
+               .OrderByDescending(n => n.CreatedDate)
+               .Select(n => n.Content)
+               .FirstOrDefault() ?? string.Empty;
+
+            dto.KnownRisksNotes = record.Notes?
+              .Where(n => n.Parent == "Known Risks")
+              .OrderByDescending(n => n.CreatedDate)
+              .Select(n => n.Content)
+              .FirstOrDefault() ?? string.Empty;
+
+
+
             return Ok(new ApiResponse<NpiRecordDto> { Success = true, Data = dto });
         }
         catch (Exception ex) 
@@ -223,8 +241,11 @@ public class NpiRecordsController : ControllerBase
 
             _mapper.Map(dto, record);
             // Notes update helper
-            await UpsertNote(record, "Setup", dto.SetupNotes, dto.ModifiedBy);
-            await UpsertNote(record, "Pilot", dto.PilotNotes, dto.ModifiedBy);
+            await _uow.UpsertNote(record, "Setup", dto.SetupNotes, dto.ModifiedBy);
+            await _uow.UpsertNote(record, "Pilot", dto.PilotNotes, dto.ModifiedBy);
+            await _uow.UpsertNote(record, "Acceptance", dto.AcceptanceNotes, dto.ModifiedBy);
+            await _uow.UpsertNote(record, "FG Handling", dto.FGHandlingNotes, dto.ModifiedBy);
+            await _uow.UpsertNote(record, "Known Risks", dto.KnownRisksNotes, dto.ModifiedBy);
             // Notes Update helper
             _uow.NpiRecords.Update(record);
             await _uow.SaveChangesAsync();
@@ -788,37 +809,6 @@ public class NpiRecordsController : ControllerBase
 
         return Ok($"{removedCount} duplicate record(s) removed.");
     }
-
-    private async Task UpsertNote(NpiRecord record, string parent, string? content, string? user)
-    {
-        if (string.IsNullOrWhiteSpace(content))
-            return;
-
-        var existingNote = record.Notes?
-            .FirstOrDefault(n => n.Parent == parent);
-
-        if (existingNote != null)
-        {
-            existingNote.Content = content;
-        }
-        else
-        {
-            record.Notes ??= new List<NpiNote>();
-
-            record.Notes.Add(new NpiNote
-            {
-                NpiRecordId = record.Id,
-                Parent = parent,
-                Content = content,
-                CreatedBy = user,
-                CreatedDate = DateTime.UtcNow
-            });
-        }
-    }
-
-
-
-
 
 }
 

@@ -252,11 +252,11 @@
 <!-- Navigation -->
 <div class="stepper-nav mb-3">
     <div class="nav-btns">
-        <button @onclick="VM.SaveRecordAsync" class="ans-secondary-button">
+       @*  <button @onclick="LauchNPI" class="ans-secondary-button">
             Launch Product
-        </button>
+        </button> *@
 
-        <button class="ans-primary-button" disabled>
+        <button class="ans-primary-button" @onclick="LauchNPI">
             Launch & Next
         </button>
     </div>
@@ -285,4 +285,12 @@
     public NpiRecordDto NpiRecord { get; set; } = new NpiRecordDto();
     [Parameter]
     public NpiDetailViewModel VM { get; set; }
+    [Parameter]
+    public EventCallback<int> TabNavigation { get; set; }
+
+    public async Task LauchNPI()
+    {
+        await VM.SaveRecordAsync();
+        await TabNavigation.InvokeAsync(1);
+    }
 }

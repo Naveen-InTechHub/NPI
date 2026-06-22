@@ -9,10 +9,12 @@ public class NpiMappingProfile : Profile
     public NpiMappingProfile()
     {
         // Entity → DTO
-        CreateMap<NpiRecord, NpiRecordDto>().ReverseMap();
+        CreateMap<NpiRecord, NpiRecordDto>().ReverseMap(); 
         CreateMap<SetupQuestion, SetupQuestionDto>().ReverseMap();
         CreateMap<PilotRequirement, PilotRequirementDto>().ReverseMap();
         CreateMap<PlannerQuestion, PlannerQuestionDto>().ReverseMap();
+        CreateMap<QualityPackageQuestion, QualityPackageQuestionDto>().ReverseMap();
+        CreateMap<FGGSSetup, FGGSSetupDto>().ReverseMap();
         CreateMap<FormulaSpec, FormulaSpecDto>().ReverseMap();
         CreateMap<LaborItem, LaborItemDto>().ReverseMap();
         CreateMap<PackagingComponent, PackagingComponentDto>().ReverseMap();

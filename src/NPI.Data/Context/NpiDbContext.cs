@@ -11,6 +11,8 @@ public class NpiDbContext : DbContext
     public DbSet<SetupQuestion> SetupQuestions => Set<SetupQuestion>();
     public DbSet<PilotRequirement> PilotRequirements => Set<PilotRequirement>();
     public DbSet<PlannerQuestion> PlannerQuestions => Set<PlannerQuestion>();
+    public DbSet<QualityPackageQuestion> QualityPackageQuestion => Set<QualityPackageQuestion>();
+    public DbSet<FGGSSetup> FGGSSetup => Set<FGGSSetup>();
     public DbSet<FormulaSpec> FormulaSpecs => Set<FormulaSpec>();
     public DbSet<LaborItem> LaborItems => Set<LaborItem>();
     public DbSet<PackagingComponent> PackagingComponents => Set<PackagingComponent>();
@@ -78,6 +80,23 @@ public class NpiDbContext : DbContext
             e.Property(x => x.QuestionText).IsRequired().HasMaxLength(300);
             e.Property(x => x.AnsweredBy).HasMaxLength(100);
             e.HasOne(x => x.NpiRecord).WithMany(r => r.PilotRequirements).HasForeignKey(x => x.NpiRecordId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ── QualityPackageQuestion ──
+        modelBuilder.Entity<QualityPackageQuestion>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.Property(x => x.QuestionKey).IsRequired().HasMaxLength(50);
+            e.Property(x => x.QuestionText).IsRequired().HasMaxLength(300);
+            e.Property(x => x.AnsweredBy).HasMaxLength(100);
+            e.HasOne(x => x.NpiRecord).WithMany(r => r.QualityPackageQuestion).HasForeignKey(x => x.NpiRecordId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ── FGGS Setup ──
+        modelBuilder.Entity<FGGSSetup>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.HasOne(x => x.NpiRecord).WithOne(r => r.FGGSSetup).HasForeignKey<FGGSSetup>(x => x.NpiRecordId).OnDelete(DeleteBehavior.Cascade);
         });
 
         // ── PlannerQuestion ──

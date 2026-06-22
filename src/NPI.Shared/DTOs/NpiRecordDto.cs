@@ -41,6 +41,10 @@ public class NpiRecordDto
     // Notes 
     public string? SetupNotes { get; set; }
     public string? PilotNotes { get; set; }
+
+    public string? AcceptanceNotes { get; set; }
+    public string? FGHandlingNotes { get; set; }
+    public string? KnownRisksNotes { get; set; }
     // Audit
     public string? CreatedBy { get; set; }
     public DateTime CreatedDate { get; set; }
@@ -51,6 +55,8 @@ public class NpiRecordDto
     public List<SetupQuestionDto> SetupQuestions { get; set; } = new();
     public List<PilotRequirementDto> PilotRequirements { get; set; } = new();
     public List<PlannerQuestionDto> PlannerQuestions { get; set; } = new();
+    public List<QualityPackageQuestionDto> QualityPackageQuestion { get; set; } = new List<QualityPackageQuestionDto>();
+    public FGGSSetupDto? FGGSSetup { get; set; }
     public FormulaSpecDto? FormulaSpec { get; set; }
     public List<LaborItemDto> LaborItems { get; set; } = new();
     public List<PackagingComponentDto> PackagingComponents { get; set; } = new();

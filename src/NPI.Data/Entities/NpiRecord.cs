@@ -41,6 +41,8 @@ public class NpiRecord : AuditableEntity
     public ICollection<SetupQuestion> SetupQuestions { get; set; } = new List<SetupQuestion>();
     public ICollection<PilotRequirement> PilotRequirements { get; set; } = new List<PilotRequirement>();
     public ICollection<PlannerQuestion> PlannerQuestions { get; set; } = new List<PlannerQuestion>();
+    public ICollection<QualityPackageQuestion> QualityPackageQuestion { get; set; } = new List<QualityPackageQuestion>();
+    public FGGSSetup? FGGSSetup { get; set; }
     public FormulaSpec? FormulaSpec { get; set; }
     public ICollection<LaborItem> LaborItems { get; set; } = new List<LaborItem>();
     public ICollection<PackagingComponent> PackagingComponents { get; set; } = new List<PackagingComponent>();

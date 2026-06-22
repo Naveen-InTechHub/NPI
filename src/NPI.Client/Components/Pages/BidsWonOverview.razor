@@ -1,11 +1,16 @@
 @page "/"
 @page "/npi"
 @using NPI.Client.DTOs.Auth
+@using Microsoft.AspNetCore.Authorization
 @using Syncfusion.Blazor.Grids
 @using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Spinner
 @inject NpiListViewModel VM
 @inject NavigationManager Nav
+
+@attribute [Authorize(Roles = Roles.SuperAdmin + "," + Roles.NPIManager + "," + Roles.Planner + "," + Roles.QualityOfficer + "," + Roles.PackagingExec)]
+
 
 <PageTitle>Bids Won Overview - ANS</PageTitle>
 
@@ -41,9 +46,11 @@
                     <tr>
                         <th class="th-check">
                             <div class="cb-wrap">
-                                <input type="checkbox" class="cb-input" @onchange="() => VM.ToggleSelectAll(AllSelected)"
-                                checked="@AllSelected" />
-
+                                @* <SfCheckBox TChecked="bool" Checked="VM.AllSelected" CheckedChanged="() => {VM.AllSelected = !VM.AllSelected; SelectAll(VM.AllSelected);}" CssClass="cb-input" /> *@
+                                <SfCheckBox TChecked="bool"
+                                Checked="VM.AllSelected"
+                                CheckedChanged="OnHeaderChanged"
+                                CssClass="cb-input" />
                             </div>
                         </th>
                         <th class="sortable @(SortCol=="CustomerName" ? (SortAsc?"sort-asc":"sort-desc") : "")"
@@ -80,36 +87,57 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var row in PagedRows)
+                    @if (VM.IsLoading)
                     {
-                        <tr style="border:none" class="@(row.Selected ?? false ? "row-selected" : "")">
-                            <td class="td-check">
-                                <div class="cb-wrap">
-                                    <input type="checkbox" class="cb-input"
-                                    checked="@row.Selected"
-                                    @onchange="() => VM.ToggleRow(row)" />
+                        <tr>
+                            <td colspan="12" style="padding:0;">
+                                <div class="table-loader">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
                                 </div>
-                            </td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="cursor-pointer td-muted">@row.CustomerName</td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.ItemCode</td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.FGCode</td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.BulkCode</td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted"> @(string.IsNullOrEmpty(row.CreatedBy) ? "User" : row.CreatedBy) </td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.CreatedDate</td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)">
-                                <div class="text-center">
-                                    <span class="status-badge @VM.StatusClass(row.Status)">@VM.GetStatusText(row.Status)</span>
-                                </div>
-                            </td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted td-wrap">@row.PackoutDescription</td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted td-wrap">@row.ProductDescription</td>
-                            <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-action">
-                                <button class="action-btn" title="Mark as done" @onclick="() => VM.NavigateToNPISetup(row.Id)">
-                                    <img src="assets/img/icon/tick.svg" />
-                                </button>
                             </td>
                         </tr>
                     }
+                    else
+                    {
+                        @foreach (var row in PagedRows)
+                        {
+                            <tr style="border:none" class="@(row.Selected ?? false ? "row-selected" : "")">
+                                <td class="td-check">
+                                    <div class="cb-wrap">
+                                        @*  <input type="checkbox" class="cb-input"
+                                    checked="@row.Selected"
+                                    @onchange="() => VM.ToggleRow(row)" /> *@
+
+                                        <input type="checkbox"
+                                               class="cb-input"
+                                               checked="@row.Selected"
+                                               @onchange="(e) => VM.ToggleRow(row, (bool)e.Value!)" />
+                                    </div>
+                                </td>
+                                <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="cursor-pointer td-muted">@row.CustomerName</td>
+                                <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.ItemCode</td>
+                                <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.FGCode</td>
+                                <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.BulkCode</td>
+                                <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted"> @(string.IsNullOrEmpty(row.CreatedBy) ? "User" : row.CreatedBy) </td>
+                                <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted">@row.CreatedDate</td>
+                                <td @onclick="() => VM.NavigateToNPISetup(row.Id)">
+                                    <div class="text-center">
+                                        <span class="status-badge @VM.StatusClass(row.Status)">@VM.GetStatusText(row.Status)</span>
+                                    </div>
+                                </td>
+                                <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted td-wrap">@row.PackoutDescription</td>
+                                <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-muted td-wrap">@row.ProductDescription</td>
+                                <td @onclick="() => VM.NavigateToNPISetup(row.Id)" class="td-action">
+                                    <button class="action-btn" title="Mark as done" @onclick="() => VM.NavigateToNPISetup(row.Id)">
+                                        <img src="assets/img/icon/tick.svg" />
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+
                 </tbody>
             </table>
         </div>
@@ -178,9 +206,6 @@
         };
     }
 
-    // ── Selection ───────────────────────────────────────────
-    private bool AllSelected => PagedRows.Any() && PagedRows.All(r => r.Selected ?? false);
-
 
     // ── Pagination ──────────────────────────────────────────
     private int CurrentPage = 1;
@@ -200,6 +225,7 @@
     UserData UserData = new UserData();
     protected override async Task OnInitializedAsync()
     {
+        VM.IsLoading = true;
         VM.PropertyChanged += (_, _) => InvokeAsync(StateHasChanged);
         await VM.LoadAsync();
         UserData = await AuthService.GetCurrentUserAsync() ?? new UserData();
@@ -208,7 +234,7 @@
         {
             Nav.NavigateTo("/login");
         }
-        ;
+        VM.IsLoading = false;
         StateHasChanged();
     }
 
@@ -223,4 +249,16 @@
         StateHasChanged();
     }
 
+    private void OnHeaderChanged(bool value)
+    {
+        VM.AllSelected = value;
+
+        foreach (var r in VM.Records)
+            r.Selected = value;
+
+        if (value)
+            VM.SelectedIds = VM.Records.Select(x => x.Id).ToList();
+        else
+            VM.SelectedIds?.Clear();
+    }
 }

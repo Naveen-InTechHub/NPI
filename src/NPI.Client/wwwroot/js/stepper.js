@@ -25,7 +25,7 @@ function goTo(index) {
     document.getElementById('panel-' + current).classList.add('active');
 
     // Update indicator & buttons
-    document.getElementById('stepIndicator').textContent = 'Step ' + (current + 1) + ' of ' + total;
+    //document.getElementById('stepIndicator').textContent = 'Step ' + (current + 1) + ' of ' + total;
     document.getElementById('btnPrev').disabled = current === 0;
 
     const btnNext = document.getElementById('btnNext');

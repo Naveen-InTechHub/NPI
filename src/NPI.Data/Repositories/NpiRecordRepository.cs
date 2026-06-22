@@ -20,7 +20,7 @@ public interface INpiRecordRepository : IRepository<NpiRecord>
     Task<NpiRecord?> GetRecordWithDocsAsync(int id);
     Task<IReadOnlyList<NpiRecord>> GetByStatusAsync(NpiStatus status);
     Task<IReadOnlyList<NpiRecord>> SearchAsync(string? searchTerm, NpiStatus? status, int page, int pageSize);
-    Task<byte[]> ExportAsync(string? searchTerm, NpiStatus? status);
+    Task<byte[]> ExportAsync(string? searchTerm, NpiStatus? status, List<int>? selectedIds);
     Task<decimal> GetTotalLaborCostAsync(int npiRecordId, LaborCategory category);
     Task<int> RemoveDuplicatesByItemCodeAsync(string itemCode);
     Task<int> RemoveAllDuplicatesAsync();
@@ -39,6 +39,8 @@ public class NpiRecordRepository : Repository<NpiRecord>, INpiRecordRepository
             .Include(r => r.SetupQuestions)
             .Include(r => r.PilotRequirements)
             .Include(r => r.PlannerQuestions)
+            .Include(r => r.QualityPackageQuestion)
+            .Include(r => r.FGGSSetup)
             .Include(r => r.FormulaSpec)
             .Include(r => r.LaborItems.OrderBy(l => l.SortOrder))
             .Include(r => r.PackagingComponents.OrderBy(p => p.SortOrder))
@@ -59,6 +61,8 @@ public class NpiRecordRepository : Repository<NpiRecord>, INpiRecordRepository
             .Include(r => r.SetupQuestions)
             .Include(r => r.PilotRequirements)
             .Include(r => r.PlannerQuestions)
+            .Include(r => r.QualityPackageQuestion)
+            .Include(r => r.FGGSSetup)
             .Include(r => r.FormulaSpec)
             .Include(r => r.Notes.OrderByDescending(n => n.CreatedDate))
             .Include(r => r.ChangeLog.OrderByDescending(c => c.ChangedDate).Take(10))
@@ -176,7 +180,7 @@ public class NpiRecordRepository : Repository<NpiRecord>, INpiRecordRepository
 
         return toDelete.Count;
     }
-    public async Task<byte[]> ExportAsync(string? searchTerm, NpiStatus? status)
+    public async Task<byte[]> ExportAsync(string? searchTerm, NpiStatus? status, List<int>? selectedIds)
     {
         var query = _dbSet.AsNoTracking().AsQueryable();
 
@@ -195,8 +199,10 @@ public class NpiRecordRepository : Repository<NpiRecord>, INpiRecordRepository
 
         if (status.HasValue)
             query = query.Where(r => r.Status == status.Value);
+        if(selectedIds != null && selectedIds.Any())
+            query = query.Where(r => selectedIds.Contains(r.Id));
 
-        var result = await query.ToListAsync();
+        var result = await query.OrderByDescending(x => x.Id).ToListAsync();
 
         if (!result.Any())
             throw new Exception("No data to export.");

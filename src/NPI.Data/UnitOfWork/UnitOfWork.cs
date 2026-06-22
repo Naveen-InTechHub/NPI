@@ -11,6 +11,8 @@ public interface IUnitOfWork : IDisposable
     IRepository<SetupQuestion> SetupQuestions { get; }
     IRepository<PilotRequirement> PilotRequirements { get; }
     IRepository<PlannerQuestion> PlannerQuestions { get; }
+    IRepository<QualityPackageQuestion> QualityPackageQuestion { get; }
+    IRepository<FGGSSetup> FGSSSetup { get; }
     IRepository<FormulaSpec> FormulaSpecs { get; }
     IRepository<LaborItem> LaborItems { get; }
     IRepository<PackagingComponent> PackagingComponents { get; }
@@ -18,11 +20,14 @@ public interface IUnitOfWork : IDisposable
     IRepository<NpiDocument> Documents { get; }
     IRepository<NpiNote> Notes { get; }
     IRepository<ChangeLogEntry> ChangeLog { get; }
+    IRepository<User> Users { get; }
+    IRepository<UserRole> UserRoles { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task BeginTransactionAsync();
     Task CommitTransactionAsync();
     Task RollbackTransactionAsync();
+    Task UpsertNote(NpiRecord record, string parent, string? content, string? user);
 }
 
 // ── Implementation ──
@@ -36,6 +41,8 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<SetupQuestion>? _setupQuestions;
     private IRepository<PilotRequirement>? _pilotRequirements;
     private IRepository<PlannerQuestion>? _plannerQuestions;
+    private IRepository<QualityPackageQuestion>? _qualityPackageQuestion;
+    private IRepository<FGGSSetup>? _fgssSetup;
     private IRepository<FormulaSpec>? _formulaSpecs;
     private IRepository<LaborItem>? _laborItems;
     private IRepository<PackagingComponent>? _packagingComponents;
@@ -43,6 +50,8 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<NpiDocument>? _documents;
     private IRepository<NpiNote>? _notes;
     private IRepository<ChangeLogEntry>? _changeLog;
+    private IRepository<User>? _users;
+    private IRepository<UserRole>? _userRoles;
 
     public UnitOfWork(NpiDbContext context)
     {
@@ -62,9 +71,12 @@ public class UnitOfWork : IUnitOfWork
 
     public IRepository<PlannerQuestion> PlannerQuestions
         => _plannerQuestions ??= new Repository<PlannerQuestion>(_context);
-
     public IRepository<FormulaSpec> FormulaSpecs
-        => _formulaSpecs ??= new Repository<FormulaSpec>(_context);
+     => _formulaSpecs ??= new Repository<FormulaSpec>(_context);
+    public IRepository<QualityPackageQuestion> QualityPackageQuestion
+     => _qualityPackageQuestion ??= new Repository<QualityPackageQuestion>(_context);
+    public IRepository<FGGSSetup> FGSSSetup
+        => _fgssSetup ??= new Repository<FGGSSetup>(_context);
 
     public IRepository<LaborItem> LaborItems
         => _laborItems ??= new Repository<LaborItem>(_context);
@@ -83,6 +95,12 @@ public class UnitOfWork : IUnitOfWork
 
     public IRepository<ChangeLogEntry> ChangeLog
         => _changeLog ??= new Repository<ChangeLogEntry>(_context);
+
+    public IRepository<User> Users
+        => _users ??= new Repository<User>(_context);
+
+    public IRepository<UserRole> UserRoles
+       => _userRoles ??= new Repository<UserRole>(_context);
 
     // ── Persistence ──
 
@@ -139,5 +157,32 @@ public class UnitOfWork : IUnitOfWork
             _disposed = true;
         }
         GC.SuppressFinalize(this);
+    }
+
+    public async Task UpsertNote(NpiRecord record, string parent, string? content, string? user)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+            return;
+
+        var existingNote = record.Notes?
+            .FirstOrDefault(n => n.Parent == parent);
+
+        if (existingNote != null)
+        {
+            existingNote.Content = content;
+        }
+        else
+        {
+            record.Notes ??= new List<NpiNote>();
+
+            record.Notes.Add(new NpiNote
+            {
+                NpiRecordId = record.Id,
+                Parent = parent,
+                Content = content,
+                CreatedBy = user,
+                CreatedDate = DateTime.UtcNow
+            });
+        }
     }
 }

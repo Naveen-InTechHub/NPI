@@ -18,11 +18,13 @@ public interface INpiService
     Task<NpiRecordDto?> GetDocsAsync(int id);
     Task<NpiRecordDto?> CreateAsync(NpiRecordDto dto);
     Task<NpiRecordDto?> UpdateAsync(int id, NpiRecordDto dto);
+    Task<string?> UpdateFGGSSetupAsync(int npiId, FGGSSetupDto dto);
     Task<bool> DeleteAsync(int id);
     Task<decimal> GetLaborTotalAsync(int id, LaborCategory category);
 
     // Setup Questions
     Task<SetupQuestionDto?> ToggleSetupQuestionAsync(int npiId, int questionId, ToggleRequest req);
+    Task<QualityPackageQuestionDto?> ToggleQualityPackageQuestionAsync(int npiId, int questionId, ToggleRequest req);
 
     // Pilot Requirements
     Task<PilotRequirementDto?> TogglePilotAsync(int npiId, int reqId, ToggleRequest req);
@@ -41,10 +43,15 @@ public interface INpiService
     Task<NpiNoteDto?> AddNoteAsync(int npiId, NpiNoteDto dto);
     Task<bool> DeleteNoteAsync(int npiId, int id);
 
+    // Formula Spec
+    Task<bool> UpdateFormulsSpec(int id, FormulaSpecDto dto);
+
     // Change Log
     Task<List<ChangeLogEntryDto>> GetChangeLogAsync(int npiId);
     // Export
-    Task<byte[]?> ExportAsync(string? search = null, NpiStatus? status = null);
+    Task<byte[]?> ExportAsync(string? search = null, NpiStatus? status = null, List<int>? SelectedIds = null);
+
+    Task<bool> DeleteFile(int documentId);
 }
 
 // ══════════════════════════════════════════════════════
@@ -98,7 +105,7 @@ public class NpiService : INpiService
         return await GetAsync<List<NpiRecordDto>>(url) ?? new();
     }
 
-    public Task<NpiRecordDto?> GetByIdAsync(int id) => GetAsync<NpiRecordDto>($"api/npirecords/{id}"); 
+    public Task<NpiRecordDto?> GetByIdAsync(int id) => GetAsync<NpiRecordDto>($"api/npirecords/{id}");
     public Task<NpiRecordDto?> GetSetupAsync(int id) => GetAsync<NpiRecordDto>($"api/npirecords/{id}/setup");
     public Task<NpiRecordDto?> GetBomAsync(int id) => GetAsync<NpiRecordDto>($"api/npirecords/{id}/bom");
     public Task<NpiRecordDto?> GetPackagingAsync(int id) => GetAsync<NpiRecordDto>($"api/npirecords/{id}/packaging");
@@ -147,11 +154,16 @@ public class NpiService : INpiService
     public async Task<List<ChangeLogEntryDto>> GetChangeLogAsync(int npiId)
         => await GetAsync<List<ChangeLogEntryDto>>($"api/npirecords/{npiId}/changelog") ?? new();
 
-    public async Task<byte[]?> ExportAsync(string? search = null, NpiStatus? status = null)
+    public async Task<byte[]?> ExportAsync(string? search = null, NpiStatus? status = null, List<int>? selectedIds = null)
     {
-        var url = $"api/npirecords/export?search={search}&status={(int?)status}";
+        var request = new ExportRequest
+        {
+            Search = search,
+            Status = status,
+            SelectedIds = selectedIds
+        };
 
-        var response = await _http.GetAsync(url);
+        var response = await _http.PostAsJsonAsync("api/npirecords/export", request);
 
         if (!response.IsSuccessStatusCode)
             return null;
@@ -159,4 +171,14 @@ public class NpiService : INpiService
         return await response.Content.ReadAsByteArrayAsync();
     }
 
+    public Task<bool> UpdateFormulsSpec(int id, FormulaSpecDto dto)
+     => PutAsync<bool>($"api/formulaspecs/{id}", dto);
+
+    public Task<QualityPackageQuestionDto?> ToggleQualityPackageQuestionAsync(int npiId, int qId, ToggleRequest req)
+      => PutAsync<QualityPackageQuestionDto>($"api/qaquestion/toggle?npiId={npiId}&id={qId}", req);
+    public Task<string?> UpdateFGGSSetupAsync(int npiId, FGGSSetupDto dto)
+   => PostAsync<string?>($"api/fggssetup?npiId={npiId}", dto);
+
+    public Task<bool> DeleteFile(int documentId)
+     => DeleteAsync($"api/npidocuments/{documentId}");
 }

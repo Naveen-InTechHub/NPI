@@ -13,6 +13,7 @@ namespace NPI.Data.Service
     {
         Task<NpiDocument> UploadFileAsync(int npiRecordId, IFormFile file, string uploadedBy);
         Task<IEnumerable<NpiDocument>> UploadFilesAsync(int npiRecordId, IEnumerable<IFormFile> files, string uploadedBy);
+        Task<bool> DeleteFile(int documentId);
     }
 
     public class NpiDocumentService : INpiDocumentService
@@ -24,6 +25,28 @@ namespace NPI.Data.Service
         {
             _unitOfWork = unitOfWork;
             _env = env;
+        }
+
+        public async Task<bool> DeleteFile(int documentId)
+        {
+            try
+            {
+                var document = await _unitOfWork.Documents.GetByIdAsync(documentId);
+                if (document == null)
+                    return false;
+                var filePath = Path.Combine(_env.ContentRootPath, document?.FilePath?.TrimStart('/'));
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+                _unitOfWork.Documents.Remove(document);
+                await _unitOfWork.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<NpiDocument> UploadFileAsync(int npiRecordId, IFormFile file, string uploadedBy)

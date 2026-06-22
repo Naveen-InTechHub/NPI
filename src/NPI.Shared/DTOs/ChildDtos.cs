@@ -60,6 +60,42 @@ public class FormulaSpecDto
     public int Batches { get; set; }
 }
 
+
+// ── Setup Questions ──
+public class QualityPackageQuestionDto
+{
+    public int Id { get; set; }
+    public int NpiRecordId { get; set; }
+    public QAQuestionCategory Category { get; set; }
+    public string QuestionKey { get; set; } = string.Empty;
+    public string QuestionText { get; set; } = string.Empty;
+    public bool? Value { get; set; }
+    public string? AnsweredBy { get; set; }
+    public DateTime? AnsweredDate { get; set; }
+    public string? Note { get; set; }
+}
+// GGS Setup Details
+public class FGGSSetupDto
+{
+    public int Id { get; set; }
+    public int NpiRecordId { get; set; }
+    public string DosageForm { get; set; } = string.Empty;
+    public string ShapeAndColor { get; set; } = string.Empty;
+    public int TabletWeight { get; set; }
+    public string Dimension { get; set; } = string.Empty;
+    public string CoatingType { get; set; } = string.Empty;
+    public string Flavor { get; set; } = string.Empty;
+    public string PackageType { get; set; } = string.Empty;
+    public int CountPerUnit { get; set; }
+    public string ContainerMaterial { get; set; } = string.Empty;
+    public string ClouserType { get; set; } = string.Empty;
+    public string SecondaryPackaging { get; set; } = string.Empty;
+    public int LabelVersion { get; set; }
+    public string RegulatoryMarket { get; set; } = string.Empty;
+    public string TargetShelfLife { get; set; } = string.Empty;
+    public string StorageConditions { get; set; } = string.Empty;
+    public string SpecialHandling { get; set; } = string.Empty;
+}
 // ── Labor Items ──
 public class LaborItemDto
 {
@@ -185,4 +221,28 @@ public class ItemCodeBomDto
     public string BulkCode { get; set; } = string.Empty;
     public string FGCode { get; set; } = string.Empty;
     public string BarCode { get; set; } = string.Empty;
+}
+
+// Export request
+
+public class ExportRequest
+{
+    public string? Search { get; set; }
+    public NpiStatus? Status { get; set; }
+    public List<int>? SelectedIds { get; set; }
+}
+
+public class CreateUserRequest
+{
+    public string UserName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public List<int> RoleIds { get; set; } = new();
+}
+
+public class UpdateUserByEmailRequest
+{
+    public string UserName { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NPI.Data.Service;
+using NPI.Shared.DTOs;
 
 namespace NPI.Server.Controllers
 {
@@ -29,7 +30,7 @@ namespace NPI.Server.Controllers
         }
 
         [HttpPost("{npiRecordId}/upload-multiple")]
-        public async Task<IActionResult> UploadMultiple( int npiRecordId, [FromForm] List<IFormFile> files)
+        public async Task<IActionResult> UploadMultiple(int npiRecordId, [FromForm] List<IFormFile> files)
         {
             if (files == null || files.Count == 0)
                 return BadRequest("No files uploaded");
@@ -47,6 +48,12 @@ namespace NPI.Server.Controllers
             return Ok();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ApiResponse<bool>>> Delete(int id)
+        {
+           bool result = await _documentService.DeleteFile(id);
+            return Ok(new ApiResponse<bool> { Data = result, Success = true, Message = "File Deleted." });
+        }
     }
 
 }

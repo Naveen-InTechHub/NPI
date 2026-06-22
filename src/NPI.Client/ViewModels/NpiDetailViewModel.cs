@@ -59,6 +59,13 @@ public class NpiDetailViewModel : ViewModelBase
         set => SetProperty(ref _isLaunching, value);
     }
 
+    private bool _isLoading;
+    public bool IsLoading
+    {
+        get => _isLoading;
+        set => SetProperty(ref _isLoading, value);
+    }
+
     private string _noteText = string.Empty;
     public string NoteText
     {
@@ -97,6 +104,12 @@ public class NpiDetailViewModel : ViewModelBase
     public List<PlannerQuestionDto> RawMaterialQuestions
         => Record?.PlannerQuestions?.Where(q => q.Category == PlannerCategory.RawMaterials).ToList() ?? new();
 
+    public List<QualityPackageQuestionDto> QualityQuestions
+       => Record?.QualityPackageQuestion?.Where(q => q.Category == QAQuestionCategory.Quality).ToList() ?? new List<QualityPackageQuestionDto>();
+
+    public List<QualityPackageQuestionDto> PackageQuestions
+      => Record?.QualityPackageQuestion?.Where(q => q.Category == QAQuestionCategory.Package).ToList() ?? new List<QualityPackageQuestionDto>();
+
     public List<PlannerQuestionDto> ComponentQuestions
         => Record?.PlannerQuestions?.Where(q => q.Category == PlannerCategory.Components).ToList() ?? new();
 
@@ -106,9 +119,9 @@ public class NpiDetailViewModel : ViewModelBase
     public List<PlannerQuestionDto> ArtWorkQuestion
     => Record?.PlannerQuestions?.Where(q => q.Category == PlannerCategory.Components && (q.QuestionKey == "regulatorycerts" || q.QuestionKey == "newartwork")).ToList() ?? new();
 
-    public FormulaSpecDto? FormulaSpec
-        => Record?.FormulaSpec;
-
+    public FormulaSpecDto FormulaSpec
+        => Record?.FormulaSpec ?? new FormulaSpecDto();
+    public FGGSSetupDto FggsSetup = new FGGSSetupDto();
     public List<LaborItemDto> FormulaLabor
         => Record?.LaborItems?.Where(l => l.Category == LaborCategory.Formula && !l.IsOverhead).OrderBy(l => l.SortOrder).ToList() ?? new();
 
@@ -176,7 +189,7 @@ public class NpiDetailViewModel : ViewModelBase
             if (Record == null)
                 ErrorMessage = "NPI record not found.";
         });
-        
+        FggsSetup = Record?.FGGSSetup ?? new FGGSSetupDto();
     }
 
     /// <summary>Switch tab</summary>
@@ -209,7 +222,28 @@ public class NpiDetailViewModel : ViewModelBase
                 OnPropertyChanged(nameof(SetupQuestions));
             }
         });
-        await LoadAsync(Record.Id); // Refresh all data to reflect any cascading changes
+       // await LoadAsync(Record.Id); // Refresh all data to reflect any cascading changes
+    }
+
+    public async Task ToggleQualityPackageQuestionAsync(QualityPackageQuestionDto question, bool? newValue)
+    {
+
+        question.Value = newValue;
+        if (Record == null) return;
+        await ExecuteAsync(async () =>
+        {
+            var result = await _service.ToggleQualityPackageQuestionAsync(
+                Record.Id, question.Id,
+                new ToggleRequest { Value = newValue, AnsweredBy = CurrentUser ?? "User" });
+            if (result != null)
+            {
+                var idx = Record.QualityPackageQuestion.FindIndex(q => q.Id == question.Id);
+                if (idx >= 0) Record.QualityPackageQuestion[idx] = result;
+                OnPropertyChanged(nameof(QualityQuestions));
+                OnPropertyChanged(nameof(PackageQuestions));
+            }
+        });
+        //await LoadAsync(Record.Id); // Refresh all data to reflect any cascading changes
     }
 
     /// <summary>Toggle a Pilot requirement Y/N</summary>
@@ -229,7 +263,7 @@ public class NpiDetailViewModel : ViewModelBase
                 OnPropertyChanged(nameof(PilotRequirements));
             }
         });
-        await LoadAsync(Record.Id); // Refresh all data to reflect any cascading changes
+      //  await LoadAsync(Record.Id); // Refresh all data to reflect any cascading changes
     }
 
     /// <summary>Toggle a Planner question Y/N</summary>
@@ -250,11 +284,11 @@ public class NpiDetailViewModel : ViewModelBase
                 OnPropertyChanged(nameof(ComponentQuestions));
             }
         });
-        await LoadAsync(Record.Id); // Refresh all data to reflect any cascading changes
+       // await LoadAsync(Record.Id); // Refresh all data to reflect any cascading changes
     }
 
     /// <summary>Save header fields</summary>
-    public async Task SaveRecordAsync()
+    public async Task SaveRecordAsync(bool showToaster = true)
     {
         if (Record == null) return;
         await ExecuteAsync(async () =>
@@ -265,7 +299,8 @@ public class NpiDetailViewModel : ViewModelBase
             if (result != null) Record = result;
         });
         IsLaunching = false;
-        _toastService.ShowSuccess("Record saved successfully.");
+        if (showToaster)
+            _toastService.ShowSuccess("Record saved successfully.");
     }
 
     /// <summary>Add a new note</summary>
@@ -352,6 +387,55 @@ public class NpiDetailViewModel : ViewModelBase
         _toastService.ShowSuccess("Item codes updated successfully.");
     }
 
+    public async Task UpdateFormulaSpecs()
+    {
+        if (Record == null) return;
+        await ExecuteAsync(async () =>
+        {
+            var result = await _service.UpdateFormulsSpec(FormulaSpec.Id, FormulaSpec);
+            if (result)
+            {
+                _toastService.ShowSuccess("Formula specs updated successfully.");
+            }
+            else
+            {
+                _toastService.ShowError("Failed to update formula specs.");
+            }
+        });
+        await LoadAsync(Record.Id); // Refresh to get updated specs
+    }
+
+    public async Task SaveFGGSSetup()
+    {
+        if (Record == null) return;
+        await ExecuteAsync(async () =>
+        {
+            Record.ModifiedBy = CurrentUser;
+            var result = await _service.UpdateFGGSSetupAsync(Record.Id, FggsSetup);
+        });
+        _toastService.ShowSuccess("FGSS Setup saved successfully.");
+    }
+
+    public async Task DeleteDocument(int docuemtnId)
+    {
+        if (Record == null) return;
+        await ExecuteAsync(async () =>
+        {
+            var success = await _service.DeleteFile(docuemtnId);
+            if (success)
+            {
+                var doc = Record.Documents.FirstOrDefault(d => d.Id == docuemtnId);
+                _toastService.ShowSuccess("Document Deleted.");
+            }
+            else
+            {
+                _toastService.ShowError("Failed to delete document.");
+            }
+           
+        });
+        await LoadAsync(Record.Id);
+        OnPropertyChanged(nameof(Documents));
+    }
 
 }
 

@@ -40,7 +40,7 @@ else if (VM.Record != null)
                 <button class="theme-toggle" @onclick="ThemeService.ToggleTheme">
                     @(ThemeService.IsDarkMode ? "☀️ Light" : "🌙 Dark")
                 </button>
-                <button class="btn btn-success" @onclick="VM.SaveRecordAsync" disabled="@VM.IsBusy">Save</button>
+                <button class="btn btn-success" @onclick="() => VM.SaveRecordAsync()" disabled="@VM.IsBusy">Save</button>
 
                 <div style="display: flex; gap: 10px; align-items:center">
                     @if (!string.IsNullOrEmpty(UserData.UserName))
@@ -502,7 +502,7 @@ else if (VM.Record != null)
                                 <button class="btn btn-primary" @onclick="UploadAll"
                                 disabled="@(!_selectedFiles.Any())">
                                     Upload All
-                                </button>
+                                </button> 
                             </div>
 
 

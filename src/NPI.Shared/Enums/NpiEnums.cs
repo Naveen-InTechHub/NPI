@@ -51,6 +51,13 @@ public enum PlannerCategory
     Components = 1
 }
 
+public enum QAQuestionCategory
+{
+    Package = 0,
+    Quality = 1
+    
+}
+
 public enum DocumentSlot
 {
     EQM = 0,

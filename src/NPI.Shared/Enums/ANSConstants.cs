@@ -19,5 +19,8 @@ namespace NPI.Shared.Enums
         public const string Notes = "Notes";
         public const string Setup = "Setup";
         public const string Pilot = "Pilot";
+        public const string Acceptance = "Acceptance";
+        public const string FGHandling = "FG Handling";
+        public const string KnownRisks = "Known Risks";
     }
 }

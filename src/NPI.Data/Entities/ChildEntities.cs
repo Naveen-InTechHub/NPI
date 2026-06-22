@@ -44,6 +44,43 @@ public class PlannerQuestion : BaseEntity
     public NpiRecord NpiRecord { get; set; } = null!;
 }
 
+// ── Setup Questions ──
+public class QualityPackageQuestion : BaseEntity
+{
+    public int NpiRecordId { get; set; }
+    public QAQuestionCategory Category { get; set; }
+    public string QuestionKey { get; set; } = string.Empty;
+    public string QuestionText { get; set; } = string.Empty;
+    public bool? Value { get; set; }
+    public string? AnsweredBy { get; set; }
+    public DateTime? AnsweredDate { get; set; }
+    public string? Note { get; set; }
+    public NpiRecord NpiRecord { get; set; } = null!;
+}
+// GGS Setup Details
+public class FGGSSetup : BaseEntity
+{
+    public int NpiRecordId { get; set; }
+    public string DosageForm { get; set; } = string.Empty;
+    public string ShapeAndColor { get; set; } = string.Empty;
+    public int TabletWeight { get; set; }
+    public string Dimension { get; set; } = string.Empty;
+    public string CoatingType { get; set; } = string.Empty;
+    public string Flavor { get; set; } = string.Empty;
+    public string PackageType { get; set; } = string.Empty;
+    public int CountPerUnit { get; set; }
+    public string ContainerMaterial { get; set; } = string.Empty;
+    public string ClouserType { get; set; } = string.Empty;
+    public string SecondaryPackaging { get; set; } = string.Empty;
+    public int LabelVersion { get; set; }
+    public string RegulatoryMarket { get; set; } = string.Empty;
+    public string TargetShelfLife { get; set; } = string.Empty;
+    public string StorageConditions { get; set; } = string.Empty;
+    public string SpecialHandling { get; set; } = string.Empty;
+
+    public NpiRecord NpiRecord { get; set; } = null!;
+}
+
 // ── Formula Specification ──
 public class FormulaSpec : BaseEntity
 {
@@ -113,7 +150,7 @@ public class PackagingOption : BaseEntity
 }
 
 // ── Documents ──
-public class NpiDocument : BaseEntity 
+public class NpiDocument : BaseEntity
 {
     public int NpiRecordId { get; set; }
     public DocumentSlot Slot { get; set; }
@@ -125,7 +162,7 @@ public class NpiDocument : BaseEntity
 
     public NpiRecord NpiRecord { get; set; } = null!;
 }
- 
+
 // ── Notes ──
 public class NpiNote : BaseEntity
 {

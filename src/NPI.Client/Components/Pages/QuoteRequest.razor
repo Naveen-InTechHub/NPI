@@ -10,133 +10,150 @@
 @attribute [Authorize(Roles = Roles.SuperAdmin + "," + Roles.NPIManager + "," + Roles.Planner + "," + Roles.QualityOfficer + "," + Roles.PackagingExec)]
 
 
-<Header/>
-@if (VM.Record != null)
+<Header />
+  @if (VM.IsLoading)
 {
-    var r = VM.Record;
-    <div class="ans-page">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="ans-page-title">New Product Initiation : <span>@r.ItemCode - @r.ProductDescription</span> </div>
-            <button class="ans-filter-btn" @onclick="VM.NavToBids">
-                Cancel
-            </button>
+
+    <div style="
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
-        <div class="ans-card-container mt-3">
-            <div class="row gy-3 gy-lg-0 gx-0 gx-lg-2">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-6 ans-col-lg-5">
-                    <div class="ans-card-title">Review Information</div>
-                    <div class="ans-border"></div>
-                    <div class="ans-card-body">
-                        <div class="ans-panel-left">
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Packout</div>
-                                <div class="ans-field-value link">@r.PackoutDescription</div>
-                            </div>
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Quote Number</div>
-                                <div class="ans-field-value">@r.QuoteNumber</div>
-                            </div>
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Quote Desc</div>
-                                <div class="ans-field-value">@r.ProductDescription</div>
-                            </div>
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Prod Type</div>
-                                <div class="ans-field-value">@r.ProductType</div>
-                            </div>
-                        </div>
+    </div>
 
-                        <div class="ans-panel-right">
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Customer</div>
-                                <div class="ans-field-value">@r.CustomerName</div>
-                            </div>
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Sales Person</div>
-                                <div class="ans-field-value">@r.SalesRep1</div>
-                            </div>
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Created By</div>
-                                <div class="ans-field-value">@(string.IsNullOrEmpty(r.CreatedBy)? "User" : r.CreatedBy)</div>
-                            </div>
-                            <div class="ans-field-row">
-                                <div class="ans-field-label">Created On</div>
-                                <div class="ans-field-value">@r.CreatedDate.ToString("MM-dd-yyyy hh:mm tt")</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-6 ans-col-lg-7">
-                    <div class="ans-sub-card-container">
-                        <div class="d-flex justify-content-between flex-wrap gap-2">
-                            <div class="ans-card-title">Formula : FS.2 Daily EU 439EURL 200k</div>
-                           @*  <button class="ans-edit-btn" data-bs-toggle="modal" data-bs-target="#editFormulaModal">
-                                <img src="assets/img/icon/edit.svg" />Edit
-                            </button> *@
-                        </div>
-
+}
+else
+{
+    @if (VM.Record != null)
+    {
+        var r = VM.Record;
+        <div class="ans-page">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="ans-page-title">New Product Initiation : <span>@r.ItemCode - @r.ProductDescription</span> </div>
+                <button class="ans-filter-btn" @onclick="VM.NavToBids">
+                    Cancel
+                </button>
+            </div>
+            <div class="ans-card-container mt-3">
+                <div class="row gy-3 gy-lg-0 gx-0 gx-lg-2">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-6 ans-col-lg-5">
+                        <div class="ans-card-title">Review Information</div>
                         <div class="ans-border"></div>
-                        <div class="ans-card-body1">
+                        <div class="ans-card-body">
                             <div class="ans-panel-left">
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Packout</div>
+                                    <div class="ans-field-value link">@r.PackoutDescription</div>
+                                </div>
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Quote Number</div>
+                                    <div class="ans-field-value">@r.QuoteNumber</div>
+                                </div>
+                                <div class="ans-field-row">
+                                    <div class="ans-field-label">Quote Desc</div>
+                                    <div class="ans-field-value">@r.ProductDescription</div>
+                                </div>
                                 <div class="ans-field-row">
                                     <div class="ans-field-label">Prod Type</div>
                                     <div class="ans-field-value">@r.ProductType</div>
                                 </div>
-                                <div class="ans-field-row">
-                                    <div class="ans-field-label">Pkg Type</div>
-                                    <div class="ans-field-value">@r.PackageType</div>
-                                </div>
-                                <div class="ans-field-row">
-                                    <div class="ans-field-label">Order Quantity</div>
-                                    <div class="ans-field-value">@r.OrderQty.ToString("N0")</div>
-                                </div>
-                                <div class="ans-field-row">
-                                    <div class="ans-field-label">No of Batches</div>
-                                    <div class="ans-field-value">2</div>
-                                </div>
                             </div>
 
                             <div class="ans-panel-right">
                                 <div class="ans-field-row">
-                                    <div class="ans-field-label">Total Units</div>
-                                    <div class="ans-field-value">@r.TotalUnits.ToString("N0")</div>
+                                    <div class="ans-field-label">Customer</div>
+                                    <div class="ans-field-value">@r.CustomerName</div>
                                 </div>
                                 <div class="ans-field-row">
-                                    <div class="ans-field-label">Savings Per unit</div>
-                                    <div class="ans-field-value">30.000</div>
+                                    <div class="ans-field-label">Sales Person</div>
+                                    <div class="ans-field-value">@r.SalesRep1</div>
                                 </div>
                                 <div class="ans-field-row">
-                                    <div class="ans-field-label">Formula Size</div>
-                                    <div class="ans-field-value">@r.FormulaSize.ToString("N0")</div>
+                                    <div class="ans-field-label">Created By</div>
+                                    <div class="ans-field-value">@(string.IsNullOrEmpty(r.CreatedBy) ? "User" : r.CreatedBy)</div>
                                 </div>
                                 <div class="ans-field-row">
-                                    <div class="ans-field-label">Blunder</div>
-                                    <div class="ans-field-value">023000 Cuft Rotary</div>
+                                    <div class="ans-field-label">Created On</div>
+                                    <div class="ans-field-value">@r.CreatedDate.ToString("MM-dd-yyyy hh:mm tt")</div>
                                 </div>
                             </div>
-                            <div class="ans-panel-right">
-                                <div class="ans-field-row">
-                                    <div class="ans-field-label">Total Savings</div>
-                                    <div class="ans-field-value">600000</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-6 ans-col-lg-7">
+                        <div class="ans-sub-card-container">
+                            <div class="d-flex justify-content-between flex-wrap gap-2">
+                                <div class="ans-card-title">Formula : @VM.FormulaSpec?.FormulaName</div>
+                                <button class="ans-edit-btn" data-bs-toggle="modal" data-bs-target="#editFormulaModal">
+                                    <img src="assets/img/icon/edit.svg" />Edit
+                                </button>
+                            </div>
+
+                            <div class="ans-border"></div>
+                            <div class="ans-card-body1">
+                                <div class="ans-panel-left">
+                                    <div class="ans-field-row">
+                                        <div class="ans-field-label">Prod Type</div>
+                                        <div class="ans-field-value">@VM.FormulaSpec?.ProdType</div>
+                                    </div>
+                                    <div class="ans-field-row">
+                                        <div class="ans-field-label">Pkg Type</div>
+                                        <div class="ans-field-value">@VM.FormulaSpec?.PkgType</div>
+                                    </div>
+                                    <div class="ans-field-row">
+                                        <div class="ans-field-label">Order Quantity</div>
+                                        <div class="ans-field-value">@VM.FormulaSpec?.OrderQty.ToString("N0")</div>
+                                    </div>
+                                    <div class="ans-field-row">
+                                        <div class="ans-field-label">No. of Batches</div>
+                                        <div class="ans-field-value">@VM.FormulaSpec?.Batches</div>
+                                    </div>
                                 </div>
-                                <div class="ans-field-row">
-                                    <div class="ans-field-label">Formula Kg</div>
-                                    <div class="ans-field-value">8892.20</div>
+
+                                <div class="ans-panel-right">
+                                    <div class="ans-field-row">
+                                        <div class="ans-field-label">Total Units</div>
+                                        <div class="ans-field-value">@VM.FormulaSpec?.TotalUnits.ToString("N2")</div>
+                                    </div>
+                                    <div class="ans-field-row">
+                                        <div class="ans-field-label">Servings Per  Unit</div>
+                                        <div class="ans-field-value">@VM.FormulaSpec?.ServPerUnit</div>
+                                    </div>
+                                    <div class="ans-field-row">
+                                        <div class="ans-field-label">Formula Size</div>
+                                        <div class="ans-field-value">@VM.FormulaSpec?.FormulaSize.ToString("N0")</div>
+                                    </div>
+                                    <div class="ans-field-row">
+                                        <div class="ans-field-label">Blunder</div>
+                                        <div class="ans-field-value">@VM.FormulaSpec?.Blender</div>
+                                    </div>
                                 </div>
-                                <div class="ans-field-row">
-                                    <div class="ans-field-label">Bulk Density</div>
-                                    <div class="ans-field-value">0.8</div>
+                                <div class="ans-panel-right">
+                                    <div class="ans-field-row">
+                                        <div class="ans-field-label">Total Servings</div>
+                                        <div class="ans-field-value">@VM.FormulaSpec?.TotalServings.ToString("N2")</div>
+                                    </div>
+                                    <div class="ans-field-row">
+                                        <div class="ans-field-label">Formula Kg</div>
+                                        <div class="ans-field-value">@VM.FormulaSpec?.KG.ToString("N0")</div>
+                                    </div>
+                                    <div class="ans-field-row">
+                                        <div class="ans-field-label">Bulk Density</div>
+                                        <div class="ans-field-value">@VM.FormulaSpec?.Density</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ── Stepper Bar ── -->
 
-        <div class="stepper mt-3 mb-3">
+            <!-- ── Stepper Bar ── -->
+
+            @*  <div class="stepper mt-3 mb-3">
             <div class="step active" onclick="goTo(0)">
                 <div class="step-body"></div>
                 <div class="step-inner">
@@ -177,10 +194,10 @@
                 </div>
             </div>
 
-        </div>
-        <!-- /stepper -->
-        <!-- ── Content Panels ── -->
-        <div class="panels">
+        </div> *@
+            <!-- /stepper -->
+            <!-- ── Content Panels ── -->
+            @*    <div class="panels">
             <!-- Step 1: NPI Setup -->
             <div class="panel active" id="panel-0">
                 <NPISetup NpiRecord="VM.Record" VM="VM"/>
@@ -201,118 +218,199 @@
 
         <!-- Step 5: Sampling Plan -->
         <div class="panel" id="panel-4">
-            <SamplingPlan/>
+                <SamplingPlan NpiRecord="VM.Record" VM="VM" />
         </div>
 
-        </div>
-        <!-- /panels -->
-        <!-- ── Navigation ── -->
-        @* <div class="stepper-nav">
+        </div> *@
+            <!-- /panels -->
+            <!-- ── Navigation ── -->
+            @* <div class="stepper-nav">
         <span class="step-indicator" id="stepIndicator">Step 1 of 5</span>
         <div class="nav-btns">
             <button class="btn btn-prev" id="btnPrev" onclick="changeStep(-1)" disabled>&#8592; Previous</button>
             <button class="btn btn-next" id="btnNext" onclick="changeStep(1)">Next &#8594;</button>
         </div>
     </div> *@
-</div>
-<!-- Modal -->
-<div class="modal fade" id="editFormulaModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
 
-        <div class="modal-content ans-modal">
 
-            <!-- Header -->
-            <div class="modal-header d-flex gap-3 align-items-center" style="background-color: rgba(37, 99, 235, 0.05); padding: 15px;">
-                <div>
-                    <div class="ans-card-title" style="color: var(--primary-color); font-size: 16px;">Edit Formula</div>
-                    <div class="ans-para mb-0 mt-1">Product and internal item codes used for tracking and production.</div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="stepper mt-3 mb-3">
+                @for (int i = 0; i < StepLabels.Length; i++)
+                {
+                    int index = i; // capture for lambda
+                    string stepClass = GetStepClass(i);
+                    string stepNum = i < CurrentStep ? "✓" : (i + 1).ToString();
+
+                    <div class="step @stepClass" @onclick="() => GoTo(index)">
+                        <div class="step-body"></div>
+                        <div class="step-inner">
+                            <div class="step-num">@stepNum</div>
+                            <span class="step-label">@StepLabels[i]</span>
+                        </div>
+                    </div>
+                }
             </div>
 
-            <!-- Body -->
-            <div class="modal-body pt-2">
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">Production Type</div>
-                        <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                        </div>
+            <!-- Panels -->
+            <div class="panels">
+
+                @if (CurrentStep == 0)
+                {
+                    <div class="panel active" id="panel-0">
+                        <NPISetup NpiRecord="VM.Record" VM="VM" TabNavigation="GoTo" />
                     </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">Package Type</div>
-                        <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                        </div>
+                }
+
+                @if (CurrentStep == 1)
+                {
+                    <div class="panel active" id="panel-1">
+                        <FGGSSetup NpiRecord="VM.Record" VM="VM" TabNavigation="GoTo" />
                     </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">Order Quantity</div>
-                        <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                        </div>
+                }
+
+                @if (CurrentStep == 2)
+                {
+                    <div class="panel active" id="panel-2">
+                        @* Testing Setup content *@
                     </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">No of Batches</div>
-                        <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                        </div>
+                }
+
+                @if (CurrentStep == 3)
+                {
+                    <div class="panel active" id="panel-3">
+                        @* Packaging Setup content *@
                     </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">Formula Size</div>
-                        <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                        </div>
+                }
+
+                @if (CurrentStep == 4)
+                {
+                    <div class="panel active" id="panel-4">
+                        <SamplingPlan NpiRecord="VM.Record" VM="VM" TabNavigation="GoTo" />
                     </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">Total Units</div>
-                        <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">Savings Per Unit</div>
-                        <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">Blunder</div>
-                        <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">Total Savings</div>
-                        <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">Formula Kg</div>
-                        <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">Bulk Density</div>
-                        <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
-                        </div>
-                    </div>
-                </div>
+                }
+
             </div>
 
-            <!-- Footer -->
-            <div class="flex-end gap-2 justify-content-end px-2 mb-3">
-                <button class="ans-secondary-button smal-size px-4" style="font-size: 14px" data-bs-dismiss="modal">Cancel</button>
-                <button class="ans-primary-button smal-size px-4" style="font-size: 14px">Update</button>
-            </div>
+            <!-- Navigation -->
+            @*   <div class="stepper-nav">
+            <button class="ans-secondary-button"
+                    id="btnPrev"
+                    disabled="@(CurrentStep == 0)"
+                    @onclick="() => ChangeStep(-1)">
+                ← Previous
+            </button>
 
+            @if (CurrentStep == Total - 1)
+            {
+                <button class="ans-finish-button" @onclick="OnFinish">Finish</button>
+            }
+            else
+            {
+                <button class="ans-primary-button" @onclick="() => ChangeStep(1)">Next →</button>
+            }
+        </div> *@
         </div>
-    </div>
-</div>
+        <!-- Modal -->
+        <div class="modal fade" id="editFormulaModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+
+                <div class="modal-content ans-modal">
+
+                    <!-- Header -->
+                    <div class="modal-header d-flex gap-3 align-items-center" style="background-color: rgba(37, 99, 235, 0.05); padding: 15px;">
+                        <div>
+                            <div class="ans-card-title" style="color: var(--primary-color); font-size: 16px;">Edit Formula</div>
+                            <div class="ans-para mb-0 mt-1">Product and internal item codes used for tracking and production.</div>
+                        </div>
+                        <button @onclick="() => VM.LoadAsync(Id)" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="modal-body pt-2">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="ans-mini-card-list-label mb-2">Production Type</div>
+                                <div class="ans-text-box ans-reduce-radius">
+                                    <SfTextBox @bind-Value="@VM.FormulaSpec.ProdType" Placeholder="Enter"></SfTextBox>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="ans-mini-card-list-label mb-2">Package Type</div>
+                                <div class="ans-text-box ans-reduce-radius">
+                                    <SfTextBox @bind-Value="@VM.FormulaSpec.PkgType" Placeholder="Enter"></SfTextBox>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="ans-mini-card-list-label mb-2">Order Quantity</div>
+                                <div class="ans-text-box ans-reduce-radius">
+                                    <SfNumericTextBox TValue="decimal" @bind-Value="@VM.FormulaSpec.OrderQty" Placeholder="Enter"></SfNumericTextBox>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="ans-mini-card-list-label mb-2">No of Batches</div>
+                                <div class="ans-text-box ans-reduce-radius">
+                                    <SfNumericTextBox TValue="int" @bind-Value="@VM.FormulaSpec.Batches" Placeholder="Enter"></SfNumericTextBox>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="ans-mini-card-list-label mb-2">Formula Size</div>
+                                <div class="ans-text-box ans-reduce-radius">
+                                    <SfNumericTextBox TValue="decimal" @bind-Value="@VM.FormulaSpec.FormulaSize" Placeholder="Enter"></SfNumericTextBox>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="ans-mini-card-list-label mb-2">Total Units</div>
+                                <div class="ans-text-box ans-reduce-radius">
+                                    <SfNumericTextBox TValue="decimal" @bind-Value="@VM.FormulaSpec.TotalUnits" Placeholder="Enter"></SfNumericTextBox>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="ans-mini-card-list-label mb-2">Servings Per Unit</div>
+                                <div class="ans-text-box ans-reduce-radius">
+                                    <SfNumericTextBox TValue="decimal" @bind-Value="@VM.FormulaSpec.ServPerUnit" Placeholder="Enter"></SfNumericTextBox>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="ans-mini-card-list-label mb-2">Blunder</div>
+                                <div class="ans-text-box ans-reduce-radius">
+                                    <SfTextBox @bind-Value="@VM.FormulaSpec.Blender" Placeholder="Enter"></SfTextBox>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="ans-mini-card-list-label mb-2">Total Servings</div>
+                                <div class="ans-text-box ans-reduce-radius">
+                                    <SfNumericTextBox TValue="decimal" @bind-Value="@VM.FormulaSpec.TotalServings" Placeholder="Enter"></SfNumericTextBox>
+
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="ans-mini-card-list-label mb-2">Formula Kg</div>
+                                <div class="ans-text-box ans-reduce-radius">
+                                    <SfNumericTextBox TValue="decimal" @bind-Value="@VM.FormulaSpec.KG" Placeholder="Enter"></SfNumericTextBox>
+
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="ans-mini-card-list-label mb-2">Bulk Density</div>
+                                <div class="ans-text-box ans-reduce-radius">
+                                    <SfNumericTextBox TValue="decimal" @bind-Value="@VM.FormulaSpec.Density" Placeholder="Enter"></SfNumericTextBox>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="flex-end gap-2 justify-content-end px-2 mb-3">
+                        <button class="ans-secondary-button smal-size px-4" @onclick="() => VM.LoadAsync(Id)" style="font-size: 14px" data-bs-dismiss="modal">Cancel</button>
+                        <button class="ans-primary-button smal-size px-4" @onclick="VM.UpdateFormulaSpecs" style="font-size: 14px" data-bs-dismiss="modal">Update</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
 }
-<Footer/>
+<Footer />
 
 @code {
     [Parameter] public int Id { get; set; }
@@ -342,88 +440,48 @@
 
     protected override async Task OnInitializedAsync()
     {
+        VM.IsLoading = true;
         VM.PropertyChanged += (_, _) => InvokeAsync(StateHasChanged);
         UserData = await AuthService.GetCurrentUserAsync() ?? new UserData();
-
+        CurrentStep = 0;
         CurrentRole = UserData.Role;
         VM.CurrentUser = UserData.UserName ?? "User";
         await VM.LoadAsync(Id);
+        VM.IsLoading = false;
     }
 
-    private static string GetComponentBadge(ComponentType type) => type switch
+    private int CurrentStep = 0;
+    private const int Total = 5;
+
+    private readonly string[] StepLabels = new[]
     {
-        ComponentType.Bottle or ComponentType.Cap => "info",
-        ComponentType.Label => "warning",
-        ComponentType.Shipper => "purple",
-        _ => "info"
+        "NPI Setup",
+        "FGSS Setup",
+        "Testing Setup",
+        "Packaging Setup",
+        "Sampling Plan"
     };
-    private List<IBrowserFile> _selectedFiles = new();
-
-    private const long MaxFileSize = 2 * 1024 * 1024; // 2MB
-
-    private readonly string[] AllowedExtensions =
-        { ".jpg", ".png", ".gif", ".docx", ".xlsx", ".pdf" };
-    private List<string> _validationErrors = new();
-
-    private void OnFilesSelected(InputFileChangeEventArgs e)
+    private string GetStepClass(int index)
     {
-        _validationErrors.Clear();
-        _selectedFiles.Clear();
-
-        foreach (var file in e.GetMultipleFiles())
-        {
-            var extension = Path.GetExtension(file.Name).ToLowerInvariant();
-
-            // Validate extension
-            if (!AllowedExtensions.Contains(extension))
-            {
-                _validationErrors.Add($"{file.Name} → Invalid file type.");
-                continue;
-            }
-
-            // Validate size
-            if (file.Size > MaxFileSize)
-            {
-                _validationErrors.Add($"{file.Name} → Exceeds 2MB.");
-                continue;
-            }
-
-            _selectedFiles.Add(file);
-        }
+        if (index < CurrentStep) return "completed";
+        if (index == CurrentStep) return "active";
+        return string.Empty;
     }
-    [Inject] private HttpClient Http { get; set; } = default!;
 
-    private async Task UploadAll()
+    private void GoTo(int index)
     {
-        _validationErrors.Clear();
-        if (!_selectedFiles.Any())
-            return;
+        if (index >= 0 && index < Total)
+            CurrentStep = index;
+        StateHasChanged();
+    }
 
-        var content = new MultipartFormDataContent();
+    private void ChangeStep(int dir)
+    {
+        GoTo(Math.Clamp(CurrentStep + dir, 0, Total - 1));
+    }
 
-        foreach (var file in _selectedFiles)
-        {
-            var streamContent = new StreamContent(
-                file.OpenReadStream(2 * 1024 * 1024));
-
-            streamContent.Headers.ContentType =
-                new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
-
-            content.Add(streamContent, "files", file.Name);
-        }
-
-        content.Add(new StringContent(string.IsNullOrEmpty(UserData.UserName) ? "User" : UserData.UserName), "uploadedBy");
-
-
-        var response = await Http.PostAsync(
-            $"api/NpiDocuments/{Id}/upload-multiple",
-            content);
-
-        if (response.IsSuccessStatusCode)
-        {
-            _selectedFiles.Clear();
-            await VM.LoadAsync(Id);
-            ToastService.ShowSuccess("Files uploaded successfully.");
-        }
+    private void OnFinish()
+    {
+        // Handle finish logic here
     }
 }

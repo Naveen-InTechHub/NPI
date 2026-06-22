@@ -12,35 +12,35 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Dosage Form</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                            <SfTextBox @bind-Value="VM.FggsSetup.DosageForm" Placeholder="Enter"></SfTextBox>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Tablet Shape & Color</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                            <SfTextBox @bind-Value="VM.FggsSetup.ShapeAndColor" Placeholder="Enter"></SfTextBox>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Tablet Weight (mg)</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                            <SfNumericTextBox @bind-Value="VM.FggsSetup.TabletWeight" TValue="int" Placeholder="Enter"></SfNumericTextBox>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Dimensions (L × W × T)</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                            <SfTextBox @bind-Value="VM.FggsSetup.Dimension" Placeholder="Enter"></SfTextBox>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Coating Type (if applicable)</div>
                         <div class="ans-select">
-                            <select class="form-select">
+                            <select class="form-select" @bind="@VM.FggsSetup.CoatingType">
                                 <option disabled selected hidden></option>
-                                <option value="1">Film</option>
-                                <option value="2">Sugar</option>
-                                <option value="3">Enteric</option>
+                                <option value="Film">Film</option>
+                                <option value="Sugar">Sugar</option>
+                                <option value="Enteric">Enteric</option>
                                 <option>None</option>
                             </select>
                         </div>
@@ -48,7 +48,7 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Flavor / Odor Characteristics</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfTextBox  Placeholder="Enter"></SfTextBox>
+                            <SfTextBox @bind-Value="VM.FggsSetup.Flavor" Placeholder="Enter"></SfTextBox>
                         </div>
                     </div>
                 </div>
@@ -66,29 +66,29 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Primary Packaging Type</div>
                         <div class="ans-select">
-                            <select class="form-select">
+                            <select class="form-select" @bind="@VM.FggsSetup.PackageType">
                                 <option disabled selected hidden></option>
-                                <option value="1">Bottle</option>
-                                <option value="2">Blister</option>
-                                <option value="3">Sachet</option>
+                                <option value="Bottle">Bottle</option>
+                                <option value="Blister">Blister</option>
+                                <option value="Sachet">Sachet</option>
                                 <option>None</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
-                        <div class="ans-mini-card-list-label mb-2">Count per Unit</div>
+                        <div class="ans-mini-card-list-label mb-2">Count Per Unit</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                            <SfNumericTextBox @bind-Value="VM.FggsSetup.CountPerUnit" TValue="int" Placeholder="Enter"></SfNumericTextBox>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Container Material</div>
                         <div class="ans-select">
-                            <select class="form-select">
+                            <select class="form-select" @bind="@VM.FggsSetup.ContainerMaterial">
                                 <option disabled selected hidden></option>
-                                <option value="1">HDPE</option>
-                                <option value="2">PET</option>
-                                <option value="3">Glass</option>
+                                <option value="HDPE">HDPE</option>
+                                <option value="PET">PET</option>
+                                <option value="Glass">Glass</option>
                                 <option>None</option>
                             </select>
                         </div>
@@ -96,11 +96,11 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Closure Type</div>
                         <div class="ans-select">
-                            <select class="form-select">
+                            <select class="form-select" @bind="@VM.FggsSetup.ClouserType">
                                 <option disabled selected hidden></option>
-                                <option value="1">CRC</option>
-                                <option value="2">Standard</option>
-                                <option value="3">Induction Seal</option>
+                                <option value="CRC">CRC</option>
+                                <option value="Standard">Standard</option>
+                                <option value="Induction Seal">Induction Seal</option>
                                 <option>None</option>
                             </select>
                         </div>
@@ -108,10 +108,10 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Secondary Packaging</div>
                         <div class="ans-select">
-                            <select class="form-select">
+                            <select class="form-select" @bind="@VM.FggsSetup.SecondaryPackaging">
                                 <option disabled selected hidden></option>
-                                <option value="1">Carton</option>
-                                <option value="2">Shrink wrap</option>
+                                <option value="Carton">Carton</option>
+                                <option value="Shrink wrap">Shrink wrap</option>
                                 <option>None</option>
                             </select>
                         </div>
@@ -119,7 +119,7 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Label Version / SKU</div>
                         <div class="ans-text-box ans-reduce-radius">
-                            <SfNumericTextBox TValue="int" Placeholder="Enter"></SfNumericTextBox>
+                            <SfNumericTextBox TValue="int" Placeholder="Enter" @bind-Value="VM.FggsSetup.LabelVersion"></SfNumericTextBox>
                         </div>
                     </div>
                 </div>
@@ -135,56 +135,29 @@
             <div class="ans-mini-card-body">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Appearance Inspection Required</div>
-                            <SfSwitch TChecked="bool?"
-                                      Checked=true
-                                      OnLabel="Yes"
-                                      OffLabel="No"
-                                      CssClass="ans-switch-btn flex-shrink-0">
-                            </SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Weight Variation Test</div>
-                            <SfSwitch TChecked="bool?"
-                                      Checked=true
-                                      OnLabel="Yes"
-                                      OffLabel="No"
-                                      CssClass="ans-switch-btn flex-shrink-0">
-                            </SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Hardness / Friability Test</div>
-                            <SfSwitch TChecked="bool?"
-                                      Checked=true
-                                      OnLabel="Yes"
-                                      OffLabel="No"
-                                      CssClass="ans-switch-btn flex-shrink-0">
-                            </SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Disintegration / Dissolution Test</div>
-                            <SfSwitch TChecked="bool?"
-                                      Checked=true
-                                      OnLabel="Yes"
-                                      OffLabel="No"
-                                      CssClass="ans-switch-btn flex-shrink-0">
-                            </SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Microbial Testing Required</div>
-                            <SfSwitch TChecked="bool?"
-                                      Checked=true
-                                      OnLabel="Yes"
-                                      OffLabel="No"
-                                      CssClass="ans-switch-btn flex-shrink-0">
-                            </SfSwitch>
-                        </div>
+                        @if (VM.QualityQuestions != null)
+                        {
+                            foreach (var question in VM.QualityQuestions)
+                            {
+                                <div class="d-flex justify-content-between gap-3 mb-2">
+                                    <div class="ans-mini-card-list-label">@question.QuestionText</div>
+                                    <SfSwitch TChecked="bool?"
+                                              Checked="@question.Value"
+                                              CheckedChanged="(v)=> VM.ToggleQualityPackageQuestionAsync(question, v)"
+                                              OnLabel="Yes"
+                                              OffLabel="No"
+                                              CssClass="ans-switch-btn flex-shrink-0">
+                                    </SfSwitch>
+
+                                </div>
+                            }
+                        }
+                      
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="ans-mini-card-list-label mb-2">Acceptance Criteria Notes</div>
                         <div class="ans-textarea-box w-100">
-                            <SfTextArea Placeholder="Enter" Width="100%" style="height: 130px;"></SfTextArea>
+                            <SfTextArea @bind-Value="NpiRecord.AcceptanceNotes" Placeholder="Enter" Width="100%" style="height: 130px;"></SfTextArea>
                         </div>
                     </div>
                 </div>
@@ -204,24 +177,35 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Target Shelf Life</div>
                         <div class="ans-select">
-                            <select class="form-select">
+                            <select class="form-select" @bind="@VM.FggsSetup.TargetShelfLife">
                                 <option disabled selected hidden></option>
+                                <option value="24 months">24 months</option>
+                                <option value="36 months">36 months</option>
+                                <option>None</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Storage Conditions</div>
                         <div class="ans-select">
-                            <select class="form-select">
+                            <select class="form-select" @bind="@VM.FggsSetup.StorageConditions">
                                 <option disabled selected hidden></option>
+                                <option value="Ambient">Ambient</option>
+                                <option value="Cool & Dry">Cool & Dry</option>
+                                <option value="Controlled">Controlled</option>
+                                <option>None</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-2">
                         <div class="ans-mini-card-list-label mb-2">Special Handling Instructions</div>
                         <div class="ans-select">
-                            <select class="form-select">
+                            <select class="form-select" @bind="@VM.FggsSetup.SpecialHandling">
                                 <option disabled selected hidden></option>
+                                <option value="Light">Light</option>
+                                <option value="Moisture">Moisture</option>
+                                <option value="Temperature sensitivity">Temperature sensitivity</option>
+                                <option>None</option>
                             </select>
                         </div>
                     </div>
@@ -238,30 +222,32 @@
             <div class="ans-mini-card-body">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">COA Required at Release</div>
-                            <SfSwitch TChecked="bool?"
-                                      Checked=true
-                                      OnLabel="Yes"
-                                      OffLabel="No"
-                                      CssClass="ans-switch-btn flex-shrink-0">
-                            </SfSwitch>
-                        </div>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <div class="ans-mini-card-list-label">Batch Record Template Linked</div>
-                            <SfSwitch TChecked="bool?"
-                                      Checked=true
-                                      OnLabel="Yes"
-                                      OffLabel="No"
-                                      CssClass="ans-switch-btn flex-shrink-0">
-                            </SfSwitch>
-                        </div>
+                        @if (VM.PackageQuestions != null)
+                        {
+                            foreach (var question in VM.PackageQuestions)
+                            {
+                                <div class="d-flex justify-content-between gap-3 mb-2">
+                                    <div class="ans-mini-card-list-label">@question.QuestionText</div>
+                                    <SfSwitch TChecked="bool?"
+                                              Checked="@question.Value"
+                                              CheckedChanged="(v)=> VM.ToggleQualityPackageQuestionAsync(question, v)"
+                                              OnLabel="Yes"
+                                              OffLabel="No"
+                                              CssClass="ans-switch-btn flex-shrink-0">
+                                    </SfSwitch>
+                                </div>
+                            }
+                        }
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="ans-mini-card-list-label mb-2">Regulatory Market</div>
                         <div class="ans-select">
-                            <select class="form-select">
+                            <select class="form-select" @bind="@VM.FggsSetup.RegulatoryMarket">
                                 <option disabled selected hidden></option>
+                                <option value="EU">EU</option>
+                                <option value="US">US</option>
+                                <option value="Other">Other</option>
+
                             </select>
                         </div>
                     </div>
@@ -280,13 +266,13 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="ans-mini-card-list-label mb-2">Special FG Handling Notes</div>
                         <div class="ans-text-box ans-reduce-radius w-100">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                            <SfTextBox @bind-Value="NpiRecord.FGHandlingNotes" Placeholder="Enter"></SfTextBox>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="ans-mini-card-list-label mb-2">Known Risks or Constraints</div>
                         <div class="ans-text-box ans-reduce-radius w-100">
-                            <SfTextBox Placeholder="Enter"></SfTextBox>
+                            <SfTextBox @bind-Value="NpiRecord.KnownRisksNotes" Placeholder="Enter"></SfTextBox>
                         </div>
                     </div>
                 </div>
@@ -298,10 +284,29 @@
 <div class="stepper-nav mb-3">
     @* <span class="step-indicator" id="stepIndicator">Step 1 of 5</span> *@
     <div class="nav-btns">
-        <button class="ans-secondary-button" id="btnPrev" onclick="changeStep(-1)">Previous</button>
-        <button class="ans-primary-button" id="btnNext" onclick="changeStep(1)">Save & Continue</button>
+        <button class="ans-secondary-button" id="btnPrev" @onclick="PreviousTab">Previous</button>
+        <button class="ans-primary-button" id="btnNext" @onclick="SaveAndContinueAsync">Save & Continue</button>
     </div>
 </div>
 @code {
+    [Parameter]
+    public NpiRecordDto NpiRecord { get; set; } = new NpiRecordDto();
+    [Parameter]
+    public NpiDetailViewModel VM { get; set; }
+    [Parameter]
+    public EventCallback<int> TabNavigation { get; set; }
+
+    public async Task SaveAndContinueAsync()
+    {
+        await VM.SaveFGGSSetup();
+        await VM.SaveRecordAsync(false);
+        await VM.LoadAsync(NpiRecord.Id);
+        await TabNavigation.InvokeAsync(4); // Navigate to next tab (e.g., Tab 3)
+    }
+
+    public async Task PreviousTab()
+    {
+        await TabNavigation.InvokeAsync(0); // Navigate to previous tab (e.g., Tab 1)
+    }
 
 }
