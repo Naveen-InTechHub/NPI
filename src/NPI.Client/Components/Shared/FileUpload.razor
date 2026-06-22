@@ -136,8 +136,18 @@
             </div>
         }
         <div class="d-flex justify-content-between gap-2 mt-3 mb-2">
-            <button @onclick="ClearAll" class="ans-secondary-button small-size">Clear All</button>
-            <button @onclick="UploadAll" class="ans-primary-button small-size">Save</button>
+            <button @onclick="ClearAll" class="ans-secondary-button small-size" disabled="@_isUploading">Clear All</button>
+            <button @onclick="UploadAll" class="ans-primary-button small-size" disabled="@_isUploading">
+                @if (_isUploading)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Uploading...</span>
+                }
+                else
+                {
+                    <span>Save</span>
+                }
+            </button>
         </div>
     </div>
 }
@@ -151,6 +161,7 @@
 
 
     private List<IBrowserFile> _selectedFiles = new();
+    private bool _isUploading = false;
 
     private const long MaxFileSize = 2 * 1024 * 1024; // 2MB
 
@@ -192,31 +203,40 @@
         if (!_selectedFiles.Any())
             return;
 
-        var content = new MultipartFormDataContent();
+        _isUploading = true;
 
-        foreach (var file in _selectedFiles)
+        try
         {
-            var streamContent = new StreamContent(
-                file.OpenReadStream(2 * 1024 * 1024));
+            var content = new MultipartFormDataContent();
 
-            streamContent.Headers.ContentType =
-                new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            foreach (var file in _selectedFiles)
+            {
+                var streamContent = new StreamContent(
+                    file.OpenReadStream(2 * 1024 * 1024));
 
-            content.Add(streamContent, "files", file.Name);
+                streamContent.Headers.ContentType =
+                    new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+
+                content.Add(streamContent, "files", file.Name);
+            }
+
+            content.Add(new StringContent("User"), "uploadedBy");
+
+
+            var response = await Http.PostAsync(
+                $"api/NpiDocuments/{NpiRecord.Id}/upload-multiple",
+                content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _selectedFiles.Clear();
+                await VM.LoadAsync(NpiRecord.Id);
+                ToastService.ShowSuccess("Files uploaded successfully.");
+            }
         }
-
-        content.Add(new StringContent("User"), "uploadedBy");
-
-
-        var response = await Http.PostAsync(
-            $"api/NpiDocuments/{NpiRecord.Id}/upload-multiple",
-            content);
-
-        if (response.IsSuccessStatusCode)
+        finally
         {
-            _selectedFiles.Clear();
-            await VM.LoadAsync(NpiRecord.Id);
-            ToastService.ShowSuccess("Files uploaded successfully.");
+            _isUploading = false;
         }
     }
 
